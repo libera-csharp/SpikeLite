@@ -46,6 +46,11 @@ namespace SpikeLite.Spammy
         /// </summary>
         private static readonly Regex _triggerRegex = new Regex(_trigger);
 
+        /// <summary>
+        /// When we're clearing our spam cache, make sure we lock it.
+        /// </summary>
+        private static readonly object _mutex = new object();
+
         #endregion 
 
         /// <summary>
@@ -63,6 +68,8 @@ namespace SpikeLite.Spammy
         /// <param name="request"></param>
         protected override void InternalHandleRequest(Request request)
         {
+            #region Spam Filtration
+
             Match expressionMatch = _triggerRegex.Match(request.Message);
 
             // If an unknown user has set off our spam sensor we are green for go.
@@ -101,8 +108,12 @@ namespace SpikeLite.Spammy
                 spammer.incrementSpam();
             }
 
+            #endregion 
+
+            #region Administrator Only Commands
+
             // Request information about a specific spammer.
-            if (request.Message.StartsWith("~spam"))
+            if (request.Message.StartsWith("~spam") && request.RequestFrom.AccessLevel == AccessLevel.PermanentAdmin)
             {
                 string target = request.Message.Substring(6).Trim();
                 string message = string.Empty;
@@ -117,7 +128,7 @@ namespace SpikeLite.Spammy
             // TODO: Kog 08/25/2008 - add a list of hostmasks and CTCP/Version info here.
 
             // Request a list of all spammers.
-            if (request.Message.Equals("~allspam"))
+            if (request.Message.Equals("~allspam") && request.RequestFrom.AccessLevel == AccessLevel.PermanentAdmin)
             {
                 int spamCount = _spamLog.Keys.Count;
                 string responseString = string.Format("{0} spammer{1} found{2} {3}", 
@@ -130,6 +141,20 @@ namespace SpikeLite.Spammy
                     new Response(request.Channel, request.Nick, ResponseType.Public, responseString)
                 );
             }
+
+            if (request.Message.Equals("~clearspam") && request.RequestFrom.AccessLevel == AccessLevel.PermanentAdmin)
+            {
+                lock (_mutex)
+                {
+                    _spamLog = new Dictionary<string, Spammer>();
+                }
+
+                ModuleManagementContainer.HandleResponse(
+                    new Response(request.Channel, request.Nick, ResponseType.Public, "Spam log cleared.")
+                );
+            }
+
+            #endregion 
         }
 
         #region Spam Tracking
