@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+
+<!--
+  SpikeLite C# IRC Bot
+  Copyright (c) 2008 FreeNode ##Csharp Community
+
+  This source is licensed under the terms of the MIT license. Please see the 
+  distributed license.txt for details.
+-->
+
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2">
+  <class name=" SpikeLite.Persistence.Karma.KarmaItem,  SpikeLite.Persistence" table="KARMA">
+    <id name="UserName" column="user_name" type="string" length="20">
+      <generator class="assigned" />
+    </id>
+    <property name="KarmaLevel" column="karma_level" type="int" length="10"/>
+  </class>
+</hibernate-mapping>

@@ -1,0 +1,89 @@
+/**
+ * SpikeLite C# IRC Bot
+ * Copyright (c) 2008 FreeNode ##Csharp Community
+ * 
+ * This source is licensed under the terms of the MIT license. Please see the 
+ * distributed license.txt for details.
+ */
+using SpikeLite.Modules.Search.com.google.api;
+using SpikeLite.Communications;
+using SpikeLite.Configuration;
+
+namespace SpikeLite.Modules.Search.Google
+{
+    /// <summary>
+    /// Attempts to do an async lookup via Google's webservice API.
+    /// </summary>
+    public class GoogleSearch
+    {
+        #region Data Members
+
+        /// <summary>
+        /// Provides access to the Bot's configuration 
+        /// </summary>
+        private SpikeLiteSection configuration;
+
+        /// <summary>
+        /// Holds the reference to the actual WS proxy.
+        /// </summary>
+        private GoogleSearchService _googleSearchService;
+
+        #endregion
+
+        #region Properties
+
+        /// <summary>
+        /// Allows registration of callbacks to be called upon search completion.
+        /// </summary>
+        public event doGoogleSearchCompletedEventHandler SearchCompleted
+        {
+            add { this._googleSearchService.doGoogleSearchCompleted += value; }
+            remove { this._googleSearchService.doGoogleSearchCompleted -= value; }
+        }
+
+        #endregion
+
+        #region Constructors
+
+        /// <summary>
+        /// Wire up our proxy object.
+        /// </summary>
+        public GoogleSearch()
+        {
+            configuration = SpikeLiteSection.GetSection();
+            _googleSearchService = new GoogleSearchService();
+        }
+
+        #endregion
+
+        #region Methods
+
+        /// <summary>
+        /// Attempts to search for a given set of search terms.
+        /// </summary>
+        /// 
+        /// <param name="searchTerms">A string of boolean search terms.</param>
+        /// <param name="userState">A response context to pass back to our callback.</param>
+        /// 
+        /// <remarks>
+        /// Requires the key "GoogleAPIKey" to be set to a valid Google API key in your app.config.
+        /// </remarks>
+        public void Search(string searchTerms, Request userState)
+        {
+            this._googleSearchService.doGoogleSearchAsync(
+                configuration.Licenses["googleSoapApi"].Key,
+                searchTerms,
+                0,
+                1,
+                false,
+                string.Empty,
+                true,
+                "lang_en",
+                string.Empty,
+                string.Empty,
+                userState);
+        }
+
+        #endregion
+    }
+}
