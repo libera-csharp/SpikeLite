@@ -48,6 +48,7 @@
     <Compile Include="CodeplexSearchModule.cs" />
     <Compile Include="CodeProjectSearchModule.cs" />
     <Compile Include="ConnectSearchModule.cs" />
+    <Compile Include="PatternSearchModule.cs" />
     <Compile Include="RefactoringSearchModule.cs" />
     <Compile Include="MSDNSearchModule.cs" />
     <Compile Include="MSForumsSearchModule.cs" />
