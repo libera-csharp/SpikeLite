@@ -9,12 +9,12 @@ using SpikeLite.AccessControl;
 
 namespace SpikeLite.Modules.Search
 {
-    [Module("Pattern", "Search DoFactory.com/Patterns/", "~pattern <search terms>", AccessLevel.Public)]
-    public class PatternSearchModule : SiteSearchModuleBase
+    [Module("Connection Strings", "Search ConnectionString.com", "~connectionstring <search terms>", AccessLevel.Public)]
+    public class ConnectionStringSearchModule : SiteSearchModuleBase
     {
         #region Constructors
-        public PatternSearchModule()
-            : base("Pattern", "pattern", "www.dofactory.com/Patterns/")
+        public ConnectionStringSearchModule()
+            : base("Connection Strings", "connectionstring", "www.connectionstrings.com")
         {
         }
         #endregion
