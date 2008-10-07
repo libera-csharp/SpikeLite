@@ -82,9 +82,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <WebReferences Include="Web References\" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Configuration\Example.config" />
     <None Include="Databases\AccessControl.s3db">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
