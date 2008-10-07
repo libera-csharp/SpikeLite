@@ -46,7 +46,6 @@
     </Reference>
     <Reference Include="System.EnterpriseServices" />
     <Reference Include="System.Web.Services" />
-    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AccessControl\AuthenticationModule.cs" />
