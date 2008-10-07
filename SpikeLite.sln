@@ -5,7 +5,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Dependencies", "Dependencie
 	ProjectSection(SolutionItems) = preProject
 		Dependencies\nunit.framework.dll = Dependencies\nunit.framework.dll
 		Dependencies\NUnitCore.dll = Dependencies\NUnitCore.dll
-		Dependencies\Org.Mentalis.Security.dll = Dependencies\Org.Mentalis.Security.dll
 		Dependencies\Sharkbite.Thresher.dll = Dependencies\Sharkbite.Thresher.dll
 		Dependencies\System.Data.SQLite.dll = Dependencies\System.Data.SQLite.dll
 	EndProjectSection
