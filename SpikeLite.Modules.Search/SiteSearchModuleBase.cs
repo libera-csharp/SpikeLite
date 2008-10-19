@@ -7,38 +7,31 @@
  */
 using System.Text;
 using SpikeLite.Communications;
-using SpikeLite.Modules.Search.Google;
-using SpikeLite.AccessControl;
-
 using SpikeLite.Modules.Search.com.msn.search.soap;
+using SpikeLite.Persistence.Authentication;
 
 namespace SpikeLite.Modules.Search
 {
     public abstract class SiteSearchModuleBase : ModuleBase
     {
         #region Fields
-        private string name;
-        private string command;
-        private string site;
+        private readonly string name;
+        private readonly string command;
+        private readonly string site;
 
-        private MSNSearchService msnSearchService;
+        private readonly MSNSearchService msnSearchService;
         #endregion
 
         #region Properties
 
         #region Name
-        protected string Name
-        {
-            get
-            {
-                return this.name;
-            }
-        }
+        protected string Name {  get { return name; } }
         #endregion
 
         #endregion
 
         #region Constructors
+
         public SiteSearchModuleBase(string name, string command, string site)
         {
             this.name = name;
@@ -47,6 +40,7 @@ namespace SpikeLite.Modules.Search
 
             msnSearchService = new MSNSearchService();
         }
+
         #endregion
 
         #region Methods
@@ -62,7 +56,7 @@ namespace SpikeLite.Modules.Search
                 if (request.Message.StartsWith("~")
                     && request.RequestFrom.AccessLevel >= AccessLevel.Public
                     && messageArray.Length >= 2
-                    && messageArray[0].ToLower() == "~" + this.command)
+                    && messageArray[0].ToLower() == "~" + command)
                 {
                     StringBuilder searchTerms = new StringBuilder();
 
@@ -108,14 +102,7 @@ namespace SpikeLite.Modules.Search
         #region PrepareResponse
         protected virtual Response PrepareResponse(string searchTerms, SearchResponse searchResponse, Request request)
         {
-            Response response;
-
-            if (searchResponse.Responses[0].Results.Length > 0)
-                response = request.CreateResponse(ResponseType.Public, "{0}, {1} '{2}': {3} | {4}", request.Nick, this.name, searchTerms, searchResponse.Responses[0].Results[0].Description, searchResponse.Responses[0].Results[0].Url);
-            else
-                response = request.CreateResponse(ResponseType.Public, "{0}, {1} '{2}': No Results", request.Nick, this.name, searchTerms);
-
-            return response;
+            return searchResponse.Responses[0].Results.Length > 0 ? request.CreateResponse(ResponseType.Public, "{0}, {1} '{2}': {3} | {4}", request.Nick, name, searchTerms, searchResponse.Responses[0].Results[0].Description, searchResponse.Responses[0].Results[0].Url) : request.CreateResponse(ResponseType.Public, "{0}, {1} '{2}': No Results", request.Nick, name, searchTerms);
         }
         #endregion
 
@@ -127,16 +114,21 @@ namespace SpikeLite.Modules.Search
 
             try
             {
-                SearchRequest searchRequest = new SearchRequest();
-                searchRequest.AppID = Configuration.Licenses["liveAppID"].Key;
-                searchRequest.CultureInfo = "en-GB";
-                searchRequest.Query = PrepareSearchTerms(searchTerms) + string.Format(" site:{0}", this.site);
+                SearchRequest searchRequest = new SearchRequest
+                                              {
+                                                  AppID = Configuration.Licenses["liveAppID"].Key,
+                                                  CultureInfo = "en-GB",
+                                                  Query =
+                                                      (PrepareSearchTerms(searchTerms) +
+                                                       string.Format(" site:{0}", site)),
+                                                  Requests = new SourceRequest[1]
+                                              };
 
-                searchRequest.Requests = new SourceRequest[1];
-
-                searchRequest.Requests[0] = new SourceRequest();
-                searchRequest.Requests[0].Source = SourceType.Web;
-                searchRequest.Requests[0].ResultFields = ResultFieldMask.Url | ResultFieldMask.Description;
+                searchRequest.Requests[0] = new SourceRequest
+                                            {
+                                                Source = SourceType.Web,
+                                                ResultFields = (ResultFieldMask.Url | ResultFieldMask.Description)
+                                            };
 
                 SearchResponse searchResponse = msnSearchService.Search(searchRequest);
 

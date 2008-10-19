@@ -6,10 +6,10 @@
  * distributed license.txt for details.
  */
 using SpikeLite.Communications;
-using SpikeLite.AccessControl;
 using SpikeLite.Modules.GeoIP.net.webservicex.www;
 using System.Text.RegularExpressions;
 using System;
+using SpikeLite.Persistence.Authentication;
 
 namespace SpikeLite.Modules.GeoIP
 {
@@ -29,7 +29,7 @@ namespace SpikeLite.Modules.GeoIP
         /// <summary>
         /// A regex grouped such that we only care about the IP.
         /// </summary>
-        private static readonly string _geoIpRegexPattern = @"~geoip\s(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})";
+        private const string _geoIpRegexPattern = @"~geoip\s(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})";
         
         /// <summary>
         /// A regular expression object for match checking and grouping.
@@ -51,7 +51,7 @@ namespace SpikeLite.Modules.GeoIP
         public GeoIpLookupModule()
         {
             _serviceProxy = new GeoIPService();
-            _serviceProxy.GetGeoIPCompleted += new GetGeoIPCompletedEventHandler(IpLookupCompletionHandler);
+            _serviceProxy.GetGeoIPCompleted += IpLookupCompletionHandler;
         }
 
         #endregion
@@ -107,7 +107,7 @@ namespace SpikeLite.Modules.GeoIP
         /// <param name="requestType">The <see cref="RequestType"/> you'd like a corresponding <see cref="ResponseType"/> for.</param>
         /// 
         /// <returns>The corresponding <see cref="ResponseType"/> for your request.</returns>
-        private ResponseType GetResponseTypeForRequestType(RequestType requestType)
+        private static ResponseType GetResponseTypeForRequestType(RequestType requestType)
         {
             return requestType.Equals(RequestType.Public) ? ResponseType.Public : ResponseType.Private;
         }

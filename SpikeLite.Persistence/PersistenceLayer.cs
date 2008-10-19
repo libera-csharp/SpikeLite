@@ -18,12 +18,13 @@ namespace SpikeLite.Persistence
     /// </summary>
     public class PersistenceLayer
     {
-        private ISession session;
+        private readonly ISession session;
 
         /// <summary>
         /// Construct our layer around NHibernate's session. This will need
         /// to be fixed to be more precise, but it allows for temporary injection.
         /// </summary>
+        /// 
         /// <param name="underlyingSession">The <see cref="ISession"/> object passed to us by the factory</param>
         public PersistenceLayer(ISession underlyingSession)
         {

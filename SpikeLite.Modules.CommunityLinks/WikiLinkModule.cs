@@ -7,7 +7,7 @@
  */
 using System;
 using SpikeLite.Communications;
-using SpikeLite.AccessControl;
+using SpikeLite.Persistence.Authentication;
 
 namespace SpikeLite.Modules.CommunityLinks
 {

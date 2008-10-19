@@ -7,9 +7,9 @@
  */
 using System;
 using SpikeLite.Communications;
+using SpikeLite.Persistence.Authentication;
 using SpikeLite.Persistence.Karma;
 using System.Text.RegularExpressions;
-using SpikeLite.AccessControl;
 
 namespace SpikeLite.Modules.Karma
 {
@@ -38,14 +38,26 @@ namespace SpikeLite.Modules.Karma
         /// <summary>
         /// Holds the valid patterns for our karma regex, with some groupings for easy parsing.
         /// </summary>
-        private static readonly string _regexPattern = @"~karma\s([A-Za-z0-9]+)((\-\-)|(\+\+))?";
+        private const string _regexPattern = @"~karma\s([A-Za-z0-9]+)((\-\-)|(\+\+))?";
 
         /// <summary>
         /// Precompile our matcher.
         /// </summary>
         private static readonly Regex _karmaRegex = new Regex(_regexPattern);
 
-        #endregion 
+        /// <summary>
+        /// This stores our Karma DAO that we use for finding/persisting Karma. This takes the place of what
+        /// were previously static methods.
+        /// </summary>
+        private KarmaDao _karmaDao;
+
+        #endregion
+
+        protected override void InternalInitModule() 
+        {
+            // Make sure we construct our Karma DAO for later.
+            _karmaDao = new KarmaDao(Persistence);
+        }
 
         /// <summary>
         /// See if we want to digest this message, and if so take action.
@@ -89,15 +101,7 @@ namespace SpikeLite.Modules.Karma
                     else
                     {
                         // Attempt to look the user up.
-                        KarmaItem karma = KarmaDao.findKarma(Persistence, nick);
-
-                        // If they're a new entry, construct a new data object.
-                        if (karma == null)
-                        {
-                            karma = new KarmaItem();
-                            karma.KarmaLevel = 0;
-                            karma.UserName = nick;
-                        }
+                        KarmaItem karma = _karmaDao.findKarma(nick) ?? new KarmaItem {KarmaLevel = 0, UserName = nick};
 
                         // If they're doing anything more than looking...
                         if (!String.IsNullOrEmpty(op))
@@ -111,7 +115,7 @@ namespace SpikeLite.Modules.Karma
                                 karma.KarmaLevel++;
                             }
 
-                            KarmaDao.saveKarma(Persistence, karma);
+                            _karmaDao.saveKarma(karma);
                         }
 
                         response = request.CreateResponse(ResponseType.Public, karma.ToString());

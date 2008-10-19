@@ -8,7 +8,7 @@
 using SpikeLite.Communications;
 using SpikeLite.Modules.Search.com.google.api;
 using SpikeLite.Modules.Search.Google;
-using SpikeLite.AccessControl;
+using SpikeLite.Persistence.Authentication;
 
 namespace SpikeLite.Modules.Search
 {
@@ -23,7 +23,7 @@ namespace SpikeLite.Modules.Search
         /// <summary>
         /// Handles our actual searching as well as callback registration.
         /// </summary>
-        private GoogleSearch _searchBroker;
+        private readonly GoogleSearch _searchBroker;
 
         #endregion
 
@@ -35,7 +35,7 @@ namespace SpikeLite.Modules.Search
         public GoogleSearchModule()
         {
             _searchBroker = new GoogleSearch();
-            _searchBroker.SearchCompleted += new doGoogleSearchCompletedEventHandler(SearchCompletedHandler);
+            _searchBroker.SearchCompleted += SearchCompletedHandler;
         }
         #endregion
 

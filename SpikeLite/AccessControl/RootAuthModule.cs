@@ -5,9 +5,7 @@
  * This source is licensed under the terms of the MIT license. Please see the 
  * distributed license.txt for details.
  */
-using System;
-using System.Collections.Generic;
-using System.Text;
+using SpikeLite.Persistence.Authentication;
 
 namespace SpikeLite.AccessControl
 {
@@ -26,7 +24,7 @@ namespace SpikeLite.AccessControl
     /// </remarks>
     class RootAuthModule : AuthenticationModule
     {
-        private AuthenticationModule _authModule;
+        private readonly AuthenticationModule _authModule;
 
         public RootAuthModule(AuthenticationModule authModule)
         {
@@ -35,14 +33,7 @@ namespace SpikeLite.AccessControl
 
         public AuthToken Authenticate( UserToken user )
         {
-            AuthToken token = _authModule.Authenticate(user);
-            
-            if (token == null)
-            {
-                token = new AuthToken(this, user, AccessLevel.None);
-            }
-
-            return token;
+            return _authModule.Authenticate(user) ?? new AuthToken(this, user, AccessLevel.None);
         }
     }
 }

@@ -60,7 +60,7 @@ namespace SpikeLite
         /// <summary>
         /// Provides access to the Bot's configuration 
         /// </summary>
-        private SpikeLiteSection _configuration;
+        private readonly SpikeLiteSection _configuration;
 
         /// <summary>
         /// Stores the bot's connection status. 
@@ -86,12 +86,14 @@ namespace SpikeLite
         /// <summary>
         /// Handles the module loading, unloading and message passing.
         /// </summary>
+        #pragma warning disable 219
         private ModuleManager _moduleManager;
+        #pragma warning restore 219
 
         /// <summary>
         /// Talks to our various persistence implementations.
         /// </summary>
-        private PersistenceLayer _persistence;
+        private readonly PersistenceLayer _persistence;
 
         /// <summary>
         /// Holds our connection arguments.
@@ -101,7 +103,7 @@ namespace SpikeLite
         /// This is partially a hack to get around the behavior described in the remarks for <see cref="Connect"/>.
         /// We'll need to fix this to make the bot multi-network.
         /// </remarks>
-        private ConnectionArgs _connectionArgs;
+        private readonly ConnectionArgs _connectionArgs;
 
         #endregion
 
@@ -135,7 +137,7 @@ namespace SpikeLite
             NetworkElement network = _configuration.Networks["FreeNode"];
             ServerElement server = network.Servers[0];
             
-            _connectionArgs = new ConnectionArgs()
+            _connectionArgs = new ConnectionArgs
             {
                 Hostname = server.HostnameOrIP,
                 Nick = network.BotNickname,
@@ -166,9 +168,9 @@ namespace SpikeLite
             Connect();
 
             // Spin up our managers.
-            _authenticationModule = new RootAuthModule(new IrcAuthenticationModule(_connection));
+            _authenticationModule = new RootAuthModule(new IrcAuthenticationModule(_persistence));
             _communicationManager = new CommunicationManager(_connection, _authenticationModule);
-            _moduleManager = new ModuleManager(_communicationManager, _authenticationModule, _persistence);
+            _moduleManager = new ModuleManager(_communicationManager, _persistence);
 
             // Alright, we're cooking now.
             _botStatus = BotStatus.Started;
@@ -237,18 +239,18 @@ namespace SpikeLite
         {
             if (!IsConnected)
             {
-                _connection = new Sharkbite.Irc.Connection(_connectionArgs, true, true);
+                _connection = new Connection(_connectionArgs, true, true);
 
                 // Subscribe our events
-                _connection.Listener.OnRegistered += new RegisteredEventHandler(OnRegister);
-                _connection.Listener.OnPrivateNotice += new PrivateNoticeEventHandler(OnPrivateNotice);
-                _connection.OnRawMessageReceived += new RawMessageReceivedEventHandler(OnRawMessageReceived);
-                _connection.OnRawMessageSent += new RawMessageSentEventHandler(OnRawMessageSent);
+                _connection.Listener.OnRegistered += OnRegister;
+                _connection.Listener.OnPrivateNotice += OnPrivateNotice;
+                _connection.OnRawMessageReceived += OnRawMessageReceived;
+                _connection.OnRawMessageSent += OnRawMessageSent;
 
                 _connection.Connect();
 
                 // Make sure we don't get any random disconnected events before we're connected
-                _connection.Listener.OnDisconnected += new DisconnectedEventHandler(Listener_OnDisconnect);
+                _connection.Listener.OnDisconnected += Listener_OnDisconnect;
             }
         }
  
@@ -265,7 +267,7 @@ namespace SpikeLite
         /// <remarks>
         /// The message text will be unformatted, as sent by the IRCD. May be RFC1459 compliant. 
         /// </remarks>
-        private void OnRawMessageSent(string message)
+        private static void OnRawMessageSent(string message)
         {
             Console.ForegroundColor = ConsoleColor.Blue;
             Console.WriteLine("{0} {1} Sent: {2}", DateTime.Now.ToShortDateString(), DateTime.Now.ToLongTimeString(), message);
@@ -280,7 +282,7 @@ namespace SpikeLite
         /// <remarks>
         /// The message text will be unformatted, as sent by the IRCD. May be RFC1459 compliant. 
         /// </remarks>
-        private void OnRawMessageReceived(string message)
+        private static void OnRawMessageReceived(string message)
         {
             Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine("{0} {1} Received: {2}", DateTime.Now.ToShortDateString(), DateTime.Now.ToLongTimeString(), message);
@@ -293,7 +295,7 @@ namespace SpikeLite
         /// <remarks>
         /// This is a good place to send your services registration. Some networks provide cloaks for users that are best
         /// set up upon connect. Consider this an analog to mIRC's onConnect. The bot currently blocks on a response, see
-        /// <see cref="Listener_OnPrivateNotice"/>.
+        /// Listener_OnPrivateNotice.
         /// </remarks>
         private void OnRegister()
         {
@@ -304,7 +306,7 @@ namespace SpikeLite
         /// We've recieved a NOTICE from the server.
         /// </summary>
         /// 
-        /// <param name="user">A <see cref="User"/> representing the sender.</param>
+        /// <param name="user">A user representing the sender.</param>
         /// <param name="notice">The message being NOTICE'd.</param>
         /// 
         /// <remarks>

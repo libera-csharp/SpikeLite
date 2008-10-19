@@ -5,58 +5,57 @@
  * This source is licensed under the terms of the MIT license. Please see the 
  * distributed license.txt for details.
  */
-using System;
 using System.Collections.Generic;
-using System.Text;
-using Sharkbite.Irc;
+using SpikeLite.Persistence;
+using SpikeLite.Persistence.Authentication;
 
 namespace SpikeLite.AccessControl
 {
     class IrcAuthenticationModule : AuthenticationModule
     {
-        private Cloaks _cloaks;
+        private readonly IEnumerable<KnownHost> _cloaks;
+        private readonly KnownHostDao _hostDao;
 
-        public IrcAuthenticationModule(Connection client)
+        public IrcAuthenticationModule(PersistenceLayer persistenceLayer)
         {
-            _cloaks = new Cloaks(client);
+            _hostDao = new KnownHostDao(persistenceLayer);
+            _cloaks = _hostDao.FindAll();
         }
 
-        public AuthToken Authenticate( UserToken user )
+        public AuthToken Authenticate(UserToken user)
         {
             return Authenticate(user as IrcUserToken);
         }
 
-        public AuthToken Authenticate( IrcUserToken user )
+        public AuthToken Authenticate(IrcUserToken user)
         {
-            if (user == null)
+            if (user != null)
             {
-                return null;
-            }
+                AccessLevel accessLevel = ValidateCloak(user.HostMask);
 
-            AccessLevel accessLevel = ValidateCloak(user.HostMask);
-
-            if ( accessLevel != AccessLevel.None )
-            {
-                return new AuthToken(this, user, accessLevel);
+                if (accessLevel != AccessLevel.None)
+                {
+                    return new AuthToken(this, user, accessLevel);
+                }
             }
 
             return null;
         }
 
-        private AccessLevel ValidateCloak( string cloakMask )
+        private AccessLevel ValidateCloak(string cloakMask)
         {
-            if (cloakMask == null || cloakMask.Length == 0)
-            {
-                return AccessLevel.None;
-            }
-
             AccessLevel userLevel = AccessLevel.None;
 
-            foreach ( Cloak cloak in _cloaks )
+            // TODO: Kog 10/19/2008 - replace with more niftiness
+
+            if (!string.IsNullOrEmpty(cloakMask))
             {
-                if ( userLevel < cloak.UserLevel && cloak.Matches(cloakMask) )
+                foreach (KnownHost cloak in _cloaks)
                 {
-                    userLevel = cloak.UserLevel;
+                    if (userLevel < cloak.AccessLevel && cloak.Matches(cloakMask))
+                    {
+                        userLevel = cloak.AccessLevel;
+                    }
                 }
             }
 

@@ -7,7 +7,7 @@
  */
 using System;
 using SpikeLite.Communications;
-using SpikeLite.AccessControl;
+using SpikeLite.Persistence.Authentication;
 
 namespace SpikeLite.Modules.Help
 {
@@ -21,7 +21,7 @@ namespace SpikeLite.Modules.Help
         {
             if (request.RequestFrom.AccessLevel >= AccessLevel.Public)
             {
-                string[] messageArray = request.Message.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                string[] messageArray = request.Message.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
 
                 if (messageArray[0].Equals("~help", StringComparison.OrdinalIgnoreCase))
                 {

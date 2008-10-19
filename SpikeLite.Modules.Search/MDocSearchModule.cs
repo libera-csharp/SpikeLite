@@ -5,7 +5,7 @@
  * This source is licensed under the terms of the MIT license. Please see the 
  * distributed license.txt for details.
  */
-using SpikeLite.AccessControl;
+using SpikeLite.Persistence.Authentication;
 
 namespace SpikeLite.Modules.Search
 {

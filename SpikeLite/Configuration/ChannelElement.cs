@@ -5,9 +5,6 @@
  * This source is licensed under the terms of the MIT license. Please see the 
  * distributed license.txt for details.
  */
-using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Configuration;
 
 namespace SpikeLite.Configuration
@@ -16,8 +13,8 @@ namespace SpikeLite.Configuration
     {
         #region Static Fields
 
-        private static ConfigurationProperty _name;
-        private static ConfigurationPropertyCollection _properties;
+        private static readonly ConfigurationProperty _name;
+        private static readonly ConfigurationPropertyCollection _properties;
 
         #endregion
 
@@ -42,8 +39,7 @@ namespace SpikeLite.Configuration
         {
             _name = new ConfigurationProperty("name", typeof(string), null, ConfigurationPropertyOptions.IsRequired);
 
-            _properties = new ConfigurationPropertyCollection();
-            _properties.Add(_name);
+            _properties = new ConfigurationPropertyCollection {_name};
         }
 
         #endregion

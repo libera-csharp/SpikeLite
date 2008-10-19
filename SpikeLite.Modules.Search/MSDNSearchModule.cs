@@ -8,7 +8,7 @@
 using SpikeLite.Communications;
 using SpikeLite.Modules.Search.com.msn.search.soap;
 using System.Text.RegularExpressions;
-using SpikeLite.AccessControl;
+using SpikeLite.Persistence.Authentication;
 
 namespace SpikeLite.Modules.Search
 {
@@ -27,17 +27,10 @@ namespace SpikeLite.Modules.Search
         #region PrepareResponse
         protected override Response PrepareResponse(string searchTerms, SearchResponse searchResponse, Request request)
         {
-            Response response;
-
             Regex regEx = new Regex(@"(\(VS\.\d+\))");
             string url = regEx.Replace(searchResponse.Responses[0].Results[0].Url, string.Empty);
 
-            if (searchResponse.Responses[0].Results.Length > 0)
-                response = request.CreateResponse(ResponseType.Public, "{0}, {1} '{2}': {3} | {4}", request.Nick, base.Name, searchTerms, searchResponse.Responses[0].Results[0].Description, url);
-            else
-                response = request.CreateResponse(ResponseType.Public, "{0}, {1} '{2}': No Results", request.Nick, base.Name, searchTerms);
-
-            return response;
+            return searchResponse.Responses[0].Results.Length > 0 ? request.CreateResponse(ResponseType.Public, "{0}, {1} '{2}': {3} | {4}", request.Nick, Name, searchTerms, searchResponse.Responses[0].Results[0].Description, url) : request.CreateResponse(ResponseType.Public, "{0}, {1} '{2}': No Results", request.Nick, Name, searchTerms);
         }
         #endregion
 

@@ -52,12 +52,6 @@
     <Compile Include="AccessControl\AuthToken.cs" />
     <Compile Include="AccessControl\RootAuthModule.cs" />
     <Compile Include="AccessControl\BasicUserToken.cs" />
-    <Compile Include="AccessControl\Cloak.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="AccessControl\Cloaks.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="AccessControl\IrcAuthenticationModule.cs" />
     <Compile Include="AccessControl\IrcUserToken.cs" />
     <Compile Include="AccessControl\UserToken.cs" />
@@ -83,12 +77,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Configuration\Example.config" />
-    <None Include="Databases\AccessControl.s3db">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Databases\Users.s3db">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SpikeLite.Persistence\SpikeLite.Persistence.csproj">

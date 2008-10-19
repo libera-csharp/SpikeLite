@@ -7,7 +7,7 @@
  */
 using System;
 using SpikeLite.Communications;
-using SpikeLite.AccessControl;
+using SpikeLite.Persistence.Authentication;
 
 namespace SpikeLite.Modules.Tell
 {
@@ -19,7 +19,7 @@ namespace SpikeLite.Modules.Tell
         #region InternalHandleRequest
         protected override void InternalHandleRequest(Request request)
         {
-            string[] messageArray = request.Message.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+            string[] messageArray = request.Message.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
 
             if (request.RequestFrom.AccessLevel >= AccessLevel.Public
                 && request.RequestType == RequestType.Public

@@ -21,12 +21,12 @@ namespace SpikeLite.Modules.Search.Google
         /// <summary>
         /// Provides access to the Bot's configuration 
         /// </summary>
-        private SpikeLiteSection configuration;
+        private readonly SpikeLiteSection configuration;
 
         /// <summary>
         /// Holds the reference to the actual WS proxy.
         /// </summary>
-        private GoogleSearchService _googleSearchService;
+        private readonly GoogleSearchService _googleSearchService;
 
         #endregion
 
@@ -37,8 +37,8 @@ namespace SpikeLite.Modules.Search.Google
         /// </summary>
         public event doGoogleSearchCompletedEventHandler SearchCompleted
         {
-            add { this._googleSearchService.doGoogleSearchCompleted += value; }
-            remove { this._googleSearchService.doGoogleSearchCompleted -= value; }
+            add { _googleSearchService.doGoogleSearchCompleted += value; }
+            remove { _googleSearchService.doGoogleSearchCompleted -= value; }
         }
 
         #endregion
@@ -70,7 +70,8 @@ namespace SpikeLite.Modules.Search.Google
         /// </remarks>
         public void Search(string searchTerms, Request userState)
         {
-            this._googleSearchService.doGoogleSearchAsync(
+            _googleSearchService.doGoogleSearchAsync
+            (
                 configuration.Licenses["googleSoapApi"].Key,
                 searchTerms,
                 0,
@@ -81,7 +82,8 @@ namespace SpikeLite.Modules.Search.Google
                 "lang_en",
                 string.Empty,
                 string.Empty,
-                userState);
+                userState
+            );
         }
 
         #endregion

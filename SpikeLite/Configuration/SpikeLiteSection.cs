@@ -13,10 +13,10 @@ namespace SpikeLite.Configuration
     {
         #region Static Fields
 
-        private static ConfigurationProperty _networks;
-        private static ConfigurationProperty _licenses;
+        private static readonly ConfigurationProperty _networks;
+        private static readonly ConfigurationProperty _licenses;
 
-        private static ConfigurationPropertyCollection _properties;
+        private static readonly ConfigurationPropertyCollection _properties;
 
         private static SpikeLiteSection _section;
 
@@ -48,10 +48,7 @@ namespace SpikeLite.Configuration
             _networks = new ConfigurationProperty("networks", typeof(NetworkElementCollection), null, ConfigurationPropertyOptions.IsRequired);
             _licenses = new ConfigurationProperty("licenses", typeof(LicenseElementCollection), null, ConfigurationPropertyOptions.IsRequired);
 
-            _properties = new ConfigurationPropertyCollection();
-
-            _properties.Add(_networks);
-            _properties.Add(_licenses);
+            _properties = new ConfigurationPropertyCollection {_networks, _licenses};
         }
 
         #region GetSection Pattern

@@ -7,9 +7,11 @@
  */
 using System.IO;
 using System.Reflection;
+using NHibernate;
 using NHibernate.Cfg;
 using NHibernate.Tool.hbm2ddl;
 using System.Data.SQLite;
+using SpikeLite.Persistence.Authentication;
 
 namespace SpikeLite.Persistence
 {
@@ -20,6 +22,8 @@ namespace SpikeLite.Persistence
     /// </summary>
     public class PersistenceFactory
     {
+        private static bool _seed;
+
         /// <summary>
         /// Attempts to set up our persistence. This will create new tables if the sdb3 file is missing,
         /// else use what's already there.
@@ -38,10 +42,20 @@ namespace SpikeLite.Persistence
             {
                 SQLiteConnection.CreateFile("persistence.s3db");
                 new SchemaExport(cfg).Execute(true, true, false, false);
+
+                _seed = true;
+            }
+
+            ISession session = cfg.BuildSessionFactory().OpenSession();
+
+            // Bit of a hack in here... we need to create the DB file before we can open the session.
+            if (_seed)
+            {
+                KnownHostDao.SeedACLs(session);
             }
 
             // Create connection.
-            return new PersistenceLayer(cfg.BuildSessionFactory().OpenSession());
+            return new PersistenceLayer(session);
         }
     }
 }

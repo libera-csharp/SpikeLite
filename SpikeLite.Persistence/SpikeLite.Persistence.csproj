@@ -57,8 +57,11 @@
       <HintPath>..\Dependencies\System.Data.SQLite.dll</HintPath>
     </Reference>
     <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Authentication\KnownHost.cs" />
+    <Compile Include="Authentication\KnownHostDao.cs" />
     <Compile Include="Karma\KarmaDao.cs" />
     <Compile Include="Karma\KarmaItem.cs" />
     <Compile Include="PersistenceFactory.cs" />
@@ -70,6 +73,9 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="NHibernate\NHibernateProvider.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Authentication\SpikeLite.Persistence.Authentication.Cloak.hbm.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

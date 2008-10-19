@@ -6,8 +6,6 @@
  * distributed license.txt for details.
  */
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace FrontEnd_Console
 {
@@ -16,13 +14,13 @@ namespace FrontEnd_Console
     /// </summary>
     internal class ConsoleRunner
     {
-        private static void Main(string[] args)
+        private static void Main()
         {
             SpikeLite.SpikeLite spikeLite = new SpikeLite.SpikeLite();
             spikeLite.Start();
 
             // Handle SIGTERM gracefully
-            Console.CancelKeyPress += delegate(object sender, ConsoleCancelEventArgs e)
+            Console.CancelKeyPress += delegate
             {
                 spikeLite.Shutdown();
                 spikeLite.Quit("Caught SIGTERM, quitting");

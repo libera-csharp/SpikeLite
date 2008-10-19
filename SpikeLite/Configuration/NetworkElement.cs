@@ -5,9 +5,6 @@
  * This source is licensed under the terms of the MIT license. Please see the 
  * distributed license.txt for details.
  */
-using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Configuration;
 
 namespace SpikeLite.Configuration
@@ -16,15 +13,15 @@ namespace SpikeLite.Configuration
     {
         #region Static Fields
 
-        private static ConfigurationProperty _networkName;
-        private static ConfigurationProperty _botNickname;
-        private static ConfigurationProperty _botRealName;
-        private static ConfigurationProperty _botUserName;
-        private static ConfigurationProperty _nickServPassword;
-        private static ConfigurationProperty _servers;
-        private static ConfigurationProperty _channels;
+        private static readonly ConfigurationProperty _networkName;
+        private static readonly ConfigurationProperty _botNickname;
+        private static readonly ConfigurationProperty _botRealName;
+        private static readonly ConfigurationProperty _botUserName;
+        private static readonly ConfigurationProperty _nickServPassword;
+        private static readonly ConfigurationProperty _servers;
+        private static readonly ConfigurationProperty _channels;
 
-        private static ConfigurationPropertyCollection _properties;
+        private static readonly ConfigurationPropertyCollection _properties;
 
         #endregion
 
@@ -91,16 +88,16 @@ namespace SpikeLite.Configuration
             _servers = new ConfigurationProperty("servers", typeof(ServerElementCollection), null, ConfigurationPropertyOptions.IsRequired);
             _channels = new ConfigurationProperty("channels", typeof(ChannelElementCollection), null, ConfigurationPropertyOptions.IsRequired);
 
-            _properties = new ConfigurationPropertyCollection();
-
-            _properties.Add(_networkName);
-            _properties.Add(_botNickname);
-            _properties.Add(_botRealName);
-            _properties.Add(_botUserName);
-            _properties.Add(_nickServPassword);
-            _properties.Add(_servers);
-            _properties.Add(_channels);
-
+            _properties = new ConfigurationPropertyCollection
+            {
+                  _networkName,
+                  _botNickname,
+                  _botRealName,
+                  _botUserName,
+                  _nickServPassword,
+                  _servers,
+                  _channels
+            };
         }
         #endregion
     }

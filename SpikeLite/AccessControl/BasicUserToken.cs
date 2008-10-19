@@ -5,22 +5,17 @@
  * This source is licensed under the terms of the MIT license. Please see the 
  * distributed license.txt for details.
  */
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Security;
-
 namespace SpikeLite.AccessControl
 {
     public class BasicUserToken : UserToken
     {
-        private string _username;
-        private string _password;
-        private string _displayName;
+        private readonly string _username;
+        private readonly string _password;
+        private readonly string _displayName;
 
-        public BasicUserToken( string username, string password ) : this(username, password, username) { }
+        public BasicUserToken(string username, string password ) : this(username, password, username) { }
 
-        public BasicUserToken( string username, string password, string displayName )
+        public BasicUserToken(string username, string password, string displayName)
         {
             _username = username;
             _password = password;

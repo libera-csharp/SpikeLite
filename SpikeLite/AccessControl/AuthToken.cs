@@ -5,9 +5,7 @@
  * This source is licensed under the terms of the MIT license. Please see the 
  * distributed license.txt for details.
  */
-using System;
-using System.Collections.Generic;
-using System.Text;
+using SpikeLite.Persistence.Authentication;
 
 namespace SpikeLite.AccessControl
 {
@@ -17,7 +15,7 @@ namespace SpikeLite.AccessControl
         private readonly UserToken _user;
         private readonly AccessLevel _accessLevel;
 
-        public AuthToken( AuthenticationModule issuer, UserToken user, AccessLevel accessLevel )
+        public AuthToken(AuthenticationModule issuer, UserToken user, AccessLevel accessLevel)
         {
             _issuer = issuer;
             _user = user;

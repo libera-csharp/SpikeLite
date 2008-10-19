@@ -5,9 +5,6 @@
  * This source is licensed under the terms of the MIT license. Please see the 
  * distributed license.txt for details.
  */
-using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Configuration;
 
 namespace SpikeLite.Configuration
@@ -15,7 +12,7 @@ namespace SpikeLite.Configuration
     [ConfigurationCollection(typeof(ChannelElement), AddItemName="channel", CollectionType = ConfigurationElementCollectionType.BasicMap)]
     public class ChannelElementCollection : ConfigurationElementCollection
     {
-        private static ConfigurationPropertyCollection _properties;
+        private static readonly ConfigurationPropertyCollection _properties;
 
         #region Properties
 
@@ -41,19 +38,17 @@ namespace SpikeLite.Configuration
             _properties = new ConfigurationPropertyCollection();
         }
 
-        public ChannelElementCollection() { }
-
         #region Indexers
 
         public ChannelElement this[int index]
         {
-            get { return (ChannelElement)base.BaseGet(index); }
+            get { return (ChannelElement)BaseGet(index); }
 
             set
             {
-                if (base.BaseGet(index) != null)
+                if (BaseGet(index) != null)
                 {
-                    base.BaseRemoveAt(index);
+                    BaseRemoveAt(index);
                 }
                 base.BaseAdd(index, value);
             }
@@ -61,7 +56,7 @@ namespace SpikeLite.Configuration
 
         public new ChannelElement this[string name]
         {
-            get { return (ChannelElement)base.BaseGet(name); }
+            get { return (ChannelElement)BaseGet(name); }
         }
 
         #endregion

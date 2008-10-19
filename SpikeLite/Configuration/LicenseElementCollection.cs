@@ -5,9 +5,6 @@
  * This source is licensed under the terms of the MIT license. Please see the 
  * distributed license.txt for details.
  */
-using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Configuration;
 
 namespace SpikeLite.Configuration
@@ -15,7 +12,7 @@ namespace SpikeLite.Configuration
     [ConfigurationCollection(typeof(LicenseElement), AddItemName="license", CollectionType = ConfigurationElementCollectionType.BasicMap)]
     public class LicenseElementCollection : ConfigurationElementCollection
     {
-        private static ConfigurationPropertyCollection _properties;
+        private static readonly ConfigurationPropertyCollection _properties;
 
         #region Properties
 
@@ -41,19 +38,17 @@ namespace SpikeLite.Configuration
             _properties = new ConfigurationPropertyCollection();
         }
 
-        public LicenseElementCollection() { }
-
         #region Indexers
 
         public LicenseElement this[int index]
         {
-            get { return (LicenseElement)base.BaseGet(index); }
+            get { return (LicenseElement)BaseGet(index); }
 
             set
             {
-                if (base.BaseGet(index) != null)
+                if (BaseGet(index) != null)
                 {
-                    base.BaseRemoveAt(index);
+                    BaseRemoveAt(index);
                 }
 
                 base.BaseAdd(index, value);
@@ -62,7 +57,7 @@ namespace SpikeLite.Configuration
 
         public new LicenseElement this[string name]
         {
-            get { return (LicenseElement)base.BaseGet(name); }
+            get { return (LicenseElement)BaseGet(name); }
         }
 
         #endregion

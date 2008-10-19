@@ -112,10 +112,8 @@ namespace SpikeLite.Communications
             {
                 return ResponseType.Private;
             }
-            else
-            {
-                return ResponseType.Public;
-            }
+
+            return ResponseType.Public;
         }
     }
 }

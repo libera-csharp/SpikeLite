@@ -13,7 +13,7 @@ namespace SpikeLite.Communications
 {
     public class RequestReceivedEventArgs : EventArgs
     {
-        private Request _request;
+        private readonly Request _request;
 
         public Request Request
         {
@@ -31,10 +31,10 @@ namespace SpikeLite.Communications
         #region Data Members
 
         private event EventHandler<RequestReceivedEventArgs> _requestReceived;
-        private UserTokenCache _userTokenCache;
+        private readonly UserTokenCache _userTokenCache;
 
-        private Connection _connection;
-        private AuthenticationModule _authenticationModule;
+        private readonly Connection _connection;
+        private readonly AuthenticationModule _authenticationModule;
 
         #endregion
 
@@ -50,19 +50,16 @@ namespace SpikeLite.Communications
             _authenticationModule = authenticationModule;
             _userTokenCache = new UserTokenCache(connection);
 
-            _connection.Listener.OnPublic += new PublicMessageEventHandler(Listener_OnPublic);
-            _connection.Listener.OnPrivate += new PrivateMessageEventHandler(Listener_OnPrivate);
+            _connection.Listener.OnPublic += Listener_OnPublic;
+            _connection.Listener.OnPrivate += Listener_OnPrivate;
         }
         
         public void SendResponse(Response response)
         {
-            ResponseType responseType = response.ResponseType;
-
             if ( response.Channel == null )
             {
                 //cannot send a public message in response to a private message
                 //TODO: log that this error occured and was corrected
-                responseType = ResponseType.Private;
             }
 
             if (response.ResponseType == ResponseType.Public)

@@ -7,7 +7,6 @@
  */
 using System;
 using System.Collections.Generic;
-using System.Text;
 using Sharkbite.Irc;
 using System.Threading;
 
@@ -16,9 +15,9 @@ namespace SpikeLite.AccessControl
     //TODO: Handle bot parting / quitting
     public class UserTokenCache
     {
-        private Connection _client;
-        private Dictionary<string, UserToken> _tokens; //nick => user token
-        private ReadWriteLock _mutex;
+        private readonly Connection _client;
+        private readonly Dictionary<string, UserToken> _tokens;
+        private readonly ReadWriteLock _mutex;
 
         public UserTokenCache(Connection client)
         {
@@ -27,79 +26,15 @@ namespace SpikeLite.AccessControl
             _mutex = new ReadWriteLock();
         }
 
-        private void AttachHandlers()
+        public Connection client
         {
-            _client.Listener.OnNick += new NickEventHandler(Listener_OnNick);
-            _client.Listener.OnPart += new PartEventHandler(Listener_OnPart);
-            _client.Listener.OnQuit += new QuitEventHandler(Listener_OnQuit);
-        }
-
-        #region Event Handling
-
-        private void Listener_OnNick(UserInfo user, string newNick)
-        {
-            string oldNick = user.Nick;
-            UserToken token;
-
-            using ( _mutex.AquireWriteLock())
-            {
-                _tokens.Remove(newNick);
-
-                if ( _tokens.TryGetValue(oldNick, out token) )
-                {
-                    _tokens.Add(newNick, token);
-                }
-                _tokens.Remove(oldNick);
-            }
-        }
-
-        private void Listener_OnPart(UserInfo user, string channel, string reason)
-        {
-            using (_mutex.AquireReadLock())
-            {
-                if (!IsStillVisible(user))
-                {
-                    InvalidateToken(user);
-                }
-            }
-        }
-
-        private void Listener_OnQuit( UserInfo user, string reason )
-        {
-            InvalidateToken(user);
-        }
-
-        #endregion 
-
-        /// <summary>
-        /// Checks if the user is still visible in any of the channels on this server that the bot is on.
-        /// </summary>
-        /// 
-        /// <param name="user">The user to check</param>
-        /// <returns>True if the user is visible to the bot in another channel, otherwise false</returns>
-        private bool IsStillVisible(UserInfo user)
-        {
-            return IsStillVisible(user.Nick);
-        }
-
-        /// <summary>
-        /// Checks if a nick is still visible in any of the channels on this server that the bot is on.
-        /// </summary>
-        /// 
-        /// <param name="nick">The nick to check</param>
-        /// <returns>True if the nick is visible to the bot in another channel, otherwise false</returns>
-        private bool IsStillVisible(string nick)
-        {
-            //TODO: Find the user
-            //for now err on the side of safety and assume the user is no longer visible
-            return false;
+            get { return _client; }
         }
 
         #region Token Handling
 
         public UserToken RetrieveToken(UserInfo user)
         {
-            string nick = user.Nick;
             UserToken token;
 
             using (_mutex.AquireReadLock())
@@ -131,7 +66,7 @@ namespace SpikeLite.AccessControl
             }
         }
 
-        private UserToken CreateUserToken(UserInfo user)
+        private static UserToken CreateUserToken(UserInfo user)
         {
             return new IrcUserToken(user.Nick, user.Hostname);
         }
@@ -142,7 +77,7 @@ namespace SpikeLite.AccessControl
 
         private class ReadWriteLock
         {
-            private ReaderWriterLock _mutex;
+            private readonly ReaderWriterLock _mutex;
             private readonly int _readTimeout;
             private readonly int _writeTimeout;
 
@@ -165,14 +100,9 @@ namespace SpikeLite.AccessControl
                 return new WriteLatch(_mutex, _writeTimeout);
             }
 
-            public IDisposable ReleaseLock()
-            {
-                return new LatchRelease(_mutex);
-            }
-
             private class ReadLockCookie : IDisposable
             {
-                private ReaderWriterLock _mutex;
+                private readonly ReaderWriterLock _mutex;
 
                 public ReadLockCookie( ReaderWriterLock lck, int timeout )
                 {
@@ -190,9 +120,9 @@ namespace SpikeLite.AccessControl
 
             private class WriteLatch : IDisposable
             {
-                private ReaderWriterLock _mutex;
+                private readonly ReaderWriterLock _mutex;
                 LockCookie _cookie;
-                private bool _upgraded;
+                private readonly bool _upgraded;
 
                 public WriteLatch(ReaderWriterLock lck, int timeout)
                 {
@@ -219,40 +149,6 @@ namespace SpikeLite.AccessControl
                     else
                     {
                         _mutex.ReleaseWriterLock();
-                    }
-                }
-            }
-
-            #endregion 
-
-            #region Latch Releasing
-
-            private class LatchRelease : IDisposable
-            {
-                private ReaderWriterLock _mutex;
-                LockCookie _cookie;
-                private bool _released;
-
-                public LatchRelease(ReaderWriterLock lck)
-                {
-                    _mutex = lck;
-
-                    if (_mutex.IsReaderLockHeld || _mutex.IsWriterLockHeld)
-                    {
-                        _cookie = lck.ReleaseLock();
-                        _released = true;
-                    }
-                    else
-                    {
-                        _released = false;
-                    }
-                }
-
-                public void Dispose()
-                {
-                    if (_released)
-                    {
-                        _mutex.RestoreLock(ref _cookie);
                     }
                 }
             }

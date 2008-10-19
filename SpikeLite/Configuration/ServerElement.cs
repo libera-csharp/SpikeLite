@@ -5,9 +5,6 @@
  * This source is licensed under the terms of the MIT license. Please see the 
  * distributed license.txt for details.
  */
-using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Configuration;
 
 namespace SpikeLite.Configuration
@@ -16,10 +13,10 @@ namespace SpikeLite.Configuration
     {
         #region Static Fields
 
-        private static ConfigurationProperty _hostnameOrIP;
-        private static ConfigurationProperty _port;
+        private static readonly ConfigurationProperty _hostnameOrIP;
+        private static readonly ConfigurationProperty _port;
 
-        private static ConfigurationPropertyCollection _properties;
+        private static readonly ConfigurationPropertyCollection _properties;
         
         #endregion
 
@@ -49,10 +46,7 @@ namespace SpikeLite.Configuration
             _hostnameOrIP = new ConfigurationProperty("hostnameOrIP", typeof(string), null, ConfigurationPropertyOptions.IsRequired);
             _port = new ConfigurationProperty("port", typeof(int), null, ConfigurationPropertyOptions.IsRequired);
 
-            _properties = new ConfigurationPropertyCollection();
-
-            _properties.Add(_hostnameOrIP);
-            _properties.Add(_port);
+            _properties = new ConfigurationPropertyCollection {_hostnameOrIP, _port};
         }
     }
 }

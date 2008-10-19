@@ -7,19 +7,19 @@
  */
 using System;
 using SpikeLite.Communications;
-using SpikeLite.AccessControl;
+using SpikeLite.Persistence.Authentication;
 
 namespace SpikeLite.Modules.Puppet
 {
-    [Module("Puppet Module", "NA", "NA", AccessLevel.PermanentAdmin)]
+    [Module("Puppet Module", "NA", "NA", AccessLevel.Root)]
     public class Puppet : ModuleBase
     {
         protected override void InternalHandleRequest(Request request)
         {
-            string[] messageArray = request.Message.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+            string[] messageArray = request.Message.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
 
             if (request.RequestType == RequestType.Private
-                && request.RequestFrom.AccessLevel >= AccessLevel.PermanentAdmin
+                && request.RequestFrom.AccessLevel >= AccessLevel.Root
                 && messageArray[0].Equals("~puppet", StringComparison.OrdinalIgnoreCase)
                 && messageArray.Length >= 4)
             {

@@ -9,7 +9,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
-using SpikeLite.AccessControl;
 using SpikeLite.Communications;
 using SpikeLite.Persistence;
 
@@ -19,12 +18,11 @@ namespace SpikeLite.Modules
     {
         #region Fields
 
-        private AuthenticationModule _authenticationModule;
         protected CommunicationManager _communicationManager;
-        private PersistenceLayer _persistenceLayer;
+        private readonly PersistenceLayer _persistenceLayer;
 
-        private Dictionary<string, ModuleBase> _modulesByName = new Dictionary<string, ModuleBase>();
-        private Dictionary<string, ModuleAttribute> _moduleAttributesByName = new Dictionary<string, ModuleAttribute>();
+        private readonly Dictionary<string, ModuleBase> _modulesByName = new Dictionary<string, ModuleBase>();
+        private readonly Dictionary<string, ModuleAttribute> _moduleAttributesByName = new Dictionary<string, ModuleAttribute>();
         
         #endregion
 
@@ -38,15 +36,14 @@ namespace SpikeLite.Modules
             get { return _moduleAttributesByName; }
         }
 
-        public ModuleManager(CommunicationManager communicationManager, AuthenticationModule authenticationModule, PersistenceLayer persistenceLayer)
+        public ModuleManager(CommunicationManager communicationManager, PersistenceLayer persistenceLayer)
         {
             _communicationManager = communicationManager;
-            _authenticationModule = authenticationModule;
             _persistenceLayer = persistenceLayer;
 
             LoadModules();
 
-            _communicationManager.RequestReceived += new EventHandler<RequestReceivedEventArgs>(communicationManager_RequestReceived);
+            _communicationManager.RequestReceived += communicationManager_RequestReceived;
         }
 
         #region Methods

@@ -19,20 +19,25 @@ namespace SpikeLite.Persistence.Karma
     /// </summary>
     public class KarmaDao
     {
+        public PersistenceLayer Persistence { get; set; }
+
+        public KarmaDao(PersistenceLayer persistenceLayer)
+        {
+            Persistence = persistenceLayer;
+        }
+
         /// <summary>
         /// Attempt to find karma for a given user
         /// </summary>
         /// 
-        /// <param name="persistenceLayer">A persistence layer to search through</param>
-        /// 
         /// <param name="userName">Username to look for</param>
         /// 
         /// <returns>A <see cref="KarmaItem"/> for your username, or null if no curent entries</returns>
-        public static KarmaItem findKarma(PersistenceLayer persistenceLayer, string userName)
+        public KarmaItem findKarma(string userName)
         {
-            ISession sess = persistenceLayer.Session;
+            ISession sess = Persistence.Session;
 
-            ICriteria query = sess.CreateCriteria(typeof(KarmaItem)).Add(Expression.Eq("UserName", userName));
+            ICriteria query = sess.CreateCriteria(typeof(KarmaItem)).Add(Restrictions.Eq("UserName", userName));
             sess.Flush();
 
             IList<KarmaItem> karmaItems = query.List<KarmaItem>();
@@ -44,17 +49,15 @@ namespace SpikeLite.Persistence.Karma
         /// Persist a <see cref="KarmaItem"/>
         /// </summary>
         /// 
-        /// <param name="persistenceLayer">A persistence layer to save to</param>
-        /// 
         /// <param name="karma">Karma item to save</param>
         /// 
         /// <remarks>
         /// This will flush the session after saving.
         /// </remarks>
-        public static void saveKarma(PersistenceLayer persistenceLayer, KarmaItem karma)
+        public void saveKarma(KarmaItem karma)
         {
-            persistenceLayer.Session.Save(karma);
-            persistenceLayer.Session.Flush();
+            Persistence.Session.Save(karma);
+            Persistence.Session.Flush();
         }
     }
 }

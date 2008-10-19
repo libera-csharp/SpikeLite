@@ -6,10 +6,8 @@
  * distributed license.txt for details.
  */
 using SpikeLite.Communications;
-using SpikeLite.Modules.Search.Google;
-using SpikeLite.AccessControl;
-
 using SpikeLite.Modules.Search.com.msn.search.soap;
+using SpikeLite.Persistence.Authentication;
 
 namespace SpikeLite.Modules.Search
 {
@@ -17,7 +15,7 @@ namespace SpikeLite.Modules.Search
     public class LiveSearchModule : ModuleBase
     {
         #region Fields
-        private MSNSearchService msnSearchService;
+        private readonly MSNSearchService msnSearchService;
         #endregion
 
         #region Constructors
@@ -86,23 +84,23 @@ namespace SpikeLite.Modules.Search
 
             try
             {
-                SearchRequest searchRequest = new SearchRequest();
-                searchRequest.AppID = "824DFE4E5A331FA7722AAD794B285DF579598F71";
-                searchRequest.CultureInfo = "en-GB";
-                searchRequest.Query = searchTerms.Trim();
+                SearchRequest searchRequest = new SearchRequest
+                {
+                      AppID = configuration.Licenses["googleSoapApi"].Key,
+                      CultureInfo = "en-GB",
+                      Query = searchTerms.Trim(),
+                      Requests = new SourceRequest[1]
+                };
 
-                searchRequest.Requests = new SourceRequest[1];
-
-                searchRequest.Requests[0] = new SourceRequest();
-                searchRequest.Requests[0].Source = SourceType.Web;
-                searchRequest.Requests[0].ResultFields = ResultFieldMask.Url | ResultFieldMask.Description;
+                searchRequest.Requests[0] = new SourceRequest
+                {
+                    Source = SourceType.Web,
+                    ResultFields = (ResultFieldMask.Url | ResultFieldMask.Description)
+                };
 
                 SearchResponse searchResponse = msnSearchService.Search(searchRequest);
                 
-                if (searchResponse.Responses.Length > 0)
-                    response = request.CreateResponse(ResponseType.Public, "{0}, {1}: {2} | {3}", request.Nick, searchTerms, searchResponse.Responses[0].Results[0].Description, searchResponse.Responses[0].Results[0].Url);
-                else
-                    response = request.CreateResponse(ResponseType.Public, "{0}, {1}: No Results", request.Nick, searchTerms);
+                response = searchResponse.Responses.Length > 0 ? request.CreateResponse(ResponseType.Public, "{0}, {1}: {2} | {3}", request.Nick, searchTerms, searchResponse.Responses[0].Results[0].Description, searchResponse.Responses[0].Results[0].Url) : request.CreateResponse(ResponseType.Public, "{0}, {1}: No Results", request.Nick, searchTerms);
             }
             catch
             {
