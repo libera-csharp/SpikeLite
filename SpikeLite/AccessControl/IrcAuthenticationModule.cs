@@ -46,8 +46,6 @@ namespace SpikeLite.AccessControl
         {
             AccessLevel userLevel = AccessLevel.None;
 
-            // TODO: Kog 10/19/2008 - replace with more niftiness
-
             if (!string.IsNullOrEmpty(cloakMask))
             {
                 foreach (KnownHost cloak in _cloaks)
