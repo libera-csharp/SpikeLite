@@ -3,7 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 10.00
 # Visual Studio 2008
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Dependencies", "Dependencies", "{08241243-632A-4D7C-B5F5-FF90E35B760B}"
 	ProjectSection(SolutionItems) = preProject
-		Dependencies\nunit.framework.dll = Dependencies\nunit.framework.dll
 		Dependencies\NUnitCore.dll = Dependencies\NUnitCore.dll
 		Dependencies\Sharkbite.Thresher.dll = Dependencies\Sharkbite.Thresher.dll
 		Dependencies\System.Data.SQLite.dll = Dependencies\System.Data.SQLite.dll
