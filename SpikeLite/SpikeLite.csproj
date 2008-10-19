@@ -93,6 +93,7 @@
   </Target>
   -->
   <PropertyGroup>
-    <PreBuildEvent>xcopy /y "$(ProjectDir)Databases\*.*"  "$(SolutionDir)FrontEnd_Console\$(OutDir)"</PreBuildEvent>
+    <PreBuildEvent>
+    </PreBuildEvent>
   </PropertyGroup>
 </Project>
