@@ -10,12 +10,11 @@ using System.Reflection;
 using NHibernate;
 using NHibernate.Cfg;
 using NHibernate.Tool.hbm2ddl;
-using System.Data.SQLite;
 using SpikeLite.Persistence.Authentication;
 
 namespace SpikeLite.Persistence
 {
-    // TODO: Kog - 7/25/2008 - inject the name of our config file
+    // TODO: Kog - 7/25/2008 - This sucks. Fix it.
 
     /// <summary>
     /// A factory to get us our persistence information
@@ -40,7 +39,7 @@ namespace SpikeLite.Persistence
             // Create our schema from our mappings, if necessary.
             if (!File.Exists("persistence.s3db"))
             {
-                SQLiteConnection.CreateFile("persistence.s3db");
+                File.Create("persistence.s3db");
                 new SchemaExport(cfg).Execute(true, true, false, false);
 
                 _seed = true;

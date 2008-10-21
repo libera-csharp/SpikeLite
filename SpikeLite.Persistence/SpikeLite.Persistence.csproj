@@ -51,11 +51,11 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>NHibernate\NHibernate.dll</HintPath>
     </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.Data.SQLite, Version=1.0.29.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=x86">
+    <Reference Include="Npgsql, Version=1.0.0.0, Culture=neutral, PublicKeyToken=5d8b90d52f46fda7, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Dependencies\System.Data.SQLite.dll</HintPath>
+      <HintPath>..\Dependencies\Npgsql.dll</HintPath>
     </Reference>
+    <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
   </ItemGroup>
@@ -86,7 +86,7 @@
   </Target>
   -->
   <PropertyGroup>
-    <PostBuildEvent>xcopy /y $(ProjectDir)SQLite\*.* $(SolutionDir)FrontEnd_Console\bin\Debug
+    <PostBuildEvent>xcopy /y $(ProjectDir)PostgreSQL\*.* $(SolutionDir)FrontEnd_Console\bin\Debug
 xcopy /y $(ProjectDir)NHibernate\*.DLL $(SolutionDir)FrontEnd_Console\bin\Debug</PostBuildEvent>
   </PropertyGroup>
 </Project>
