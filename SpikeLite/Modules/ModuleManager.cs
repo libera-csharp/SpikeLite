@@ -11,20 +11,28 @@ using System.IO;
 using System.Reflection;
 using SpikeLite.Communications;
 using SpikeLite.Persistence;
+using log4net;
 
 namespace SpikeLite.Modules
 {
     public class ModuleManager
     {
-        #region Fields
+        #region Data Members
 
         protected CommunicationManager _communicationManager;
         private readonly PersistenceLayer _persistenceLayer;
 
         private readonly Dictionary<string, ModuleBase> _modulesByName = new Dictionary<string, ModuleBase>();
         private readonly Dictionary<string, ModuleAttribute> _moduleAttributesByName = new Dictionary<string, ModuleAttribute>();
+
+        /// <summary>
+        /// This holds a reference to our Log4Net logger.
+        /// </summary>
+        private ILog _logger;
         
         #endregion
+
+        #region Properties
 
         public Dictionary<string, ModuleBase> ModulesByName
         {
@@ -35,6 +43,24 @@ namespace SpikeLite.Modules
         {
             get { return _moduleAttributesByName; }
         }
+
+        /// <summary>
+        /// Gets the Log4NET logger that we're using.
+        /// </summary>
+        public ILog Logger
+        {
+            get
+            {
+                if (_logger == null)
+                {
+                    _logger = LogManager.GetLogger(typeof(ModuleManager));
+                }
+
+                return _logger;
+            }
+        }
+
+        #endregion 
 
         public ModuleManager(CommunicationManager communicationManager, PersistenceLayer persistenceLayer)
         {
@@ -81,8 +107,7 @@ namespace SpikeLite.Modules
                                 _modulesByName.Add(moduleAttribute.Name.ToLower(), module);
                                 _moduleAttributesByName.Add(moduleAttribute.Name.ToLower(), moduleAttribute);
 
-                                Console.ForegroundColor = ConsoleColor.Magenta;
-                                Console.WriteLine("{0} {1} Loaded Module: {2}", DateTime.Now.ToShortDateString(), DateTime.Now.ToLongTimeString(), moduleAttribute.Name);
+                                Logger.DebugFormat("{0} {1} Loaded Module: {2}", DateTime.Now.ToShortDateString(), DateTime.Now.ToLongTimeString(), moduleAttribute.Name);
                             }
                         }
                     }

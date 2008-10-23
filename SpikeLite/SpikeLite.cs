@@ -7,6 +7,7 @@
  */
 using System;
 using System.Threading;
+using log4net;
 using Sharkbite.Irc;
 using SpikeLite.AccessControl;
 using SpikeLite.Communications;
@@ -105,6 +106,11 @@ namespace SpikeLite
         /// </remarks>
         private readonly ConnectionArgs _connectionArgs;
 
+        /// <summary>
+        /// This holds the instace of the logger we use for spamming whatever appender we so desire.
+        /// </summary>
+        private ILog _logger;
+
         #endregion
 
         #region Properties
@@ -119,6 +125,22 @@ namespace SpikeLite
         public bool IsConnected
         {
             get { return _connection != null && _connection.Connected; }
+        }
+
+        /// <summary>
+        /// Gets the Log4NET logger that we're using.
+        /// </summary>
+        public ILog Logger
+        {
+            get
+            {
+                if (_logger == null)
+                {
+                    _logger = LogManager.GetLogger(typeof(SpikeLite));
+                }
+
+                return _logger;
+            }
         }
 
         #endregion
@@ -267,10 +289,9 @@ namespace SpikeLite
         /// <remarks>
         /// The message text will be unformatted, as sent by the IRCD. May be RFC1459 compliant. 
         /// </remarks>
-        private static void OnRawMessageSent(string message)
+        private void OnRawMessageSent(string message)
         {
-            Console.ForegroundColor = ConsoleColor.Blue;
-            Console.WriteLine("{0} {1} Sent: {2}", DateTime.Now.ToShortDateString(), DateTime.Now.ToLongTimeString(), message);
+            Logger.DebugFormat("{0} {1} Sent: {2}", DateTime.Now.ToShortDateString(), DateTime.Now.ToLongTimeString(), message);
         }
 
         /// <summary>
@@ -282,10 +303,9 @@ namespace SpikeLite
         /// <remarks>
         /// The message text will be unformatted, as sent by the IRCD. May be RFC1459 compliant. 
         /// </remarks>
-        private static void OnRawMessageReceived(string message)
+        private void OnRawMessageReceived(string message)
         {
-            Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine("{0} {1} Received: {2}", DateTime.Now.ToShortDateString(), DateTime.Now.ToLongTimeString(), message);
+            Logger.DebugFormat("{0} {1} Received: {2}", DateTime.Now.ToShortDateString(), DateTime.Now.ToLongTimeString(), message);
         }
 
         /// <summary>
@@ -333,8 +353,7 @@ namespace SpikeLite
                 else
                 {
                     // TODO: Kog JUN-05 2008 - do we want to quit here, or what?
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine("{0} {1} AUTHENTICATION FAILURE", DateTime.Now.ToShortDateString(), DateTime.Now.ToLongTimeString());
+                    Logger.InfoFormat("{0} {1} AUTHENTICATION FAILURE", DateTime.Now.ToShortDateString(), DateTime.Now.ToLongTimeString());
                 }
             }
         }
@@ -363,8 +382,7 @@ namespace SpikeLite
 
                     if (!IsConnected)
                     {
-                        Console.ForegroundColor = ConsoleColor.Red;
-                        Console.WriteLine("{0} {1} Failed whilst attempting reconnection attempt #{2}", DateTime.Now.ToShortDateString(), DateTime.Now.ToLongTimeString(), reconnectCount);
+                        Logger.WarnFormat("{0} {1} Failed whilst attempting reconnection attempt #{2}", DateTime.Now.ToShortDateString(), DateTime.Now.ToLongTimeString(), reconnectCount);
 
                         // Because of the do-while we end up with n+1 sleeps... not a big deal, but just remember.
                         Thread.Sleep(60000);

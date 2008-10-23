@@ -25,6 +25,10 @@ namespace FrontEnd_Console
             SpikeLite.SpikeLite bot = (SpikeLite.SpikeLite)ctx.GetObject("SpikeLite");
             bot.Start();
 
+            // We may actually not log to the console past this point, so let's go ahead and spam something
+            // here just in case.
+            Console.WriteLine("We've spun up the bot and are currently logging to our appenders. Hit CTL+C to quit.");
+
             // Handle SIGTERM gracefully
             Console.CancelKeyPress += delegate
             {
