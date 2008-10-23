@@ -4,6 +4,7 @@ Microsoft Visual Studio Solution File, Format Version 10.00
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Dependencies", "Dependencies", "{08241243-632A-4D7C-B5F5-FF90E35B760B}"
 	ProjectSection(SolutionItems) = preProject
 		Dependencies\Sharkbite.Thresher.dll = Dependencies\Sharkbite.Thresher.dll
+		Dependencies\Spring.Core.dll = Dependencies\Spring.Core.dll
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpikeLite", "SpikeLite\SpikeLite.csproj", "{2DB890EF-6D6C-44FD-B607-244CAE1D55F7}"

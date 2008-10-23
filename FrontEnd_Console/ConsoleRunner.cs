@@ -6,6 +6,8 @@
  * distributed license.txt for details.
  */
 using System;
+using Spring.Context;
+using Spring.Context.Support;
 
 namespace FrontEnd_Console
 {
@@ -16,14 +18,18 @@ namespace FrontEnd_Console
     {
         private static void Main()
         {
-            SpikeLite.SpikeLite spikeLite = new SpikeLite.SpikeLite();
-            spikeLite.Start();
+            // Create our application context for Spring.NET.
+            IApplicationContext ctx = ContextRegistry.GetContext();
+
+            // Grab our bean and spin it up.
+            SpikeLite.SpikeLite bot = (SpikeLite.SpikeLite)ctx.GetObject("SpikeLite");
+            bot.Start();
 
             // Handle SIGTERM gracefully
             Console.CancelKeyPress += delegate
             {
-                spikeLite.Shutdown();
-                spikeLite.Quit("Caught SIGTERM, quitting");
+                bot.Shutdown();
+                bot.Quit("Caught SIGTERM, quitting");
             };
         }
     }
