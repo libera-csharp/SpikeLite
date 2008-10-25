@@ -31,7 +31,7 @@ namespace SpikeLite.Modules.Tell
                 {
                     if (i == 1)
                     {
-                        request.Nick = messageArray[i];
+                        request.Addressee = messageArray[i];
                     }
                     else if (i == 2)
                     {

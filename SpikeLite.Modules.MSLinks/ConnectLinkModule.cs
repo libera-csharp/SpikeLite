@@ -19,7 +19,7 @@ namespace SpikeLite.Modules.MSLinks
             if (request.RequestFrom.AccessLevel >= AccessLevel.Public
                 && request.Message.Equals("~connect", StringComparison.OrdinalIgnoreCase))
             {
-                Response response = request.CreateResponse(ResponseType.Public, @"{0}, http://connect.microsoft.com/", request.Nick);
+                Response response = request.CreateResponse(ResponseType.Public, @"{0}, http://connect.microsoft.com/", request.Addressee);
                 ModuleManagementContainer.HandleResponse(response);
             }
         }

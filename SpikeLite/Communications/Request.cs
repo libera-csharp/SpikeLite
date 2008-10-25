@@ -17,58 +17,12 @@ namespace SpikeLite.Communications
 
     public struct Request
     {
-        #region Fields
-    
-        private AuthToken _sender;
-        private string _channel;
-        private string _nick;
-        private RequestType _requestType;
-        private string _message;
-        
-        #endregion
-
-        #region Properties
-        
-        public AuthToken RequestFrom
-        {
-            get { return _sender; }
-            set { _sender = value; } 
-        }
-
-        public string Channel
-        {
-            get { return _channel; }
-            set { _channel = value; } 
-        }
-
-        public string Nick
-        {
-            get { return _nick; }
-            set { _nick = value; }
-        }
-
-        public RequestType RequestType
-        {
-            get { return _requestType; }
-            set { _requestType = value; } 
-        }
-
-        public string Message
-        {
-            get { return _message; }
-            set { _message = value; } 
-        }
-        
-        #endregion
-
-        public Request(AuthToken requestFrom, string channel, string nick, RequestType requestType, string message)
-        {
-            _sender = requestFrom;
-            _channel = channel;
-            _nick = nick;
-            _requestType = requestType;
-            _message = message;
-        }
+        public AuthToken RequestFrom { get; set; }
+        public string Channel { get; set; }
+        public string Nick { get; set; }
+        public RequestType RequestType { get; set; }
+        public string Addressee { get; set; }
+        public string Message { get; set; }
 
         #region CreateResponse
         
@@ -81,7 +35,13 @@ namespace SpikeLite.Communications
         {
             ResponseType responseType = GetResponseType(maxResponse);
 
-            return new Response(_channel, _nick, responseType, message);
+            return new Response()
+            {
+                Channel = Channel,
+                Nick = Nick,
+                ResponseType = responseType,
+                Message = message
+            };
         }
 
         public Response CreateResponse( ResponseType maxResponse, string message, object arg1 )
@@ -108,7 +68,7 @@ namespace SpikeLite.Communications
 
         private ResponseType GetResponseType( ResponseType maxResponse )
         {
-            if (maxResponse == ResponseType.Private || _requestType == RequestType.Private)
+            if (maxResponse == ResponseType.Private || RequestType == RequestType.Private)
             {
                 return ResponseType.Private;
             }

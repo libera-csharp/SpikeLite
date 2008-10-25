@@ -102,7 +102,7 @@ namespace SpikeLite.Modules.Search
         #region PrepareResponse
         protected virtual Response PrepareResponse(string searchTerms, SearchResponse searchResponse, Request request)
         {
-            return searchResponse.Responses[0].Results.Length > 0 ? request.CreateResponse(ResponseType.Public, "{0}, {1} '{2}': {3} | {4}", request.Nick, name, searchTerms, searchResponse.Responses[0].Results[0].Description, searchResponse.Responses[0].Results[0].Url) : request.CreateResponse(ResponseType.Public, "{0}, {1} '{2}': No Results", request.Nick, name, searchTerms);
+            return searchResponse.Responses[0].Results.Length > 0 ? request.CreateResponse(ResponseType.Public, "{0}, {1} '{2}': {3} | {4}", request.Addressee, name, searchTerms, searchResponse.Responses[0].Results[0].Description, searchResponse.Responses[0].Results[0].Url) : request.CreateResponse(ResponseType.Public, "{0}, {1} '{2}': No Results", request.Addressee, name, searchTerms);
         }
         #endregion
 

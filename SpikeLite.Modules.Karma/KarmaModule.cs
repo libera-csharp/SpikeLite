@@ -95,7 +95,7 @@ namespace SpikeLite.Modules.Karma
                     // Make sure the sender isn't messing with their own karma.
                     if (nick.Equals(request.Nick, StringComparison.OrdinalIgnoreCase) && !String.IsNullOrEmpty(op))
                     {
-                        response = request.CreateResponse(ResponseType.Public, string.Format("{0}: toggling your own karma is very uncool.", request.Nick));
+                        response = request.CreateResponse(ResponseType.Public, string.Format("{0}, toggling your own karma is very uncool.", request.Nick));
                         ModuleManagementContainer.HandleResponse(response);
                     }
                     else

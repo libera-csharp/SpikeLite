@@ -137,11 +137,11 @@ namespace SpikeLite.Modules.Search
             {
                 if (e.Result.resultElements.Length > 0)
                 {
-                    response = request.CreateResponse(ResponseType.Public, "{0}, Google '{1}': {2} | {3}", request.Nick, e.Result.searchQuery, e.Result.resultElements[0].title.Replace("<b>", "").Replace(@"</b>", ""), e.Result.resultElements[0].URL);
+                    response = request.CreateResponse(ResponseType.Public, "{0}, Google '{1}': {2} | {3}", request.Addressee, e.Result.searchQuery, e.Result.resultElements[0].title.Replace("<b>", "").Replace(@"</b>", ""), e.Result.resultElements[0].URL);
                 }
                 else
                 {
-                    response = request.CreateResponse(ResponseType.Public, "{0}, Google '{1}': No Results.", request.Nick, e.Result.searchQuery);
+                    response = request.CreateResponse(ResponseType.Public, "{0}, Google '{1}': No Results.", request.Addressee, e.Result.searchQuery);
                 }
             }
             catch
