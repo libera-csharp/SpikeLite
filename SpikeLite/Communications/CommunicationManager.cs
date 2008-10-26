@@ -13,16 +13,11 @@ namespace SpikeLite.Communications
 {
     public class RequestReceivedEventArgs : EventArgs
     {
-        private readonly Request _request;
-
-        public Request Request
-        {
-            get { return _request; }
-        }
+        public Request Request { get; private set; }
 
         public RequestReceivedEventArgs(Request request)
         {
-            _request = request;
+            Request = request;
         }
     }
 
@@ -56,20 +51,18 @@ namespace SpikeLite.Communications
         
         public void SendResponse(Response response)
         {
-            if ( response.Channel == null )
-            {
-                //cannot send a public message in response to a private message
-                //TODO: log that this error occured and was corrected
-            }
-
             if (response.ResponseType == ResponseType.Public)
             {
                 _connection.Sender.PublicMessage(response.Channel, response.Message);
             }
             else if (response.ResponseType == ResponseType.Private)
             {
-                //TODO: check that response.RespondTo is in the same channel as data.NickName
-                //TODO: check that the bot can see the response.RespondTo
+                if (response.Channel == null)
+                {
+                    //cannot send a public message in response to a private message
+                    //TODO: log that this error occured
+                }
+                
                 _connection.Sender.PrivateMessage(response.Nick, response.Message);
             }
             else
@@ -84,7 +77,16 @@ namespace SpikeLite.Communications
         {
             UserToken userToken = _userTokenCache.RetrieveToken(userInfo);
             AuthToken authToken = _authenticationModule.Authenticate(userToken);
-            Request request = new Request(authToken, channel, userInfo.Nick, RequestType.Public, message);
+
+            Request request = new Request()
+            {
+                RequestFrom = authToken,
+                Channel = channel,
+                Nick = userInfo.Nick,
+                RequestType = RequestType.Public,
+                Addressee = userInfo.Nick,
+                Message = message
+            };
 
             OnRequestReceived(request);
         }
@@ -93,7 +95,15 @@ namespace SpikeLite.Communications
         {
             UserToken userToken = _userTokenCache.RetrieveToken(userInfo);
             AuthToken authToken = _authenticationModule.Authenticate(userToken);
-            Request request = new Request(authToken, null, userInfo.Nick, RequestType.Private, message);
+            
+			Request request = new Request()
+            {
+                RequestFrom = authToken,
+                Channel = null,
+                Nick = userInfo.Nick,
+                RequestType = RequestType.Private,
+                Message = message
+            };
 
             OnRequestReceived(request);
         }

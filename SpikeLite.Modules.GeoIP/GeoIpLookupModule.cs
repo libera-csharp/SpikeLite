@@ -72,8 +72,8 @@ namespace SpikeLite.Modules.GeoIP
                 {
                     // If the message format isn't correct, notify the user.
                     ModuleManagementContainer.HandleResponse(request.CreateResponse(
-                                                 GetResponseTypeForRequestType(request.RequestType), 
-                                                 String.Format("{0}: invalid geoip syntax, please try again", request.Nick)));
+                                                 GetResponseTypeForRequestType(request.RequestType),
+                                                 String.Format("{0}, invalid geoip syntax, please try again.", request.Nick)));
                 }
             }
         }
@@ -89,8 +89,8 @@ namespace SpikeLite.Modules.GeoIP
         {
             Request requestContext = (Request)e.UserState;
 
-            string response = string.Format("{0}, the IP {1} maps to the country '{2}', ISO code {3}.", 
-                                            requestContext.Nick,
+            string response = string.Format("{0}, the IP {1} maps to the country '{2}', ISO code {3}.",
+                                            requestContext.Addressee,
                                             e.Result.IP,
                                             e.Result.CountryName,
                                             e.Result.CountryCode);

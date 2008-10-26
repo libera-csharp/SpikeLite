@@ -19,7 +19,7 @@ namespace SpikeLite.Modules.CommunityLinks
             if (request.RequestFrom.AccessLevel >= AccessLevel.Public
                 && request.Message.Equals("~wiki", StringComparison.OrdinalIgnoreCase))
             {
-                Response response = request.CreateResponse(ResponseType.Public, @"{0}, http://www.freenode-csharp.net/wiki/", request.Nick);
+                Response response = request.CreateResponse(ResponseType.Public, @"{0}, http://www.freenode-csharp.net/wiki/", request.Addressee);
                 ModuleManagementContainer.HandleResponse(response);
             }
         }

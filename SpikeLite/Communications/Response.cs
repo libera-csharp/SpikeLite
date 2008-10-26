@@ -16,49 +16,9 @@ namespace SpikeLite.Communications
 
     public struct Response
     {
-        #region Fields
-        
-        private string _channel;
-        private string _nick;
-        private ResponseType _responseType;
-        private string _message;
-        
-        #endregion
-
-        #region Properties
-        
-        public string Channel
-        {
-            get { return _channel; }
-            set { _channel = value; }
-        }
-
-        public string Nick
-        {
-            get { return _nick; }
-            set { _nick = value; }
-        }
-
-        public ResponseType ResponseType
-        {
-            get { return _responseType; }
-            set { _responseType = value; }
-        }
-
-        public string Message
-        {
-            get { return _message; }
-            set { _message = value; }
-        }
-        
-        #endregion
-
-        public Response(string channel, string nick, ResponseType responseType, string message)
-        {
-            _channel = channel;
-            _nick = nick;
-            _responseType = responseType;
-            _message = message;
-        }
+        public string Channel { get; set; }
+        public string Nick { get; set; }
+        public ResponseType ResponseType { get; set; }
+        public string Message { get; set; }
     }
 }
