@@ -30,7 +30,7 @@ namespace SpikeLite.Modules.Search
             Regex regEx = new Regex(@"(\(VS\.\d+\))");
             string url = regEx.Replace(searchResponse.Responses[0].Results[0].Url, string.Empty);
 
-            return searchResponse.Responses[0].Results.Length > 0 ? request.CreateResponse(ResponseType.Public, "{0}, {1} '{2}': {3} | {4}", request.Nick, Name, searchTerms, searchResponse.Responses[0].Results[0].Description, url) : request.CreateResponse(ResponseType.Public, "{0}, {1} '{2}': No Results", request.Nick, Name, searchTerms);
+            return searchResponse.Responses[0].Results.Length > 0 ? request.CreateResponse(ResponseType.Public, "{0}, {1} '{2}': {3} | {4}", request.Addressee, Name, searchTerms, searchResponse.Responses[0].Results[0].Description, url) : request.CreateResponse(ResponseType.Public, "{0}, {1} '{2}': No Results", request.Nick, Name, searchTerms);
         }
         #endregion
 

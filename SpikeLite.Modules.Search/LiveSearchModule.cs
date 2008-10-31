@@ -99,8 +99,8 @@ namespace SpikeLite.Modules.Search
                 };
 
                 SearchResponse searchResponse = msnSearchService.Search(searchRequest);
-                
-                response = searchResponse.Responses.Length > 0 ? request.CreateResponse(ResponseType.Public, "{0}, {1}: {2} | {3}", request.Nick, searchTerms, searchResponse.Responses[0].Results[0].Description, searchResponse.Responses[0].Results[0].Url) : request.CreateResponse(ResponseType.Public, "{0}, {1}: No Results", request.Nick, searchTerms);
+
+                response = searchResponse.Responses.Length > 0 ? request.CreateResponse(ResponseType.Public, "{0}, {1}: {2} | {3}", request.Addressee, searchTerms, searchResponse.Responses[0].Results[0].Description, searchResponse.Responses[0].Results[0].Url) : request.CreateResponse(ResponseType.Public, "{0}, {1}: No Results", request.Nick, searchTerms);
             }
             catch
             {
