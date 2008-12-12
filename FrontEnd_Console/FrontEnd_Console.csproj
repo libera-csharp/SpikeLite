@@ -80,7 +80,5 @@
   <PropertyGroup>
     <PostBuildEvent>
     </PostBuildEvent>
-    <PreBuildEvent>xcopy /y /I "$(SolutionDir)SpikeLite.Persistence\PostgreSQL\*.*" "$(SolutionDir)FrontEnd_Console\bin\Debug"
-xcopy /y /I "$(SolutionDir)SpikeLite.Persistence\*.DLL" "$(SolutionDir)FrontEnd_Console\bin\Debug"</PreBuildEvent>
   </PropertyGroup>
 </Project>
