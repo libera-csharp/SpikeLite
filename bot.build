@@ -11,12 +11,19 @@
 			the other MSBuild task (solution tag) seems to be hardcoded to look
 			for a specific XML attribute...
 
-			Until I can patch the damn thing we're just going to have to exec. This
-		        will require you to have msbuild.exe for 3.5 on your path. Sorry.	
+			Until I can patch the damn thing we're just going to have to exec. By default
+			we use C:\WINDOWS\Microsoft.NET\Framework\v3.5\MSBuild.exe, but you can override
+			it by passing in -D:msbuild.location=c:\newpath\to\msbuild.exe	
 		-->
 
+		<if test="${not property::exists('msbuild.location')}">
+			<property name="msbuild.location" value="C:\WINDOWS\Microsoft.NET\Framework\v3.5\MSBuild.exe" readonly="true" />
+		</if>
+
+
+
 		<!-- exec MSBuild sans arguments -->
-		<exec program="msbuild">
+		<exec program="${msbuild.location}">
 			<arg value="/target:Rebuild"/>
 			<arg value="/p:Configuration=Release"/>
 		</exec>
