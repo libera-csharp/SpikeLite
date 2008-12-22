@@ -20,10 +20,16 @@
 			<property name="msbuild.location" value="C:\WINDOWS\Microsoft.NET\Framework\v3.5\MSBuild.exe" readonly="true" />
 		</if>
 
-		<!-- exec MSBuild sans arguments -->
+		<!-- Build Release quality binary -->
 		<exec program="${msbuild.location}">
 			<arg value="/target:Rebuild"/>
 			<arg value="/p:Configuration=Release"/>
+		</exec>
+
+		<!-- Build Debug quality binary -->
+		<exec program="${msbuild.location}">
+			<arg value="/target:Rebuild"/>
+			<arg value="/p:Configuration=Debug"/>
 		</exec>
 
 		<!-- Zip the Release quality artifacts -->
