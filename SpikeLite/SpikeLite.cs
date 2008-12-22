@@ -291,7 +291,7 @@ namespace SpikeLite
         /// </remarks>
         private void OnRawMessageSent(string message)
         {
-            Logger.DebugFormat("{0} {1} Sent: {2}", DateTime.Now.ToShortDateString(), DateTime.Now.ToLongTimeString(), message);
+            Logger.DebugFormat("Sent: {0}", message);
         }
 
         /// <summary>
@@ -305,7 +305,7 @@ namespace SpikeLite
         /// </remarks>
         private void OnRawMessageReceived(string message)
         {
-            Logger.DebugFormat("{0} {1} Received: {2}", DateTime.Now.ToShortDateString(), DateTime.Now.ToLongTimeString(), message);
+            Logger.DebugFormat("Received: {0}", message);
         }
 
         /// <summary>
@@ -344,16 +344,19 @@ namespace SpikeLite
                          notice.EndsWith("is not registered", StringComparison.OrdinalIgnoreCase))
                     )
                 {
+                    Logger.Info("Handshake completed, joining channels.");
+
                     foreach (ChannelElement channel in _configuration.Networks["FreeNode"].Channels)
                     {
                         _connection.Sender.Join(channel.Name);
+                        Logger.InfoFormat("joining {0}...", channel.Name);
                     }
                 }
                 // log auth failures
                 else
                 {
                     // TODO: Kog JUN-05 2008 - do we want to quit here, or what?
-                    Logger.InfoFormat("{0} {1} AUTHENTICATION FAILURE", DateTime.Now.ToShortDateString(), DateTime.Now.ToLongTimeString());
+                    Logger.Info("AUTHENTICATION FAILURE");
                 }
             }
         }
@@ -382,7 +385,7 @@ namespace SpikeLite
 
                     if (!IsConnected)
                     {
-                        Logger.WarnFormat("{0} {1} Failed whilst attempting reconnection attempt #{2}", DateTime.Now.ToShortDateString(), DateTime.Now.ToLongTimeString(), reconnectCount);
+                        Logger.WarnFormat("Failed whilst attempting reconnection attempt #{0}", reconnectCount);
 
                         // Because of the do-while we end up with n+1 sleeps... not a big deal, but just remember.
                         Thread.Sleep(60000);
