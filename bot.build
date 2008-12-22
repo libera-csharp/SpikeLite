@@ -20,20 +20,26 @@
 			<property name="msbuild.location" value="C:\WINDOWS\Microsoft.NET\Framework\v3.5\MSBuild.exe" readonly="true" />
 		</if>
 
-
-
 		<!-- exec MSBuild sans arguments -->
 		<exec program="${msbuild.location}">
 			<arg value="/target:Rebuild"/>
 			<arg value="/p:Configuration=Release"/>
 		</exec>
 
-		<!-- Zip the artifacts -->
+		<!-- Zip the Release quality artifacts -->
 		<zip zipfile="SpikeLite-Release.zip">
 			<fileset basedir="FrontEnd_Console\bin\Release">
 				<include name="**/*"/>
 			</fileset>
 		</zip>
+
+		<!-- Zip the Debug quality artifacts -->
+		<zip zipfile="SpikeLite-Debug.zip">
+			<fileset basedir="FrontEnd_Console\bin\Debug">
+				<include name="**/*"/>
+			</fileset>
+		</zip>
+
 	</target>
 
 	<target name="clean" description="Clean previously built artifacts">
