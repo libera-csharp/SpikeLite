@@ -8,7 +8,14 @@
   distributed license.txt for details.
 -->
 
+<!-- 
+  This is our generic beans bootstrapper file. We currently don't have much in here. Look to the app.config
+  to see which XML files we're pulling into our application context, each should be labeled. 
+-->
+
 <objects xmlns="http://www.springframework.net">
+  
   <!-- This is our Bot runner, brought in from the SpikeLite assembly. This is what we delegate control to. -->
   <object id="SpikeLite" type="SpikeLite.SpikeLite, SpikeLite"/>
+
 </objects>

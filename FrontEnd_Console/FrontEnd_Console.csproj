@@ -50,6 +50,7 @@
       <HintPath>..\Dependencies\Spring.Core.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.configuration" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ConsoleRunner.cs" />
@@ -65,7 +66,13 @@
     <None Include="app.config" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="beans-nhibernate.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="beans.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="log4net.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
