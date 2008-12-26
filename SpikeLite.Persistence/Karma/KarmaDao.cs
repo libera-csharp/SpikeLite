@@ -8,24 +8,15 @@
 using System.Collections.Generic;
 using NHibernate;
 using NHibernate.Criterion;
+using Spring.Data.NHibernate.Support;
 
 namespace SpikeLite.Persistence.Karma
 {
-    // TODO: Kog - 07/25/2008 - check the need for flushes, see if we can use an interceptor
-    // TODO: Kog - 07/25/2008 - inject our factory, or session into the DAO
-
     /// <summary>
     /// A very light, cheap wrapper around KarmaItems
     /// </summary>
-    public class KarmaDao
+    public class KarmaDao : HibernateDaoSupport, IKarmaDao
     {
-        public PersistenceLayer Persistence { get; set; }
-
-        public KarmaDao(PersistenceLayer persistenceLayer)
-        {
-            Persistence = persistenceLayer;
-        }
-
         /// <summary>
         /// Attempt to find karma for a given user
         /// </summary>
@@ -33,12 +24,12 @@ namespace SpikeLite.Persistence.Karma
         /// <param name="userName">Username to look for</param>
         /// 
         /// <returns>A <see cref="KarmaItem"/> for your username, or null if no curent entries</returns>
-        public KarmaItem findKarma(string userName)
+        public virtual KarmaItem FindKarma(string userName)
         {
-            ISession sess = Persistence.Session;
+            ISession sess = DoGetSession(false);
 
-            ICriteria query = sess.CreateCriteria(typeof(KarmaItem)).Add(Restrictions.Eq("UserName", userName));
-            sess.Flush();
+            ICriteria query = sess.CreateCriteria(typeof(KarmaItem))
+                                .Add(Restrictions.Eq("UserName", userName));
 
             IList<KarmaItem> karmaItems = query.List<KarmaItem>();
 
@@ -54,10 +45,9 @@ namespace SpikeLite.Persistence.Karma
         /// <remarks>
         /// This will flush the session after saving.
         /// </remarks>
-        public void saveKarma(KarmaItem karma)
+        public virtual void SaveKarma(KarmaItem karma)
         {
-            Persistence.Session.Save(karma);
-            Persistence.Session.Flush();
+            DoGetSession(false).SaveOrUpdateCopy(karma);
         }
     }
 }

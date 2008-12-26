@@ -12,41 +12,50 @@ using SpikeLite.Persistence.Authentication;
 
 namespace SpikeLite.Modules.Search
 {
+    /// <summary>
+    /// This class forms the a parent class from which a given site-search module may inherit.
+    /// </summary>
     public abstract class SiteSearchModuleBase : ModuleBase
     {
-        #region Fields
-        private readonly string name;
-        private readonly string command;
-        private readonly string site;
+        /// <summary>
+        /// Holds the name of our search provider, in a pretty-printed format.
+        /// </summary>
+        private readonly string _name;
 
-        private readonly MSNSearchService msnSearchService;
-        #endregion
+        /// <summary>
+        /// Holds the trigger we respond to.
+        /// </summary>
+        private readonly string _command;
 
-        #region Properties
+        /// <summary>
+        /// Holds the actual URL we're searching against.
+        /// </summary>
+        private readonly string _site;
 
-        #region Name
-        protected string Name {  get { return name; } }
-        #endregion
+        /// <summary>
+        /// Holds our default searching proxy.
+        /// </summary>
+        private readonly MSNSearchService _searchProxy;
 
-        #endregion
-
-        #region Constructors
+        /// <summary>
+        /// Gets the name of our search module.
+        /// </summary>
+        protected string Name {  get { return _name; } }
 
         public SiteSearchModuleBase(string name, string command, string site)
         {
-            this.name = name;
-            this.command = command;
-            this.site = site;
+            _name = name;
+            _command = command;
+            _site = site;
 
-            msnSearchService = new MSNSearchService();
+            _searchProxy = new MSNSearchService();
         }
 
-        #endregion
-
-        #region Methods
-
-        #region InternalHandleRequest
-
+        /// <summary>
+        /// Parses incoming messages and tries to create search requests.
+        /// </summary>
+        /// 
+        /// <param name="request">Our incoming message.</param>
         protected override void InternalHandleRequest(Request request)
         {
             if (request.RequestType == RequestType.Public)
@@ -56,7 +65,7 @@ namespace SpikeLite.Modules.Search
                 if (request.Message.StartsWith("~")
                     && request.RequestFrom.AccessLevel >= AccessLevel.Public
                     && messageArray.Length >= 2
-                    && messageArray[0].ToLower() == "~" + command)
+                    && messageArray[0].ToLower() == "~" + _command)
                 {
                     StringBuilder searchTerms = new StringBuilder();
 
@@ -73,7 +82,7 @@ namespace SpikeLite.Modules.Search
                 else if (messageArray[0].ToLower().StartsWith(Configuration.Networks["FreeNode"].BotNickname.ToLower())
                     && request.RequestFrom.AccessLevel >= AccessLevel.Public
                     && messageArray.Length >= 3
-                    && messageArray[1].ToLower() == command)
+                    && messageArray[1].ToLower() == _command)
                 {
                     StringBuilder searchTerms = new StringBuilder();
 
@@ -90,24 +99,47 @@ namespace SpikeLite.Modules.Search
             }
         }
 
-        #endregion
-
-        #region PrepareSearchTerms
+        /// <summary>
+        /// A convenience method, used to sanitize our incoming search terms.
+        /// </summary>
+        /// 
+        /// <param name="searchTerms">A string of search terms to sanitize.</param>
+        /// 
+        /// <returns>A sanizited set of search terms.</returns>
         protected virtual string PrepareSearchTerms(string searchTerms)
         {
             return searchTerms.Trim();
         }
-        #endregion
 
-        #region PrepareResponse
+        /// <summary>
+        /// Attempts to pretty print a response to be sent back to a user.
+        /// </summary>
+        /// 
+        /// <param name="searchTerms">The set of search terms used.</param>
+        /// <param name="searchResponse">Our search hit, if any.</param>
+        /// <param name="request">Our initial message asking us to search, providing context as to who sent it.</param>
+        /// 
+        /// <returns>A response fit to be sent back to our communications manager.</returns>
         protected virtual Response PrepareResponse(string searchTerms, SearchResponse searchResponse, Request request)
         {
-            return searchResponse.Responses[0].Results.Length > 0 ? request.CreateResponse(ResponseType.Public, "{0}, {1} '{2}': {3} | {4}", request.Addressee, name, searchTerms, searchResponse.Responses[0].Results[0].Description, searchResponse.Responses[0].Results[0].Url) : request.CreateResponse(ResponseType.Public, "{0}, {1} '{2}': No Results", request.Addressee, name, searchTerms);
+            return searchResponse.Responses[0].Results.Length > 0 ? request.CreateResponse(ResponseType.Public, "{0}, {1} '{2}': {3} | {4}", 
+                                                                                           request.Addressee, 
+                                                                                           _name, 
+                                                                                           searchTerms, 
+                                                                                           searchResponse.Responses[0].Results[0].Description, 
+                                                                                           searchResponse.Responses[0].Results[0].Url) 
+                                                                   : request.CreateResponse(ResponseType.Public, "{0}, {1} '{2}': No Results", 
+                                                                                            request.Addressee, 
+                                                                                            _name, 
+                                                                                            searchTerms);
         }
-        #endregion
 
-        #region ExecuteSearch
-
+        /// <summary>
+        /// Attempts to execute an async webservices based search using our proxy assigned above. 
+        /// </summary>
+        /// 
+        /// <param name="searchTerms">A (hopefully) sanitized set of terms to search on.</param>
+        /// <param name="request">Our request context.</param>
         private void ExecuteSearch(string searchTerms, Request request)
         {
             Response response;
@@ -116,11 +148,11 @@ namespace SpikeLite.Modules.Search
             {
                 SearchRequest searchRequest = new SearchRequest
                                               {
-                                                  AppID = Configuration.Licenses["liveAppID"].Key,
+                                                  AppID = ApiKey,
                                                   CultureInfo = "en-GB",
                                                   Query =
                                                       (PrepareSearchTerms(searchTerms) +
-                                                       string.Format(" site:{0}", site)),
+                                                       string.Format(" site:{0}", _site)),
                                                   Requests = new SourceRequest[1]
                                               };
 
@@ -130,7 +162,7 @@ namespace SpikeLite.Modules.Search
                                                 ResultFields = (ResultFieldMask.Url | ResultFieldMask.Description)
                                             };
 
-                SearchResponse searchResponse = msnSearchService.Search(searchRequest);
+                SearchResponse searchResponse = _searchProxy.Search(searchRequest);
 
                 response = PrepareResponse(searchTerms, searchResponse, request);
             }
@@ -141,9 +173,5 @@ namespace SpikeLite.Modules.Search
 
             ModuleManagementContainer.HandleResponse(response);
         }
-
-        #endregion        
-        
-        #endregion
     }
 }

@@ -12,7 +12,7 @@ using SpikeLite.Persistence.Authentication;
 namespace SpikeLite.Modules.Puppet
 {
     [Module("Puppet Module", "NA", "NA", AccessLevel.Root)]
-    public class Puppet : ModuleBase
+    public class PuppetModule : ModuleBase
     {
         protected override void InternalHandleRequest(Request request)
         {

@@ -27,18 +27,5 @@ namespace SpikeLite.Modules
         /// on a per-module basis.
         /// </remarks>
         void HandleRequest(Request request);
-
-        /// <summary>
-        /// A Crude hack to allow our module manager to inject an instance of itself and some information about
-        /// the persistence layer.
-        /// </summary>
-        /// 
-        /// <param name="moduleManager">The module manager itself. This allows chaining of modules (for now).</param>
-        /// 
-        /// <param name="persistenceLayer">
-        /// An instance of the <see cref="PersistenceLayer"/>, allowing access to DAOs as well as individual
-        /// entities.
-        /// </param>
-        void InitModule(ModuleManager moduleManager, PersistenceLayer persistenceLayer);
     }
 }

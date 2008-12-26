@@ -33,46 +33,55 @@
   <ItemGroup>
     <Reference Include="Castle.Core, Version=1.0.3.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>NHibernate\Castle.Core.dll</HintPath>
+      <HintPath>..\Dependencies\Castle.Core.dll</HintPath>
     </Reference>
     <Reference Include="Castle.DynamicProxy2, Version=2.0.3.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>NHibernate\Castle.DynamicProxy2.dll</HintPath>
+      <HintPath>..\Dependencies\Castle.DynamicProxy2.dll</HintPath>
     </Reference>
     <Reference Include="Iesi.Collections, Version=1.0.0.3, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>NHibernate\Iesi.Collections.dll</HintPath>
+      <HintPath>..\Dependencies\Iesi.Collections.dll</HintPath>
     </Reference>
     <Reference Include="log4net, Version=1.2.10.0, Culture=neutral, PublicKeyToken=1b44e1d426115821, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>NHibernate\log4net.dll</HintPath>
+      <HintPath>..\Dependencies\log4net.dll</HintPath>
     </Reference>
-    <Reference Include="NHibernate, Version=2.0.0.2002, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
+    <Reference Include="NHibernate, Version=2.0.1.4000, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>NHibernate\NHibernate.dll</HintPath>
+      <HintPath>..\Dependencies\NHibernate.dll</HintPath>
+    </Reference>
+    <Reference Include="Npgsql, Version=2.0.0.0, Culture=neutral, PublicKeyToken=5d8b90d52f46fda7, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>PostgreSQL\Npgsql.dll</HintPath>
+    </Reference>
+    <Reference Include="Spring.Core, Version=1.2.0.20313, Culture=neutral, PublicKeyToken=65e474d141e25e07, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Dependencies\Spring.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Spring.Data, Version=1.2.0.20313, Culture=neutral, PublicKeyToken=65e474d141e25e07, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Dependencies\Spring.Data.dll</HintPath>
+    </Reference>
+    <Reference Include="Spring.Data.NHibernate20, Version=1.2.0.20313, Culture=neutral, PublicKeyToken=65e474d141e25e07, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Dependencies\Spring.Data.NHibernate20.dll</HintPath>
     </Reference>
     <Reference Include="System" />
-    <Reference Include="System.Data.SQLite, Version=1.0.29.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=x86">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Dependencies\System.Data.SQLite.dll</HintPath>
-    </Reference>
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Authentication\IKnownHostDao.cs" />
     <Compile Include="Authentication\KnownHost.cs" />
     <Compile Include="Authentication\KnownHostDao.cs" />
+    <Compile Include="Karma\IKarmaDao.cs" />
     <Compile Include="Karma\KarmaDao.cs" />
     <Compile Include="Karma\KarmaItem.cs" />
-    <Compile Include="PersistenceFactory.cs" />
-    <Compile Include="PersistenceLayer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Karma\SpikeLite.Persistence.Karma.KarmaItem.hbm.xml" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="NHibernate\NHibernateProvider.config" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Authentication\SpikeLite.Persistence.Authentication.Cloak.hbm.xml" />
@@ -86,7 +95,6 @@
   </Target>
   -->
   <PropertyGroup>
-    <PostBuildEvent>xcopy /y /I $(ProjectDir)SQLite\*.* $(SolutionDir)FrontEnd_Console\$(OutDir)
-xcopy /y /I $(ProjectDir)NHibernate\*.DLL $(SolutionDir)FrontEnd_Console\$(OutDir)</PostBuildEvent>
+    <PostBuildEvent>xcopy /y /I "$(ProjectDir)PostgreSQL\*.*" "$(SolutionDir)FrontEnd_Console\$(OutDir)"</PostBuildEvent>
   </PropertyGroup>
 </Project>

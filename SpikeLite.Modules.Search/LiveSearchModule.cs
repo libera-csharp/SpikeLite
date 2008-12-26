@@ -86,7 +86,7 @@ namespace SpikeLite.Modules.Search
             {
                 SearchRequest searchRequest = new SearchRequest
                 {
-                      AppID = base.Configuration.Licenses["liveAppID"].Key,
+                      AppID = ApiKey,
                       CultureInfo = "en-GB",
                       Query = searchTerms.Trim(),
                       Requests = new SourceRequest[1]

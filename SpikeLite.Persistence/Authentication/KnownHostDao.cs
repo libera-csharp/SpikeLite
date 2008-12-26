@@ -7,6 +7,7 @@
  */
 using System.Collections.Generic;
 using NHibernate;
+using Spring.Data.NHibernate.Support;
 
 namespace SpikeLite.Persistence.Authentication
 {
@@ -15,20 +16,8 @@ namespace SpikeLite.Persistence.Authentication
     /// We're not very exciting at present, but then our ORM handles all the CRUD ops that we used to
     /// hand-write.
     /// </summary>
-    public class KnownHostDao
+    public class KnownHostDao : HibernateDaoSupport, IKnownHostDao
     {
-        public PersistenceLayer Persistence { get; set; }
-        
-        /// <summary>
-        /// Creates an instance of our DAO using constructor injection on our persistence layer.
-        /// </summary>
-        /// 
-        /// <param name="persistenceLayer">A persistence layer.</param>
-        public KnownHostDao(PersistenceLayer persistenceLayer)
-        {
-            Persistence = persistenceLayer;
-        }
-
         /// <summary>
         /// Attempt to find all known hosts in our ACL database. 
         /// </summary>
@@ -39,23 +28,32 @@ namespace SpikeLite.Persistence.Authentication
         /// We do not currently use any caching mechanism, and instead make use of an in-memory copy within
         /// our ACL manager. There doesn't seem to be much value in any other strategy.
         /// </remarks>
-        public IEnumerable<KnownHost> FindAll()
+        public virtual IEnumerable<KnownHost> FindAll()
         {
-            ISession sess = Persistence.Session;
+            ISession sess = DoGetSession(false);
 
             ICriteria query = sess.CreateCriteria(typeof(KnownHost));
-            sess.Flush();
+            IList<KnownHost> hostList = query.List<KnownHost>();
 
-            return query.List<KnownHost>();
+            // Yeah, this sucks, we need to get rid of it ASAP.
+            if (hostList.Count < 1)
+            {
+                SeedACLs();
+                hostList = query.List<KnownHost>();
+            }
+
+            return hostList;
         }
 
         /// <summary>
         /// When we do not have a database on hand we call this method to seed some accounts.
         /// </summary>
-        public static void SeedACLs(ISession session)
+        private void SeedACLs()
         {
+            ISession sess = DoGetSession(false);
+
             // Get most of the regulars
-            session.Save(new KnownHost
+            sess.Save(new KnownHost
             {
                  AccessLevel = AccessLevel.Public,
                  HostMatchType = HostMatchType.Start,
@@ -63,7 +61,7 @@ namespace SpikeLite.Persistence.Authentication
             });
 
             // Take care of smippy
-            session.Save(new KnownHost
+            sess.Save(new KnownHost
             {
                 AccessLevel = AccessLevel.Root,
                 HostMatchType = HostMatchType.Start,
@@ -71,7 +69,7 @@ namespace SpikeLite.Persistence.Authentication
             });
 
             // Take care of KoTS
-            session.Save(new KnownHost
+            sess.Save(new KnownHost
             {
                 AccessLevel = AccessLevel.Root,
                 HostMatchType = HostMatchType.Start,
@@ -79,14 +77,20 @@ namespace SpikeLite.Persistence.Authentication
             });
 
             // Take care of Kog
-            session.Save(new KnownHost
+            sess.Save(new KnownHost
             {
                 AccessLevel = AccessLevel.Root,
                 HostMatchType = HostMatchType.Start,
                 HostMask = "about/csharp/regular/Kog"
             });
 
-            session.Flush();
+            // Take care of a test user
+            sess.Save(new KnownHost
+            {
+                AccessLevel = AccessLevel.Root,
+                HostMatchType = HostMatchType.Start,
+                HostMask = "doot.doot"
+            });
         }
     }
 }

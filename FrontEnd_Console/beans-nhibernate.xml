@@ -1,0 +1,82 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+
+<!--
+  SpikeLite C# IRC Bot
+  Copyright (c) 2008 FreeNode ##Csharp Community
+
+  This source is licensed under the terms of the MIT license. Please see the 
+  distributed license.txt for details.
+-->
+
+<!--
+  Sets up our persistence, including mapping our DAOs with their transaction proxies. We've gone with AOP advice based transactions instead
+  of using attribute based transactional support. By default finders get a read only, save operations get a read/write transaction. If you'd
+  like to swap out the strategy, please speak with the contributors first...
+  
+  Lastly, there's a bit of a mess with the configuration options. This should be changed in the next revision, hopefully.
+-->
+
+<objects xmlns="http://www.springframework.net"
+         xmlns:db="http://www.springframework.net/database"
+         xmlns:tx="http://www.springframework.net/tx">
+
+  <!-- Provide our connection string. -->
+  <db:provider id="DbProvider" 
+               provider="Npgsql-2.0" 
+               connectionString="User ID=user;Password=password;Host=127.0.0.1;Port=5432;Database=db;"/>
+
+  <!-- Create a bean for our session factory, which gets injected into all our DAOs. -->
+  <object id="HibernateSessionFactory" type="Spring.Data.NHibernate.LocalSessionFactoryObject, Spring.Data.NHibernate20">
+    <property name="DbProvider" ref="DbProvider"/>
+    <property name="MappingAssemblies">
+      <list>
+        <value>SpikeLite.Persistence</value>
+      </list>
+    </property>
+    <property name="HibernateProperties">
+      <dictionary>
+        <entry key="connection.provider" value="NHibernate.Connection.DriverConnectionProvider"/>
+        <entry key="dialect" value="NHibernate.Dialect.PostgreSQLDialect"/>
+        <entry key="connection.driver_class" value="NHibernate.Driver.NpgsqlDriver"/>
+        <entry key="show_sql" value="false"/>
+        <entry key="hbm2ddl.auto" value="update"/>
+      </dictionary>
+    </property>
+    <property name="ExposeTransactionAwareSessionFactory" value="true" />
+  </object>
+
+  <!-- Wire up our DAOs. -->
+  <object id="KnownHostDaoImpl" type="SpikeLite.Persistence.Authentication.KnownHostDao, SpikeLite.Persistence">
+    <property name="sessionFactory" ref="HibernateSessionFactory"/>
+  </object>
+
+  <object id="KnownHostDao" parent="TxProxyConfigurationTemplate">
+    <property name="Target" ref="KnownHostDaoImpl"/>
+  </object>
+
+  <object id="KarmaDaoImpl" type="SpikeLite.Persistence.Karma.KarmaDao, SpikeLite.Persistence">
+    <property name="sessionFactory" ref="HibernateSessionFactory"/>
+  </object>
+
+  <object id="KarmaDao" parent="TxProxyConfigurationTemplate">
+    <property name="Target" ref="KarmaDaoImpl"/>
+  </object>
+
+  <!-- Create a proxying template we can use to slap transactions on via AOP. -->
+  <object id="TxProxyConfigurationTemplate" abstract="true" type="Spring.Transaction.Interceptor.TransactionProxyFactoryObject, Spring.Data">
+    <property name="PlatformTransactionManager" ref="HibernateTransactionManager"/>
+    <property name="TransactionAttributes">
+      <name-values>
+        <add key="Find*" value="PROPAGATION_REQUIRED,readOnly"/>
+        <add key="Save*" value="PROPAGATION_REQUIRED"/>
+      </name-values>
+    </property>
+  </object>
+
+  <!-- Provide a transaction manager. Each DAO should probably have its own session per convention. -->
+  <object id="HibernateTransactionManager" type="Spring.Data.NHibernate.HibernateTransactionManager, Spring.Data.NHibernate20">
+    <property name="DbProvider" ref="DbProvider"/>
+    <property name="SessionFactory" ref="HibernateSessionFactory"/>
+  </object>
+  
+</objects>

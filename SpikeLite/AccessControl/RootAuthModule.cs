@@ -24,16 +24,11 @@ namespace SpikeLite.AccessControl
     /// </remarks>
     class RootAuthModule : AuthenticationModule
     {
-        private readonly AuthenticationModule _authModule;
-
-        public RootAuthModule(AuthenticationModule authModule)
-        {
-            _authModule = authModule;
-        }
+        public AuthenticationModule AuthModule { get; set; }
 
         public AuthToken Authenticate( UserToken user )
         {
-            return _authModule.Authenticate(user) ?? new AuthToken(this, user, AccessLevel.None);
+            return AuthModule.Authenticate(user) ?? new AuthToken(this, user, AccessLevel.None);
         }
     }
 }

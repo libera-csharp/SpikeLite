@@ -7,6 +7,9 @@
  */
 namespace SpikeLite.AccessControl
 {
+    /// <summary>
+    /// Defines the public contract for a given authentication provider.
+    /// </summary>
     public interface AuthenticationModule
     {
         AuthToken Authenticate( UserToken user );

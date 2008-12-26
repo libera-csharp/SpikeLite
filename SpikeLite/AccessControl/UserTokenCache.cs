@@ -12,23 +12,18 @@ using System.Threading;
 
 namespace SpikeLite.AccessControl
 {
-    //TODO: Handle bot parting / quitting
+    /// <summary>
+    /// Handles caching our user tokens, making lookups on messages received much faster.
+    /// </summary>
     public class UserTokenCache
     {
-        private readonly Connection _client;
         private readonly Dictionary<string, UserToken> _tokens;
         private readonly ReadWriteLock _mutex;
 
-        public UserTokenCache(Connection client)
+        public UserTokenCache()
         {
-            _client = client;
             _tokens = new Dictionary<string,UserToken>();
             _mutex = new ReadWriteLock();
-        }
-
-        public Connection client
-        {
-            get { return _client; }
         }
 
         #region Token Handling

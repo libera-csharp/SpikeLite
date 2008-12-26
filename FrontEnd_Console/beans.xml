@@ -1,0 +1,91 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+
+<!--
+  SpikeLite C# IRC Bot
+  Copyright (c) 2008 FreeNode ##Csharp Community
+
+  This source is licensed under the terms of the MIT license. Please see the 
+  distributed license.txt for details.
+-->
+
+<!-- 
+  This is our generic beans bootstrapper file. We currently don't have much in here. Look to the app.config
+  to see which XML files we're pulling into our application context, each should be labeled. 
+-->
+
+<objects xmlns="http://www.springframework.net">
+  
+  <!-- 
+       This is our Bot runner, brought in from the SpikeLite assembly. This is what we delegate control to. 
+       You probably don't want to change the injected beans either, unless you have a good reason.
+  -->
+  <object id="SpikeLite" type="SpikeLite.SpikeLite, SpikeLite">
+    <property name="ModuleManager" ref="ModuleManager"/>
+    <property name="CommunicationManager" ref="CommunicationManager"/>
+    <property name="AuthenticationManager" ref="DefaultAuthenticationManager"/>
+  </object>
+
+  <!-- 
+      This is our module manager, in charge of keeping track of our modules and who responds to what message. 
+      We make use of the beans-modules to define all the individual modules inserted here.
+  -->
+  <object id="ModuleManager" type="SpikeLite.Modules.ModuleManager, SpikeLite">
+    <constructor-arg index="0" ref="CommunicationManager"/>
+    <property name="Modules">
+      <!-- Sets the list of loaded modules. These should be defined in the beans-modules.xml-->
+      <list element-type="SpikeLite.Modules.IModule, SpikeLite">
+        <ref object="AboutModule"/>
+        <ref object="WikiLinkModule"/>
+        <ref object="GeoipModule"/>
+        <ref object="HelpModule"/>
+        <ref object="KarmaModule"/>
+        <ref object="ConnectLinkModule"/>
+        <ref object="ForumLinkModule"/>
+        <ref object="PuppetModule"/>
+        <ref object="pInvokeModule"/>
+        <ref object="MSDNModule"/>
+        <ref object="PatternsModule"/>
+        <ref object="MSConnectModule"/>
+        <ref object="CodeplexModule"/>
+        <ref object="xkcdModule"/>
+        <ref object="MDocModule"/>
+        <ref object="CodeProjectModule"/>
+        <ref object="MSForumsModule"/>
+        <ref object="GoogleModule"/>
+        <ref object="LiveModule"/>
+        <ref object="DADSModule"/>
+        <ref object="RefactoringModule"/>
+        <ref object="ConnectionStringsModule"/>
+        <ref object="WikipediaModule"/>
+        <ref object="TellModule"/>
+      </list>
+    </property>
+  </object>
+  
+  <!-- Set up some API keys for our search -->
+  <object name="GoogleApiKey" type="String">
+    <constructor-arg index="0" value="NOT CONFIGURED"/>
+  </object>
+
+  <object name="LiveApiKey" type="String">
+    <constructor-arg index="0" value="NOT CONFIGURED"/>
+  </object>
+
+  <!-- 
+       This is our communication manager, responsible for passing messages bettween modules and the outside
+       world.
+  -->
+  <object id="CommunicationManager" type="SpikeLite.Communications.CommunicationManager, SpikeLite">
+    <property name="AuthHandler" ref="DefaultAuthenticationManager"/>
+  </object>
+  
+  <!-- This is our default access manager. -->
+  <object id="DefaultAuthenticationManager" type="SpikeLite.AccessControl.RootAuthModule, SpikeLite">
+    <property name="AuthModule" ref="IrcAuthenticationModule"/>
+  </object>
+
+  <object id="IrcAuthenticationModule" type="SpikeLite.AccessControl.IrcAuthenticationModule, SpikeLite">
+    <constructor-arg index="0" ref="KnownHostDao"/>
+  </object>
+
+</objects>

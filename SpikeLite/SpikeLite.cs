@@ -7,6 +7,7 @@
  */
 using System;
 using System.Threading;
+using log4net;
 using Sharkbite.Irc;
 using SpikeLite.AccessControl;
 using SpikeLite.Communications;
@@ -73,29 +74,6 @@ namespace SpikeLite
         private Connection _connection;
 
         /// <summary>
-        /// Provides an authentication context for users.
-        /// </summary>
-        private AuthenticationModule _authenticationModule;
-
-        /// <summary>
-        /// Applies security policy to message passing. Implements default message security levels.
-        /// See also <see cref="CommunicationManager"/>.
-        /// </summary>
-        private CommunicationManager _communicationManager;
-
-        /// <summary>
-        /// Handles the module loading, unloading and message passing.
-        /// </summary>
-        #pragma warning disable 219
-        private ModuleManager _moduleManager;
-        #pragma warning restore 219
-
-        /// <summary>
-        /// Talks to our various persistence implementations.
-        /// </summary>
-        private readonly PersistenceLayer _persistence;
-
-        /// <summary>
         /// Holds our connection arguments.
         /// </summary>
         /// 
@@ -104,6 +82,11 @@ namespace SpikeLite
         /// We'll need to fix this to make the bot multi-network.
         /// </remarks>
         private readonly ConnectionArgs _connectionArgs;
+
+        /// <summary>
+        /// This holds the instace of the logger we use for spamming whatever appender we so desire.
+        /// </summary>
+        private ILog _logger;
 
         #endregion
 
@@ -121,18 +104,58 @@ namespace SpikeLite
             get { return _connection != null && _connection.Connected; }
         }
 
+        /// <summary>
+        /// Gets the Log4NET logger that we're using.
+        /// </summary>
+        public ILog Logger
+        {
+            get
+            {
+                if (_logger == null)
+                {
+                    _logger = LogManager.GetLogger(typeof(SpikeLite));
+                }
+
+                return _logger;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the authentication module that we're using. This is usually injected via our IoC container..
+        /// </summary>
+        public AuthenticationModule AuthenticationManager
+        {
+            get; set;
+        }
+
+        /// <summary>
+        /// Gets or sets the communications manager we're using. This is usually injected via our IoC container.
+        /// </summary>
+        public CommunicationManager CommunicationManager
+        {
+            get; set;
+        }
+
+        /// <summary>
+        /// Gets or sets our module manager we're using. This is usually injected via our IoC container.
+        /// </summary>
+        public ModuleManager ModuleManager
+        {
+            get; set;
+        }
+
         #endregion
 
         #region Construction
 
+        // TODO: Kog 12/25/2008 - swap this configuration stuff to Spring.NET ASAP.
+
         /// <summary>
-        /// Construct an instance of the SpikeLite engine. Wire up some events, spin up some 
-        /// objects.
+        /// Do some default configuration.
         /// </summary>
         public SpikeLite()
         {
             _configuration = SpikeLiteSection.GetSection();
-            _persistence = PersistenceFactory.getPersistence();
 
             NetworkElement network = _configuration.Networks["FreeNode"];
             ServerElement server = network.Servers[0];
@@ -167,28 +190,20 @@ namespace SpikeLite
             // Attempt to connect.
             Connect();
 
-            // Spin up our managers.
-            _authenticationModule = new RootAuthModule(new IrcAuthenticationModule(_persistence));
-            _communicationManager = new CommunicationManager(_connection, _authenticationModule);
-            _moduleManager = new ModuleManager(_communicationManager, _persistence);
+            CommunicationManager.Connection = _connection;
+            ModuleManager.LoadModules();
 
             // Alright, we're cooking now.
             _botStatus = BotStatus.Started;
         }
+
+        // TODO: Kog 12/25/2008 - Do we really need this?
 
         /// <summary>
         /// Kill all our modules, stop all our IPC.
         /// </summary>    
         public void Shutdown()
         {
-            _botStatus = BotStatus.Stopping;
-
-            // TODO: Kog JUN-05 2008 - why are these null?
-            // TODO: make this do something cool... or at least sync our persistence sessions.
-            _moduleManager = null;
-            _communicationManager = null;
-            _authenticationModule = null;
-
             _botStatus = BotStatus.Stopped;
         }
 
@@ -267,10 +282,9 @@ namespace SpikeLite
         /// <remarks>
         /// The message text will be unformatted, as sent by the IRCD. May be RFC1459 compliant. 
         /// </remarks>
-        private static void OnRawMessageSent(string message)
+        private void OnRawMessageSent(string message)
         {
-            Console.ForegroundColor = ConsoleColor.Blue;
-            Console.WriteLine("{0} {1} Sent: {2}", DateTime.Now.ToShortDateString(), DateTime.Now.ToLongTimeString(), message);
+            Logger.DebugFormat("Sent: {0}", message);
         }
 
         /// <summary>
@@ -282,10 +296,9 @@ namespace SpikeLite
         /// <remarks>
         /// The message text will be unformatted, as sent by the IRCD. May be RFC1459 compliant. 
         /// </remarks>
-        private static void OnRawMessageReceived(string message)
+        private void OnRawMessageReceived(string message)
         {
-            Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine("{0} {1} Received: {2}", DateTime.Now.ToShortDateString(), DateTime.Now.ToLongTimeString(), message);
+            Logger.DebugFormat("Received: {0}", message);
         }
 
         /// <summary>
@@ -324,17 +337,19 @@ namespace SpikeLite
                          notice.EndsWith("is not registered", StringComparison.OrdinalIgnoreCase))
                     )
                 {
+                    Logger.Info("Handshake completed, joining channels.");
+
                     foreach (ChannelElement channel in _configuration.Networks["FreeNode"].Channels)
                     {
                         _connection.Sender.Join(channel.Name);
+                        Logger.InfoFormat("joining {0}...", channel.Name);
                     }
                 }
                 // log auth failures
                 else
                 {
                     // TODO: Kog JUN-05 2008 - do we want to quit here, or what?
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine("{0} {1} AUTHENTICATION FAILURE", DateTime.Now.ToShortDateString(), DateTime.Now.ToLongTimeString());
+                    Logger.Info("AUTHENTICATION FAILURE");
                 }
             }
         }
@@ -363,8 +378,7 @@ namespace SpikeLite
 
                     if (!IsConnected)
                     {
-                        Console.ForegroundColor = ConsoleColor.Red;
-                        Console.WriteLine("{0} {1} Failed whilst attempting reconnection attempt #{2}", DateTime.Now.ToShortDateString(), DateTime.Now.ToLongTimeString(), reconnectCount);
+                        Logger.WarnFormat("Failed whilst attempting reconnection attempt #{0}", reconnectCount);
 
                         // Because of the do-while we end up with n+1 sleeps... not a big deal, but just remember.
                         Thread.Sleep(60000);

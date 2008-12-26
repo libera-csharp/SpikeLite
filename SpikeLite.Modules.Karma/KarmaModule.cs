@@ -33,8 +33,6 @@ namespace SpikeLite.Modules.Karma
     [Module("Karma", "Stores user's Karma", "~karma <NickName>++ to increment a users karma. ~karma <NickName>-- to decrement a users karma. ~karma <NickName> to query a user's karma.", AccessLevel.Public)]
     public class KarmaModule : ModuleBase
     {
-        #region Data Members
-
         /// <summary>
         /// Holds the valid patterns for our karma regex, with some groupings for easy parsing.
         /// </summary>
@@ -46,18 +44,9 @@ namespace SpikeLite.Modules.Karma
         private static readonly Regex _karmaRegex = new Regex(_regexPattern);
 
         /// <summary>
-        /// This stores our Karma DAO that we use for finding/persisting Karma. This takes the place of what
-        /// were previously static methods.
+        /// Allow injection of our Karma DAO.
         /// </summary>
-        private KarmaDao _karmaDao;
-
-        #endregion
-
-        protected override void InternalInitModule() 
-        {
-            // Make sure we construct our Karma DAO for later.
-            _karmaDao = new KarmaDao(Persistence);
-        }
+        public IKarmaDao KarmaDao { get; set; }
 
         /// <summary>
         /// See if we want to digest this message, and if so take action.
@@ -101,7 +90,7 @@ namespace SpikeLite.Modules.Karma
                     else
                     {
                         // Attempt to look the user up.
-                        KarmaItem karma = _karmaDao.findKarma(nick) ?? new KarmaItem {KarmaLevel = 0, UserName = nick};
+                        KarmaItem karma = KarmaDao.FindKarma(nick) ?? new KarmaItem {KarmaLevel = 0, UserName = nick};
 
                         // If they're doing anything more than looking...
                         if (!String.IsNullOrEmpty(op))
@@ -115,7 +104,7 @@ namespace SpikeLite.Modules.Karma
                                 karma.KarmaLevel++;
                             }
 
-                            _karmaDao.saveKarma(karma);
+                            KarmaDao.SaveKarma(karma);
                         }
 
                         response = request.CreateResponse(ResponseType.Public, karma.ToString());
