@@ -95,7 +95,6 @@
   </Target>
   -->
   <PropertyGroup>
-    <PostBuildEvent>xcopy /y /I "$(ProjectDir)PostgreSQL\*.*" "$(SolutionDir)FrontEnd_Console\$(OutDir)"
-xcopy /y /I "$(ProjectDir)NHibernate\*.DLL" "$(SolutionDir)FrontEnd_Console\$(OutDir)"</PostBuildEvent>
+    <PostBuildEvent>xcopy /y /I "$(ProjectDir)PostgreSQL\*.*" "$(SolutionDir)FrontEnd_Console\$(OutDir)"</PostBuildEvent>
   </PropertyGroup>
 </Project>
