@@ -12,11 +12,6 @@ namespace SpikeLite.Modules.Search
     [Module("MSForums", "Search the Microsoft Forums", "~msforums <search terms>", AccessLevel.Public)]
     public class MSForumsSearchModule : SiteSearchModuleBase
     {
-        #region Constructors
-        public MSForumsSearchModule()
-            : base("MSForums", "msforums", "forums.microsoft.com")
-        {
-        }
-        #endregion
+        public MSForumsSearchModule() : base("MSForums", "msforums", "forums.microsoft.com") { }
     }
 }

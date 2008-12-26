@@ -37,7 +37,7 @@ namespace SpikeLite.Modules
         /// <summary>
         /// Gets the Log4NET logger that we're using.
         /// </summary>
-        public ILog Logger
+        protected virtual ILog Logger
         {
             get
             {

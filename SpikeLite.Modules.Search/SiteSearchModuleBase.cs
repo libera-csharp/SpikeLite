@@ -5,6 +5,7 @@
  * This source is licensed under the terms of the MIT license. Please see the 
  * distributed license.txt for details.
  */
+using System;
 using System.Text;
 using SpikeLite.Communications;
 using SpikeLite.Modules.Search.com.msn.search.soap;
@@ -166,9 +167,10 @@ namespace SpikeLite.Modules.Search
 
                 response = PrepareResponse(searchTerms, searchResponse, request);
             }
-            catch
+            catch (Exception ex)
             {
                 response = request.CreateResponse(ResponseType.Public, "{0}, The service is currently b00rked, please try again in a few minutes.", request.Nick);
+                Logger.InfoFormat("Search threw an exception. Nick: {0}, terms: \"{1}\", stack message: {2}", request.Nick, searchTerms, ex.StackTrace);
             }
 
             ModuleManagementContainer.HandleResponse(response);

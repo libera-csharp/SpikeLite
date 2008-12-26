@@ -19,60 +19,51 @@
   <!-- 
        This is the parent for all default search provided algorithms, IE things backed by
        LiveSearch instead of google. Please make sure to mark parent="AbstractLiveSearchModule."
+       
+       This is a prototype scoped bean as it doesn't really need to survive past being used to construct the other
+       modules.
   -->
-  <object id="AbstractLiveSearchModule" abstract="true" type="SpikeLite.Modules.ModuleBase, SpikeLite">
+  <object id="AbstractLiveSearchModule" abstract="true" type="SpikeLite.Modules.ModuleBase, SpikeLite" singleton="false">
     <property name="ApiKey" ref="LiveApiKey"/>
   </object>
   
-  <object id="AboutModule" type="SpikeLite.Modules.About.AboutModule, SpikeLite.Modules.About"/>
-  
-  <object id="WikiLinkModule" type="SpikeLite.Modules.CommunityLinks.WikiLinkModule, SpikeLite.Modules.CommunityLinks"/>
-  
-  <object id="GeoipModule" type="SpikeLite.Modules.GeoIP.GeoIpLookupModule, SpikeLite.Modules.GeoIP"/>
-  
-  <object id="HelpModule" type="SpikeLite.Modules.Help.HelpModule, SpikeLite.Modules.Help"/>
-  
-  <object id="KarmaModule" type="SpikeLite.Modules.Karma.KarmaModule, SpikeLite.Modules.Karma">
-    <property name="KarmaDao" ref="KarmaDao"/>
-  </object>
-  
-  <object id="ConnectLinkModule" type="SpikeLite.Modules.MSLinks.ConnectLinkModule, SpikeLite.Modules.MSLinks"/>
-  
+  <!-- Default search-based modules. -->
   <object id="ForumLinkModule" parent="AbstractLiveSearchModule" type="SpikeLite.Modules.MSLinks.ForumLinkModule, SpikeLite.Modules.MSLinks"/>
-  
-  <object id="PuppetModule" type="SpikeLite.Modules.Puppet.PuppetModule, SpikeLite.Modules.Puppet"/>
-  
   <object id="pInvokeModule" parent="AbstractLiveSearchModule" type="SpikeLite.Modules.Search.PInvokeSearchModule, SpikeLite.Modules.Search"/>
-  
   <object id="MSDNModule" parent="AbstractLiveSearchModule" type="SpikeLite.Modules.Search.MSDNSearchModule, SpikeLite.Modules.Search"/>
-  
   <object id="PatternsModule" parent="AbstractLiveSearchModule" type="SpikeLite.Modules.Search.PatternSearchModule, SpikeLite.Modules.Search"/>
-  
   <object id="MSConnectModule" parent="AbstractLiveSearchModule" type="SpikeLite.Modules.Search.ConnectSearchModule, SpikeLite.Modules.Search"/>
-  
   <object id="CodeplexModule" parent="AbstractLiveSearchModule" type="SpikeLite.Modules.Search.CodeplexSearchModule, SpikeLite.Modules.Search"/>
-  
   <object id="xkcdModule" parent="AbstractLiveSearchModule" type="SpikeLite.Modules.Search.XkcdSearchModule, SpikeLite.Modules.Search"/>
-  
   <object id="MDocModule" parent="AbstractLiveSearchModule" type="SpikeLite.Modules.Search.MDocSearchModule, SpikeLite.Modules.Search"/>
-  
   <object id="CodeProjectModule" parent="AbstractLiveSearchModule" type="SpikeLite.Modules.Search.CodeProjectSearchModule, SpikeLite.Modules.Search"/>
+  <object id="LiveModule" parent="AbstractLiveSearchModule" type="SpikeLite.Modules.Search.LiveSearchModule, SpikeLite.Modules.Search"/>
+  <object id="DADSModule" parent="AbstractLiveSearchModule" type="SpikeLite.Modules.Search.DADSSearchModule, SpikeLite.Modules.Search"/>
+  <object id="RefactoringModule" parent="AbstractLiveSearchModule" type="SpikeLite.Modules.Search.RefactoringSearchModule, SpikeLite.Modules.Search"/>
+  <object id="ConnectionStringsModule" parent="AbstractLiveSearchModule" type="SpikeLite.Modules.Search.ConnectionStringSearchModule, SpikeLite.Modules.Search"/>
+  <object id="WikipediaModule" parent="AbstractLiveSearchModule" type="SpikeLite.Modules.Search.WikipediaSearchModule, SpikeLite.Modules.Search"/>
+  <object id="MSForumsModule" parent="AbstractLiveSearchModule" type="SpikeLite.Modules.Search.MSForumsSearchModule, SpikeLite.Modules.Search"/>
   
-  <object id="MSForumsModule" type="SpikeLite.Modules.Search.MSForumsSearchModule, SpikeLite.Modules.Search"/>
-  
+  <!-- Our non-default search-based modules. -->
   <object id="GoogleModule" type="SpikeLite.Modules.Search.GoogleSearchModule, SpikeLite.Modules.Search">
     <property name="ApiKey" ref="GoogleApiKey"/>
   </object>
-
-  <object id="LiveModule" parent="AbstractLiveSearchModule" type="SpikeLite.Modules.Search.LiveSearchModule, SpikeLite.Modules.Search"/>
   
-  <object id="DADSModule" parent="AbstractLiveSearchModule" type="SpikeLite.Modules.Search.DADSSearchModule, SpikeLite.Modules.Search"/>
-  
-  <object id="RefactoringModule" parent="AbstractLiveSearchModule" type="SpikeLite.Modules.Search.RefactoringSearchModule, SpikeLite.Modules.Search"/>
-  
-  <object id="ConnectionStringsModule" parent="AbstractLiveSearchModule" type="SpikeLite.Modules.Search.ConnectionStringSearchModule, SpikeLite.Modules.Search"/>
-  
-  <object id="WikipediaModule" parent="AbstractLiveSearchModule" type="SpikeLite.Modules.Search.WikipediaSearchModule, SpikeLite.Modules.Search"/>
-  
+  <!-- Infrastructure modules. -->
+  <object id="AboutModule" type="SpikeLite.Modules.About.AboutModule, SpikeLite.Modules.About"/>
+  <object id="HelpModule" type="SpikeLite.Modules.Help.HelpModule, SpikeLite.Modules.Help"/>
+  <object id="PuppetModule" type="SpikeLite.Modules.Puppet.PuppetModule, SpikeLite.Modules.Puppet"/>
   <object id="TellModule" type="SpikeLite.Modules.Tell.TellModule, SpikeLite.Modules.Tell"/>
+  
+  <!-- Modules that wrap thinly veiled webservice calls. -->
+  <object id="GeoipModule" type="SpikeLite.Modules.GeoIP.GeoIpLookupModule, SpikeLite.Modules.GeoIP"/>
+
+  <!-- Database-backed modules.  -->
+  <object id="KarmaModule" type="SpikeLite.Modules.Karma.KarmaModule, SpikeLite.Modules.Karma">
+    <property name="KarmaDao" ref="KarmaDao"/>
+  </object>
+
+  <!-- Static fact modules. -->
+  <object id="WikiLinkModule" type="SpikeLite.Modules.CommunityLinks.WikiLinkModule, SpikeLite.Modules.CommunityLinks"/>
+  <object id="ConnectLinkModule" type="SpikeLite.Modules.MSLinks.ConnectLinkModule, SpikeLite.Modules.MSLinks"/>
 </objects>

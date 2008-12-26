@@ -84,7 +84,7 @@ namespace SpikeLite.Modules
         /// <summary>
         /// Gets the Log4NET logger that we're using.
         /// </summary>
-        public ILog Logger
+        protected virtual ILog Logger
         {
             get
             {
@@ -125,10 +125,7 @@ namespace SpikeLite.Modules
                 _modulesByName.Add(moduleAttributes[0].Name.ToLower(), module);
                 _moduleAttributesByName.Add(moduleAttributes[0].Name.ToLower(), moduleAttributes[0]);
 
-                Logger.DebugFormat("{0} {1} Loaded Module: {2}",
-                                   DateTime.Now.ToShortDateString(),
-                                   DateTime.Now.ToLongTimeString(),
-                                   moduleAttributes[0].Name);
+                Logger.Info(moduleAttributes[0].Name);
             }
         }
 
