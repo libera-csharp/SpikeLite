@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<project name="SharpBot" default="build" basedir=".">
+	<description>FreeNode Csharp Bot</description>
+	
+	<target name="build" description="Build in debug mode" depends="clean">
+		<!-- 
+			GregF 12/11/2008 -
+
+			NAnt itself only recognizes <= 2.0, and the MSBuild task seems
+			to take it's values from the framework version you give it. Further,
+			the other MSBuild task (solution tag) seems to be hardcoded to look
+			for a specific XML attribute...
+
+			Until I can patch the damn thing we're just going to have to exec. By default
+			we use C:\WINDOWS\Microsoft.NET\Framework\v3.5\MSBuild.exe, but you can override
+			it by passing in -D:msbuild.location=c:\newpath\to\msbuild.exe	
+		-->
+
+		<if test="${not property::exists('msbuild.location')}">
+			<property name="msbuild.location" value="C:\WINDOWS\Microsoft.NET\Framework\v3.5\MSBuild.exe" readonly="true" />
+		</if>
+
+
+
+		<!-- exec MSBuild sans arguments -->
+		<exec program="${msbuild.location}">
+			<arg value="/target:Rebuild"/>
+			<arg value="/p:Configuration=Release"/>
+		</exec>
+
+		<!-- Zip the artifacts -->
+		<zip zipfile="SpikeLite-Release.zip">
+			<fileset basedir="FrontEnd_Console\bin\Release">
+				<include name="**/*"/>
+			</fileset>
+		</zip>
+	</target>
+
+	<target name="clean" description="Clean previously built artifacts">
+		<delete dir="frontend_console/bin"/>
+		<delete dir="frontend_console/obj"/>
+		<delete dir="spikelite/bin"/>
+		<delete dir="spikelite/obj"/>
+	</target>
+</project>
