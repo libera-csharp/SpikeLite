@@ -11,22 +11,54 @@ using SpikeLite.Persistence.Authentication;
 
 namespace SpikeLite.AccessControl
 {
+    /// <summary>
+    /// Defines an authentication module that does IRC-based authentication using a set of cloaks or other
+    /// user information.
+    /// </summary>
     class IrcAuthenticationModule : AuthenticationModule
     {
-        private readonly IEnumerable<KnownHost> _cloaks;
-        private readonly KnownHostDao _hostDao;
+        // TODO: Kog 12/25/2008 - Maybe we can use NHibernate's secondary cache for this on the DAO?
 
-        public IrcAuthenticationModule(PersistenceLayer persistenceLayer)
+        /// <summary>
+        /// Cache the set of cloaks we already know about.
+        /// </summary>
+        private readonly IEnumerable<KnownHost> _cloaks;
+
+        /// <summary>
+        /// This stores our known host dao, injected at construction time.
+        /// </summary>
+        private readonly IKnownHostDao _hostDao;
+
+        /// <summary>
+        /// Constructs our authentication module and caches all hosts known to the system at spin-up time.
+        /// </summary>
+        /// 
+        /// <param name="hostDao">An implementation of our host dao, injected into our constructor.</param>
+        public IrcAuthenticationModule(IKnownHostDao hostDao)
         {
-            _hostDao = new KnownHostDao(persistenceLayer);
+            _hostDao = hostDao;
             _cloaks = _hostDao.FindAll();
         }
 
+        /// <summary>
+        /// Attempts to authenticate a given user token.
+        /// </summary>
+        /// 
+        /// <param name="user">A User token passed into us to inspect.</param>
+        /// 
+        /// <returns>An internal representation of any rights and privileges said user token might possess.</returns>
         public AuthToken Authenticate(UserToken user)
         {
             return Authenticate(user as IrcUserToken);
         }
 
+        /// <summary>
+        /// Attempts to authenticate an IRC-based user token.
+        /// </summary>
+        /// 
+        /// <param name="user">An IRC user token.</param>
+        /// 
+        /// <returns>An internal representation of any rights and privileges said user token might possess.</returns>
         public AuthToken Authenticate(IrcUserToken user)
         {
             if (user != null)
@@ -42,15 +74,22 @@ namespace SpikeLite.AccessControl
             return null;
         }
 
-        private AccessLevel ValidateCloak(string cloakMask)
+        /// <summary>
+        /// Attempts to validate a given hostmask against the set of known hosts.
+        /// </summary>
+        /// 
+        /// <param name="hostMask">A hostmask to check to against our cache.</param>
+        /// 
+        /// <returns>An associated access level for the mask, which may be NONE if the mask is unknown.</returns>
+        private AccessLevel ValidateCloak(string hostMask)
         {
             AccessLevel userLevel = AccessLevel.None;
 
-            if (!string.IsNullOrEmpty(cloakMask))
+            if (!string.IsNullOrEmpty(hostMask))
             {
                 foreach (KnownHost cloak in _cloaks)
                 {
-                    if (userLevel < cloak.AccessLevel && cloak.Matches(cloakMask))
+                    if (userLevel < cloak.AccessLevel && cloak.Matches(hostMask))
                     {
                         userLevel = cloak.AccessLevel;
                     }

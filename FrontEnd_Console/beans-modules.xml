@@ -1,0 +1,78 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+
+<!--
+  SpikeLite C# IRC Bot
+  Copyright (c) 2008 FreeNode ##Csharp Community
+
+  This source is licensed under the terms of the MIT license. Please see the 
+  distributed license.txt for details.
+-->
+
+<!--
+  These are the beans defined for our modules. These are later referenced in our beans.xml within our
+  Module Manager bean, so if you're going to override this file by adding or removing a bean, make 
+  sure to modify the manager bean as well.
+-->
+
+<objects xmlns="http://www.springframework.net">
+  
+  <!-- 
+       This is the parent for all default search provided algorithms, IE things backed by
+       LiveSearch instead of google. Please make sure to mark parent="AbstractLiveSearchModule."
+  -->
+  <object id="AbstractLiveSearchModule" abstract="true" type="SpikeLite.Modules.ModuleBase, SpikeLite">
+    <property name="ApiKey" ref="LiveApiKey"/>
+  </object>
+  
+  <object id="AboutModule" type="SpikeLite.Modules.About.AboutModule, SpikeLite.Modules.About"/>
+  
+  <object id="WikiLinkModule" type="SpikeLite.Modules.CommunityLinks.WikiLinkModule, SpikeLite.Modules.CommunityLinks"/>
+  
+  <object id="GeoipModule" type="SpikeLite.Modules.GeoIP.GeoIpLookupModule, SpikeLite.Modules.GeoIP"/>
+  
+  <object id="HelpModule" type="SpikeLite.Modules.Help.HelpModule, SpikeLite.Modules.Help"/>
+  
+  <object id="KarmaModule" type="SpikeLite.Modules.Karma.KarmaModule, SpikeLite.Modules.Karma">
+    <property name="KarmaDao" ref="KarmaDao"/>
+  </object>
+  
+  <object id="ConnectLinkModule" type="SpikeLite.Modules.MSLinks.ConnectLinkModule, SpikeLite.Modules.MSLinks"/>
+  
+  <object id="ForumLinkModule" parent="AbstractLiveSearchModule" type="SpikeLite.Modules.MSLinks.ForumLinkModule, SpikeLite.Modules.MSLinks"/>
+  
+  <object id="PuppetModule" type="SpikeLite.Modules.Puppet.PuppetModule, SpikeLite.Modules.Puppet"/>
+  
+  <object id="pInvokeModule" parent="AbstractLiveSearchModule" type="SpikeLite.Modules.Search.PInvokeSearchModule, SpikeLite.Modules.Search"/>
+  
+  <object id="MSDNModule" parent="AbstractLiveSearchModule" type="SpikeLite.Modules.Search.MSDNSearchModule, SpikeLite.Modules.Search"/>
+  
+  <object id="PatternsModule" parent="AbstractLiveSearchModule" type="SpikeLite.Modules.Search.PatternSearchModule, SpikeLite.Modules.Search"/>
+  
+  <object id="MSConnectModule" parent="AbstractLiveSearchModule" type="SpikeLite.Modules.Search.ConnectSearchModule, SpikeLite.Modules.Search"/>
+  
+  <object id="CodeplexModule" parent="AbstractLiveSearchModule" type="SpikeLite.Modules.Search.CodeplexSearchModule, SpikeLite.Modules.Search"/>
+  
+  <object id="xkcdModule" parent="AbstractLiveSearchModule" type="SpikeLite.Modules.Search.XkcdSearchModule, SpikeLite.Modules.Search"/>
+  
+  <object id="MDocModule" parent="AbstractLiveSearchModule" type="SpikeLite.Modules.Search.MDocSearchModule, SpikeLite.Modules.Search"/>
+  
+  <object id="CodeProjectModule" parent="AbstractLiveSearchModule" type="SpikeLite.Modules.Search.CodeProjectSearchModule, SpikeLite.Modules.Search"/>
+  
+  <object id="MSForumsModule" type="SpikeLite.Modules.Search.MSForumsSearchModule, SpikeLite.Modules.Search"/>
+  
+  <object id="GoogleModule" type="SpikeLite.Modules.Search.GoogleSearchModule, SpikeLite.Modules.Search">
+    <property name="ApiKey" ref="GoogleApiKey"/>
+  </object>
+
+  <object id="LiveModule" parent="AbstractLiveSearchModule" type="SpikeLite.Modules.Search.LiveSearchModule, SpikeLite.Modules.Search"/>
+  
+  <object id="DADSModule" parent="AbstractLiveSearchModule" type="SpikeLite.Modules.Search.DADSSearchModule, SpikeLite.Modules.Search"/>
+  
+  <object id="RefactoringModule" parent="AbstractLiveSearchModule" type="SpikeLite.Modules.Search.RefactoringSearchModule, SpikeLite.Modules.Search"/>
+  
+  <object id="ConnectionStringsModule" parent="AbstractLiveSearchModule" type="SpikeLite.Modules.Search.ConnectionStringSearchModule, SpikeLite.Modules.Search"/>
+  
+  <object id="WikipediaModule" parent="AbstractLiveSearchModule" type="SpikeLite.Modules.Search.WikipediaSearchModule, SpikeLite.Modules.Search"/>
+  
+  <object id="TellModule" type="SpikeLite.Modules.Tell.TellModule, SpikeLite.Modules.Tell"/>
+</objects>

@@ -16,10 +16,6 @@ namespace SpikeLite.Modules
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = true)]
     public class ModuleAttribute : Attribute
     {
-        #region Fields
-
-        #endregion
-
         #region Properties
 
         /// <summary>

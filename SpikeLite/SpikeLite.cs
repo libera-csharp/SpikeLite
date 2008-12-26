@@ -74,29 +74,6 @@ namespace SpikeLite
         private Connection _connection;
 
         /// <summary>
-        /// Provides an authentication context for users.
-        /// </summary>
-        private AuthenticationModule _authenticationModule;
-
-        /// <summary>
-        /// Applies security policy to message passing. Implements default message security levels.
-        /// See also <see cref="CommunicationManager"/>.
-        /// </summary>
-        private CommunicationManager _communicationManager;
-
-        /// <summary>
-        /// Handles the module loading, unloading and message passing.
-        /// </summary>
-        #pragma warning disable 219
-        private ModuleManager _moduleManager;
-        #pragma warning restore 219
-
-        /// <summary>
-        /// Talks to our various persistence implementations.
-        /// </summary>
-        private readonly PersistenceLayer _persistence;
-
-        /// <summary>
         /// Holds our connection arguments.
         /// </summary>
         /// 
@@ -143,18 +120,42 @@ namespace SpikeLite
             }
         }
 
+        /// <summary>
+        /// Gets or sets the authentication module that we're using. This is usually injected via our IoC container..
+        /// </summary>
+        public AuthenticationModule AuthenticationManager
+        {
+            get; set;
+        }
+
+        /// <summary>
+        /// Gets or sets the communications manager we're using. This is usually injected via our IoC container.
+        /// </summary>
+        public CommunicationManager CommunicationManager
+        {
+            get; set;
+        }
+
+        /// <summary>
+        /// Gets or sets our module manager we're using. This is usually injected via our IoC container.
+        /// </summary>
+        public ModuleManager ModuleManager
+        {
+            get; set;
+        }
+
         #endregion
 
         #region Construction
 
+        // TODO: Kog 12/25/2008 - swap this configuration stuff to Spring.NET ASAP.
+
         /// <summary>
-        /// Construct an instance of the SpikeLite engine. Wire up some events, spin up some 
-        /// objects.
+        /// Do some default configuration.
         /// </summary>
         public SpikeLite()
         {
             _configuration = SpikeLiteSection.GetSection();
-            _persistence = PersistenceFactory.getPersistence();
 
             NetworkElement network = _configuration.Networks["FreeNode"];
             ServerElement server = network.Servers[0];
@@ -189,28 +190,20 @@ namespace SpikeLite
             // Attempt to connect.
             Connect();
 
-            // Spin up our managers.
-            _authenticationModule = new RootAuthModule(new IrcAuthenticationModule(_persistence));
-            _communicationManager = new CommunicationManager(_connection, _authenticationModule);
-            _moduleManager = new ModuleManager(_communicationManager, _persistence);
+            CommunicationManager.Connection = _connection;
+            ModuleManager.LoadModules();
 
             // Alright, we're cooking now.
             _botStatus = BotStatus.Started;
         }
+
+        // TODO: Kog 12/25/2008 - Do we really need this?
 
         /// <summary>
         /// Kill all our modules, stop all our IPC.
         /// </summary>    
         public void Shutdown()
         {
-            _botStatus = BotStatus.Stopping;
-
-            // TODO: Kog JUN-05 2008 - why are these null?
-            // TODO: make this do something cool... or at least sync our persistence sessions.
-            _moduleManager = null;
-            _communicationManager = null;
-            _authenticationModule = null;
-
             _botStatus = BotStatus.Stopped;
         }
 

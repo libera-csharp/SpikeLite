@@ -32,6 +32,15 @@
     </filter>
   </appender>
 
+  <!-- A file-based logger for modules. -->
+  <appender name="ModuleFileBasedLogger" type="log4net.Appender.FileAppender">
+    <file value="spikelite-modules.log" />
+    <appendToFile value="false" />
+    <layout type="log4net.Layout.PatternLayout">
+      <conversionPattern value="%date %-5level %logger - %message%newline" />
+    </layout>
+  </appender>
+
   <!-- DEBUG level logs show up in STDOUT, uncolorized.  -->
   <appender name="PlainConsoleAppender" type="log4net.Appender.ConsoleAppender">
     <layout type="log4net.Layout.PatternLayout">
@@ -55,5 +64,15 @@
          on our console though. -->
   <logger name="SpikeLite.SpikeLite">
     <level value="DEBUG" />
+  </logger>
+
+  <logger name="NHibernate">
+    <level value="WARN" />
+  </logger>
+
+  <!-- Shove stuff from our modules and module manager into here.-->
+  <logger name="SpikeLite.Modules.ModuleManager">
+    <level value="DEBUG" />
+    <appender-ref ref="ModuleFileBasedLogger" />
   </logger>
 </log4net>

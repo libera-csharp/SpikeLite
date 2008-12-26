@@ -45,7 +45,11 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Dependencies\log4net.dll</HintPath>
     </Reference>
-    <Reference Include="Spring.Core, Version=1.2.0.20288, Culture=neutral, PublicKeyToken=65e474d141e25e07, processorArchitecture=MSIL">
+    <Reference Include="Spring.Aop, Version=1.2.0.20313, Culture=neutral, PublicKeyToken=65e474d141e25e07, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Dependencies\Spring.Aop.dll</HintPath>
+    </Reference>
+    <Reference Include="Spring.Core, Version=1.2.0.20313, Culture=neutral, PublicKeyToken=65e474d141e25e07, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Dependencies\Spring.Core.dll</HintPath>
     </Reference>
@@ -66,6 +70,9 @@
     <None Include="app.config" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="beans-modules.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="beans-nhibernate.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

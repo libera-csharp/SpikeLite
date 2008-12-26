@@ -50,6 +50,13 @@ namespace SpikeLite.Modules.Search
         /// <param name="request">A request context object. See <see cref="Request"/>.</param>
         protected override void InternalHandleRequest(Request request)
         {
+            // TODO: Kog 12/25/2008 - This is a craptastical hack. We need to redesign the search
+            // hierarchy.
+            if (string.IsNullOrEmpty(_searchBroker.ApiKey))
+            {
+                _searchBroker.ApiKey = ApiKey;
+            }
+
             // TODO: Kog JUN-07 2008 - refactor this to use the new syntax.
             if (request.RequestType == RequestType.Public)
             {

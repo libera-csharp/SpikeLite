@@ -55,24 +55,33 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>PostgreSQL\Npgsql.dll</HintPath>
     </Reference>
+    <Reference Include="Spring.Core, Version=1.2.0.20313, Culture=neutral, PublicKeyToken=65e474d141e25e07, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Dependencies\Spring.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Spring.Data, Version=1.2.0.20313, Culture=neutral, PublicKeyToken=65e474d141e25e07, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Dependencies\Spring.Data.dll</HintPath>
+    </Reference>
+    <Reference Include="Spring.Data.NHibernate20, Version=1.2.0.20313, Culture=neutral, PublicKeyToken=65e474d141e25e07, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Dependencies\Spring.Data.NHibernate20.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Authentication\IKnownHostDao.cs" />
     <Compile Include="Authentication\KnownHost.cs" />
     <Compile Include="Authentication\KnownHostDao.cs" />
+    <Compile Include="Karma\IKarmaDao.cs" />
     <Compile Include="Karma\KarmaDao.cs" />
     <Compile Include="Karma\KarmaItem.cs" />
-    <Compile Include="PersistenceFactory.cs" />
-    <Compile Include="PersistenceLayer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Karma\SpikeLite.Persistence.Karma.KarmaItem.hbm.xml" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="NHibernate\NHibernateProvider.config" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Authentication\SpikeLite.Persistence.Authentication.Cloak.hbm.xml" />

@@ -15,9 +15,6 @@ namespace SpikeLite.Modules.About
     [Module("About", "Provides information about the bot.", "Usage Syntax: ~about", AccessLevel.Public)]
     public class AboutModule : ModuleBase
     {
-        #region Methods
-
-        #region InternalHandleRequest
         protected override void InternalHandleRequest(Request request)
         {
             if (request.RequestFrom.AccessLevel >= AccessLevel.Public
@@ -27,9 +24,7 @@ namespace SpikeLite.Modules.About
                 SendResponse(request);
             }
         }
-        #endregion
 
-        #region SendResponse
         protected void SendResponse(Request request)
         {
             string message = string.Format("{0} (V{1}) is the ##csharp irc bot on freenode.net", Configuration.Networks["FreeNode"].BotNickname, Assembly.GetEntryAssembly().GetName().Version.ToString(2));
@@ -47,8 +42,5 @@ namespace SpikeLite.Modules.About
             response.Message = "But there's no sense crying over every mistake. You just keep on trying till you run out of cake.";
             ModuleManagementContainer.HandleResponse(response);
         }
-        #endregion
-
-        #endregion
     }
 }

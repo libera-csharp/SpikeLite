@@ -15,33 +15,70 @@ using log4net;
 
 namespace SpikeLite.Modules
 {
+    /// <summary>
+    /// This class manages the loading and unloading of modules, as well as connecting a given module to
+    /// the communications manager, acting as a dispatcher on messages received.
+    /// </summary>
     public class ModuleManager
     {
         #region Data Members
 
-        protected CommunicationManager _communicationManager;
-        private readonly PersistenceLayer _persistenceLayer;
+        // TODO: Kog 12/25/2008 - We can probably get rid of the dispatching via Spring and via either AOP or
+        // via injecting our communications manager. Or perhaps using the Spring decoupled events.
 
+        /// <summary>
+        /// This stores our communications manager, which we intercept messages from.
+        /// </summary>
+        protected CommunicationManager _communicationManager;
+
+        /// <summary>
+        /// Maps the set of modules by name. This allows us to be able to pull out modules in request chaining.
+        /// </summary>
         private readonly Dictionary<string, ModuleBase> _modulesByName = new Dictionary<string, ModuleBase>();
+
+        // TODO: Kog 12/25/2008 - this can probably be done at the IoC container level...
+
+        /// <summary>
+        /// Maps the set of module attributes by name. This allows for easy lookup in our help module.
+        /// </summary>
         private readonly Dictionary<string, ModuleAttribute> _moduleAttributesByName = new Dictionary<string, ModuleAttribute>();
 
         /// <summary>
         /// This holds a reference to our Log4Net logger.
         /// </summary>
         private ILog _logger;
-        
-        #endregion
+
+        #endregion 
 
         #region Properties
 
+        // TODO: Kog 12/25/2008 - Get rid of this ASAP.
+
+        /// <summary>
+        /// Passes a dictionary of our modules and their names to a given caller.
+        /// </summary>
         public Dictionary<string, ModuleBase> ModulesByName
         {
             get { return _modulesByName; }
         }
-        
+
+        // TODO: Kog 12/25/2008 - Get rid of this ASAP.
+
+        /// <summary>
+        /// Passes a dictionary of our module attributes and their module names to a given caller.
+        /// </summary>
         public Dictionary<string, ModuleAttribute> ModuleAttributesByName
         {
             get { return _moduleAttributesByName; }
+        }
+
+        /// <summary>
+        /// This allows us to inject our list of modules via spring.
+        /// </summary>
+        public IList<IModule> Modules
+        {
+            get; 
+            set;
         }
 
         /// <summary>
@@ -62,13 +99,14 @@ namespace SpikeLite.Modules
 
         #endregion 
 
-        public ModuleManager(CommunicationManager communicationManager, PersistenceLayer persistenceLayer)
+        /// <summary>
+        /// Spin up our module manager and start intercepting events.
+        /// </summary>
+        /// 
+        /// <param name="communicationManager">Our communication manager.</param>
+        public ModuleManager(CommunicationManager communicationManager)
         {
             _communicationManager = communicationManager;
-            _persistenceLayer = persistenceLayer;
-
-            LoadModules();
-
             _communicationManager.RequestReceived += communicationManager_RequestReceived;
         }
 
@@ -76,44 +114,21 @@ namespace SpikeLite.Modules
 
         #region LoadModules
 
-        private void LoadModules()
+        public void LoadModules()
         {
-            //TODO AJ: This needs changing to use Spring.Net and IoC. For now we're just manually loading the modules.
-
-            //AJ: All modules must currently reside in the root directory of the app.
-            string directory = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
-
-            //AJ: Loading all files in the directory is very inefficient, this could be improved by giving the modules a unique
-            //AJ: file extension and only loading those files. But there's not much point since this code will be scrapped anyway.
-            foreach (string file in Directory.GetFiles(directory))
+            // TODO: Kog 12/25/2008 - if it weren't already 0700 in the morning I'd fix this... get to it next commit.
+            foreach (ModuleBase module in Modules)
             {
-                try
-                {
-                    Assembly assembly = Assembly.LoadFrom(file);
+                module.ModuleManagementContainer = this;
+                ModuleAttribute[] moduleAttributes = (ModuleAttribute[])(module.GetType()).GetCustomAttributes(typeof(ModuleAttribute), false);
 
-                    foreach (Type loadedType in assembly.GetTypes())
-                    {
-                        if (!loadedType.IsAbstract && loadedType.IsSubclassOf(typeof(ModuleBase)))
-                        {
-                            ModuleAttribute[] moduleAttributes = (ModuleAttribute[])loadedType.GetCustomAttributes(typeof(ModuleAttribute), false);
+                _modulesByName.Add(moduleAttributes[0].Name.ToLower(), module);
+                _moduleAttributesByName.Add(moduleAttributes[0].Name.ToLower(), moduleAttributes[0]);
 
-                            if (moduleAttributes.Length == 1)
-                            {
-                                ModuleAttribute moduleAttribute = moduleAttributes[0];
-                                ModuleBase module = (ModuleBase)Activator.CreateInstance(loadedType);
-
-                                module.InitModule(this, _persistenceLayer);
-
-                                _modulesByName.Add(moduleAttribute.Name.ToLower(), module);
-                                _moduleAttributesByName.Add(moduleAttribute.Name.ToLower(), moduleAttribute);
-
-                                Logger.DebugFormat("{0} {1} Loaded Module: {2}", DateTime.Now.ToShortDateString(), DateTime.Now.ToLongTimeString(), moduleAttribute.Name);
-                            }
-                        }
-                    }
-                }
-                //AJ: Swallowing exceptions is bad mmmmkay <insert usual excuse about temp code here>
-                catch { }
+                Logger.DebugFormat("{0} {1} Loaded Module: {2}",
+                                   DateTime.Now.ToShortDateString(),
+                                   DateTime.Now.ToLongTimeString(),
+                                   moduleAttributes[0].Name);
             }
         }
 
@@ -123,7 +138,7 @@ namespace SpikeLite.Modules
         {
             //TODO AJ:Add Chain of Responsability for command modules to allow for better message handling
             //TODO AJ:Once CoR has been added the include a dictionary of the first level of modules to make lookup faster
-            //TODO AJ:and stop messages being passed to modules that arn't interested.
+            //TODO AJ:and stop messages being passed to modules that aren't interested.
 
             //AJ: Forward the Request to each Module
             foreach (ModuleBase module in _modulesByName.Values)
@@ -134,7 +149,6 @@ namespace SpikeLite.Modules
 
         public void HandleResponse(Response response)
         {
-            //AJ: Forward the Response to the Communications Manager 
             _communicationManager.SendResponse(response);
         }
 

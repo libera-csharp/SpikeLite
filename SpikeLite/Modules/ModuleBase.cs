@@ -8,40 +8,57 @@
 using SpikeLite.Communications;
 using SpikeLite.Persistence;
 using SpikeLite.Configuration;
+using log4net;
 
 namespace SpikeLite.Modules
 {
+    /// <summary>
+    /// An abstract implementation of things that a module might do. We have some lovely wiring in here,
+    /// some registration with our module manager (yes, it's still a little coupled) and some virtual points
+    /// for being overridden down the line.
+    /// </summary>
     public abstract class ModuleBase : IModule
     {
-        #region Fields
-
         /// <summary>
         /// Contains a reference to our configuration container. This is handed to us at load time.
         /// </summary>
         private readonly SpikeLiteSection _configuration;
 
         /// <summary>
-        /// Contains a reference to our persistence layer.
+        /// Holds our log4net logger.
         /// </summary>
-        /// 
-        /// <remarks>
-        /// Kog - 10/19/2008: this sucks and we definitely need to get rid of it.
-        /// </remarks>
-        private PersistenceLayer _persistenceLayer;
+        private ILog _logger;
 
         /// <summary>
-        /// Contains a reference to the module manager that holds us. This allows us to pass messages
-        /// back to the bot.
+        /// This property exposes the module container to implementations of this module.
         /// </summary>
-        /// 
-        /// <remarks>
-        /// Kog - 10/19/2008: this mechanism needs refactoring.
-        /// </remarks>
-        private ModuleManager _moduleManager;
+        public ModuleManager ModuleManagementContainer { get; set; }
 
-        #endregion
+        /// <summary>
+        /// Gets the Log4NET logger that we're using.
+        /// </summary>
+        public ILog Logger
+        {
+            get
+            {
+                if (_logger == null)
+                {
+                    _logger = LogManager.GetLogger(typeof(ModuleBase));
+                }
 
-        #region Properties
+                return _logger;
+            }
+        }
+
+        // TODO: Kog 12/25/2008 replace this with inheritence - have a "licensed module" or something.
+
+        /// <summary>
+        /// Gets or sets an optional API or license key that a module may require.
+        /// </summary>
+        public virtual string ApiKey
+        {
+            get; set;
+        }
 
         /// <summary>
         /// This exposes the configuration container to implementations of this module. This property
@@ -52,42 +69,9 @@ namespace SpikeLite.Modules
             get { return _configuration; }
         }
 
-        /// <summary>
-        /// This exposes the persistence layer to implementations of this module. This property is immutable.
-        /// </summary>
-        protected virtual PersistenceLayer Persistence
-        {
-            get { return _persistenceLayer; }
-        }
-
-        /// <summary>
-        /// This property exposes the module container to implementations of this module. This property is immutable.
-        /// </summary>
-        protected virtual ModuleManager ModuleManagementContainer
-        {
-            get { return _moduleManager; }
-        }
-
-        #endregion
-
-        protected ModuleBase()
+        protected ModuleBase() 
         {
             _configuration = SpikeLiteSection.GetSection();
-        }
-
-        /// <summary>
-        /// Spin the module up. We take care of some some wiring here, and then call InternalInitModule. This
-        /// method is not virtual as you are expected to override the internal variety.
-        /// </summary>
-        /// 
-        /// <param name="moduleManager">Our module container.</param>
-        /// <param name="persistenceLayer">Our persistence layer.</param>
-        public void InitModule(ModuleManager moduleManager, PersistenceLayer persistenceLayer)
-        {
-            _persistenceLayer = persistenceLayer;
-            _moduleManager = moduleManager;
-
-            InternalInitModule();
         }
 
         /// <summary>
@@ -106,8 +90,6 @@ namespace SpikeLite.Modules
             InternalHandleRequest(request);
         }
 
-        #region Internal Implementation Details
-
         /// <summary>
         /// Provide a method that modules can implement and has the wiring already done by HandleRequest.
         /// </summary>
@@ -121,18 +103,5 @@ namespace SpikeLite.Modules
         /// may come when we hook up AOP (then we'll expect a 1:1 between message and consumer, sans advice points).
         /// </remarks>
         protected abstract void InternalHandleRequest(Request request);
-
-        /// <summary>
-        /// Provide a default no-op method that gets called when we init the module. This allows us to do things
-        /// like wire up DAOs since we have no IoC container at the moment.
-        /// </summary>
-        /// 
-        /// <remarks>
-        /// This can most likely be replaced with an event if we so desire, as can many of the other methods
-        /// in this class.
-        /// </remarks>
-        protected virtual void InternalInitModule() { }
-
-        #endregion 
     }
 }

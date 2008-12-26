@@ -14,8 +14,6 @@ namespace SpikeLite.Configuration
         #region Static Fields
 
         private static readonly ConfigurationProperty _networks;
-        private static readonly ConfigurationProperty _licenses;
-
         private static readonly ConfigurationPropertyCollection _properties;
 
         private static SpikeLiteSection _section;
@@ -30,12 +28,6 @@ namespace SpikeLite.Configuration
             get { return (NetworkElementCollection)base[_networks]; }
         }
 
-        [ConfigurationProperty("licenses", IsRequired = true)]
-        public LicenseElementCollection Licenses
-        {
-            get { return (LicenseElementCollection)base[_licenses]; }
-        }
-
         protected override ConfigurationPropertyCollection Properties
         {
             get { return _properties; }
@@ -46,9 +38,7 @@ namespace SpikeLite.Configuration
         static SpikeLiteSection()
         {
             _networks = new ConfigurationProperty("networks", typeof(NetworkElementCollection), null, ConfigurationPropertyOptions.IsRequired);
-            _licenses = new ConfigurationProperty("licenses", typeof(LicenseElementCollection), null, ConfigurationPropertyOptions.IsRequired);
-
-            _properties = new ConfigurationPropertyCollection {_networks, _licenses};
+            _properties = new ConfigurationPropertyCollection {_networks};
         }
 
         #region GetSection Pattern

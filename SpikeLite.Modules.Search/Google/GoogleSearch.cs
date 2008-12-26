@@ -16,8 +16,6 @@ namespace SpikeLite.Modules.Search.Google
     /// </summary>
     public class GoogleSearch
     {
-        #region Data Members
-
         /// <summary>
         /// Provides access to the Bot's configuration 
         /// </summary>
@@ -28,10 +26,6 @@ namespace SpikeLite.Modules.Search.Google
         /// </summary>
         private readonly GoogleSearchService _googleSearchService;
 
-        #endregion
-
-        #region Properties
-
         /// <summary>
         /// Allows registration of callbacks to be called upon search completion.
         /// </summary>
@@ -41,7 +35,17 @@ namespace SpikeLite.Modules.Search.Google
             remove { _googleSearchService.doGoogleSearchCompleted -= value; }
         }
 
-        #endregion
+        /// <summary>
+        /// Gets or sets our Google API key.
+        /// </summary>
+        /// 
+        /// <remarks>
+        /// We need to redesign the search hierarchy, this isn't a very good strategy.
+        /// </remarks>
+        public string ApiKey
+        {
+            get; set;
+        }
 
         #region Constructors
 
@@ -50,7 +54,6 @@ namespace SpikeLite.Modules.Search.Google
         /// </summary>
         public GoogleSearch()
         {
-            configuration = SpikeLiteSection.GetSection();
             _googleSearchService = new GoogleSearchService();
         }
 
@@ -72,7 +75,7 @@ namespace SpikeLite.Modules.Search.Google
         {
             _googleSearchService.doGoogleSearchAsync
             (
-                configuration.Licenses["googleSoapApi"].Key,
+                ApiKey,
                 searchTerms,
                 0,
                 1,
