@@ -125,6 +125,10 @@ namespace SpikeLite.Modules
                 _modulesByName.Add(moduleAttributes[0].Name.ToLower(), module);
                 _moduleAttributesByName.Add(moduleAttributes[0].Name.ToLower(), moduleAttributes[0]);
 
+                // TODO: Kog 12/26/2008 - Yeah, the network support is hacked in to only support a single
+                // TODO:                  network. We can't support multiples right now anyway, it's a TODO.
+                module.NetworkConnectionInformation = _communicationManager.NetworkList[0];
+
                 Logger.Info(moduleAttributes[0].Name);
             }
         }

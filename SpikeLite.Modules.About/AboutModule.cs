@@ -27,7 +27,9 @@ namespace SpikeLite.Modules.About
 
         protected void SendResponse(Request request)
         {
-            string message = string.Format("{0} (V{1}) is the ##csharp irc bot on freenode.net", Configuration.Networks["FreeNode"].BotNickname, Assembly.GetEntryAssembly().GetName().Version.ToString(2));
+            string message = string.Format("{0} (V{1}) is the ##csharp irc bot on freenode.net", 
+                                           NetworkConnectionInformation.BotNickname, 
+                                           Assembly.GetEntryAssembly().GetName().Version.ToString(2));
             Response response = request.CreateResponse(ResponseType.Private, message);
             ModuleManagementContainer.HandleResponse(response);
 

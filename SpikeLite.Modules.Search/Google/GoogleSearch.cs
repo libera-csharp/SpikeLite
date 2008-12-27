@@ -7,7 +7,6 @@
  */
 using SpikeLite.Modules.Search.com.google.api;
 using SpikeLite.Communications;
-using SpikeLite.Configuration;
 
 namespace SpikeLite.Modules.Search.Google
 {
@@ -16,11 +15,6 @@ namespace SpikeLite.Modules.Search.Google
     /// </summary>
     public class GoogleSearch
     {
-        /// <summary>
-        /// Provides access to the Bot's configuration 
-        /// </summary>
-        private readonly SpikeLiteSection configuration;
-
         /// <summary>
         /// Holds the reference to the actual WS proxy.
         /// </summary>

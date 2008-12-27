@@ -13,7 +13,8 @@ using SpikeLite.AccessControl;
 using SpikeLite.Communications;
 using SpikeLite.Modules;
 using SpikeLite.Persistence;
-using SpikeLite.Configuration;
+using SpikeLite.Communications.IRC;
+using System.Collections.Generic;
 
 namespace SpikeLite
 {
@@ -59,11 +60,6 @@ namespace SpikeLite
         #region Data Members
 
         /// <summary>
-        /// Provides access to the Bot's configuration 
-        /// </summary>
-        private readonly SpikeLiteSection _configuration;
-
-        /// <summary>
         /// Stores the bot's connection status. 
         /// </summary>
         private BotStatus _botStatus = BotStatus.Stopped;
@@ -81,7 +77,7 @@ namespace SpikeLite
         /// This is partially a hack to get around the behavior described in the remarks for <see cref="Connect"/>.
         /// We'll need to fix this to make the bot multi-network.
         /// </remarks>
-        private readonly ConnectionArgs _connectionArgs;
+        private ConnectionArgs _connectionArgs;
 
         /// <summary>
         /// This holds the instace of the logger we use for spamming whatever appender we so desire.
@@ -105,6 +101,33 @@ namespace SpikeLite
         }
 
         /// <summary>
+        /// Gets or sets the authentication module that we're using. This is usually injected via our IoC container.
+        /// This must not be null.
+        /// </summary>
+        public AuthenticationModule AuthenticationManager
+        {
+            get; set;
+        }
+
+        /// <summary>
+        /// Gets or sets the communications manager we're using. This is usually injected via our IoC container. This
+        /// must not be null.
+        /// </summary>
+        public CommunicationManager CommunicationManager
+        {
+            get; set;
+        }
+
+        /// <summary>
+        /// Gets or sets our module manager we're using. This is usually injected via our IoC container. This
+        /// must not be null.
+        /// </summary>
+        public ModuleManager ModuleManager
+        {
+            get; set;
+        }
+
+        /// <summary>
         /// Gets the Log4NET logger that we're using.
         /// </summary>
         protected virtual ILog Logger
@@ -120,57 +143,7 @@ namespace SpikeLite
             }
         }
 
-        /// <summary>
-        /// Gets or sets the authentication module that we're using. This is usually injected via our IoC container..
-        /// </summary>
-        public AuthenticationModule AuthenticationManager
-        {
-            get; set;
-        }
-
-        /// <summary>
-        /// Gets or sets the communications manager we're using. This is usually injected via our IoC container.
-        /// </summary>
-        public CommunicationManager CommunicationManager
-        {
-            get; set;
-        }
-
-        /// <summary>
-        /// Gets or sets our module manager we're using. This is usually injected via our IoC container.
-        /// </summary>
-        public ModuleManager ModuleManager
-        {
-            get; set;
-        }
-
         #endregion
-
-        #region Construction
-
-        // TODO: Kog 12/25/2008 - swap this configuration stuff to Spring.NET ASAP.
-
-        /// <summary>
-        /// Do some default configuration.
-        /// </summary>
-        public SpikeLite()
-        {
-            _configuration = SpikeLiteSection.GetSection();
-
-            NetworkElement network = _configuration.Networks["FreeNode"];
-            ServerElement server = network.Servers[0];
-            
-            _connectionArgs = new ConnectionArgs
-            {
-                Hostname = server.HostnameOrIP,
-                Nick = network.BotNickname,
-                Port = server.Port,
-                RealName = network.BotRealName,
-                UserName = network.BotUserName
-            };
-        }
-
-        #endregion 
 
         #region Public Behavior
 
@@ -179,6 +152,22 @@ namespace SpikeLite
         /// </summary>
         public void Start()
         {
+            // TODO: Kog 12/26/2008 - Yeah, the network support is hacked in to only support a single
+            // TODO:                  network. We can't support multiples right now anyway, it's a TODO.
+            Network network = CommunicationManager.NetworkList[0];
+
+            // TODO: Kog 12/26/2008 - We need to support the list of things outlined in the Server class docs.
+            Server server = network.ServerList[0];
+
+            _connectionArgs = new ConnectionArgs
+            {
+                Hostname = server.Host,
+                Nick = network.BotNickname,
+                Port = server.Port ?? 6667,
+                RealName = network.BotRealname,
+                UserName = network.BotUsername
+            };
+
             // Make sure we're not trying to double start.
             if (_botStatus != BotStatus.Stopped)
             {
@@ -312,7 +301,9 @@ namespace SpikeLite
         /// </remarks>
         private void OnRegister()
         {
-            _connection.Sender.PrivateMessage("nickserv", String.Format("identify {0}", _configuration.Networks["FreeNode"].NickServPassword));
+            // TODO: Kog 12/26/2008 - Yeah, the network support is hacked in to only support a single
+            // TODO:                  network. We can't support multiples right now anyway, it's a TODO.
+            _connection.Sender.PrivateMessage("nickserv", String.Format("identify {0}", CommunicationManager.NetworkList[0].AccountPassword));
         }
 
         /// <summary>
@@ -339,8 +330,11 @@ namespace SpikeLite
                 {
                     Logger.Info("Handshake completed, joining channels.");
 
-                    foreach (ChannelElement channel in _configuration.Networks["FreeNode"].Channels)
+                    // TODO: Kog 12/26/2008 - Yeah, the network support is hacked in to only support a single
+                    // TODO:                  network. We can't support multiples right now anyway, it's a TODO.
+                    foreach (Channel channel in CommunicationManager.NetworkList[0].ServerList[0].ChannelList)
                     {
+                        // TODO: Kog 12/26/2008 - We need to support the API listed in the channel class docs.
                         _connection.Sender.Join(channel.Name);
                         Logger.InfoFormat("joining {0}...", channel.Name);
                     }
@@ -363,6 +357,9 @@ namespace SpikeLite
         /// </remarks>
         private void Listener_OnDisconnect()
         {
+            // TODO: Kog 12/26/2008 - Rewrite this to work better with multiple networks, and with the implementation
+            // TODO:                  details suggested on the Server class docs.
+
             int reconnectCount = 1;
 
             // Disconnect our event sources... see docs on the method, or on Connect.

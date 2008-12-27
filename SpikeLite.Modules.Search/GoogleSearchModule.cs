@@ -82,7 +82,8 @@ namespace SpikeLite.Modules.Search
                         }
                     }
                 }
-                else if (messageArray[0].StartsWith(Configuration.Networks["FreeNode"].BotNickname))
+                // TODO: Kog 12/26/2008 - This type of check should be done in our communications module.
+                else if (messageArray[0].StartsWith(NetworkConnectionInformation.BotNickname))
                 {
                     if (request.RequestFrom.AccessLevel >= AccessLevel.Public)
                     {

@@ -59,6 +59,7 @@
     <Reference Include="System.Data" />
     <Reference Include="System.EnterpriseServices" />
     <Reference Include="System.Web.Services" />
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AccessControl\AuthenticationModule.cs" />
@@ -70,24 +71,17 @@
     <Compile Include="AccessControl\UserToken.cs" />
     <Compile Include="AccessControl\UserTokenCache.cs" />
     <Compile Include="Communications\CommunicationManager.cs" />
+    <Compile Include="Communications\IRC\Channel.cs" />
+    <Compile Include="Communications\IRC\Network.cs" />
+    <Compile Include="Communications\IRC\Server.cs" />
     <Compile Include="Communications\Request.cs" />
     <Compile Include="Communications\Response.cs" />
-    <Compile Include="Configuration\ChannelElement.cs" />
-    <Compile Include="Configuration\ChannelElementCollection.cs" />
-    <Compile Include="Configuration\ServerElementCollection.cs" />
-    <Compile Include="Configuration\NetworkElementCollection.cs" />
-    <Compile Include="Configuration\ServerElement.cs" />
-    <Compile Include="Configuration\NetworkElement.cs" />
-    <Compile Include="Configuration\SpikeLiteSection.cs" />
     <Compile Include="Modules\IModule.cs" />
     <Compile Include="Modules\ModuleAttribute.cs" />
     <Compile Include="Modules\ModuleBase.cs" />
     <Compile Include="Modules\ModuleManager.cs" />
     <Compile Include="SpikeLite.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Configuration\Example.config" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SpikeLite.Persistence\SpikeLite.Persistence.csproj">

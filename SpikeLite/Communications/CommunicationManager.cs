@@ -9,6 +9,8 @@ using System;
 using Sharkbite.Irc;
 using SpikeLite.AccessControl;
 using log4net;
+using SpikeLite.Communications.IRC;
+using System.Collections.Generic;
 
 namespace SpikeLite.Communications
 {
@@ -99,6 +101,14 @@ namespace SpikeLite.Communications
 
                 return _logger;
             }
+        }
+
+        /// <summary>
+        /// Gets or sets the list of networks to consider connecting to.
+        /// </summary>
+        public IList<Network> NetworkList
+        {
+            get; set;
         }
 
 

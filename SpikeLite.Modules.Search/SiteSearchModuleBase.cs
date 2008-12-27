@@ -80,7 +80,8 @@ namespace SpikeLite.Modules.Search
 
                     searchTerms.Length = 0;
                 }
-                else if (messageArray[0].ToLower().StartsWith(Configuration.Networks["FreeNode"].BotNickname.ToLower())
+                // TODO: Kog 12/26/2008 - This type of check should be done in our communications module.
+                else if (messageArray[0].ToLower().StartsWith(NetworkConnectionInformation.BotNickname)
                     && request.RequestFrom.AccessLevel >= AccessLevel.Public
                     && messageArray.Length >= 3
                     && messageArray[1].ToLower() == _command)

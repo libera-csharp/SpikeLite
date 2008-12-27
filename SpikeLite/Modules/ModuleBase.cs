@@ -6,8 +6,8 @@
  * distributed license.txt for details.
  */
 using SpikeLite.Communications;
+using SpikeLite.Communications.IRC;
 using SpikeLite.Persistence;
-using SpikeLite.Configuration;
 using log4net;
 
 namespace SpikeLite.Modules
@@ -19,11 +19,6 @@ namespace SpikeLite.Modules
     /// </summary>
     public abstract class ModuleBase : IModule
     {
-        /// <summary>
-        /// Contains a reference to our configuration container. This is handed to us at load time.
-        /// </summary>
-        private readonly SpikeLiteSection _configuration;
-
         /// <summary>
         /// Holds our log4net logger.
         /// </summary>
@@ -60,18 +55,16 @@ namespace SpikeLite.Modules
             get; set;
         }
 
-        /// <summary>
-        /// This exposes the configuration container to implementations of this module. This property
-        /// is immutable.
-        /// </summary>
-        protected virtual SpikeLiteSection Configuration
-        {
-            get { return _configuration; }
-        }
+        // TODO: Kog 12/26/2008 - This totally sucks, we need to replace this idea. Messages should most likely
+        // TODO:                  have some sort of information as to what network they were received on, so we can
+        // TODO:                  pull this in the proper place... for now let's just kludge.
 
-        protected ModuleBase() 
+        /// <summary>
+        /// Gets or sets our network information, including the severs and channels.
+        /// </summary>
+        public Network NetworkConnectionInformation
         {
-            _configuration = SpikeLiteSection.GetSection();
+            get; set;
         }
 
         /// <summary>

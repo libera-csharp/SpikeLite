@@ -77,6 +77,37 @@
   -->
   <object id="CommunicationManager" type="SpikeLite.Communications.CommunicationManager, SpikeLite">
     <property name="AuthHandler" ref="DefaultAuthenticationManager"/>
+    <property name="NetworkList">
+      <list element-type="SpikeLite.Communications.IRC.Network, SpikeLite">
+        <ref object="FreeNodeNetwork"/>
+      </list>
+    </property>
+  </object>
+
+  <object id="FreeNodeNetwork" type="SpikeLite.Communications.IRC.Network, SpikeLite">
+    <property name="NetworkName" value="FreeNode"/>
+    <property name="BotNickname" value="SpikeLite"/>
+    <property name="BotRealname" value="##CSharp irc bot"/>
+    <property name="BotUsername" value="SpikeLite"/>
+    <property name="AccountPassword" value="password of death"/>
+    <property name="ServerList">
+      <list element-type="SpikeLite.Communications.IRC.Server, SpikeLite">
+        <ref object="FreeNodeRoundRobinServer"/>
+      </list>
+    </property>
+  </object>
+
+  <object id="FreeNodeRoundRobinServer" type="SpikeLite.Communications.IRC.Server, SpikeLite">
+    <property name="Host" value="127.0.0.1"/>
+    <property name="ChannelList">
+      <list element-type="SpikeLite.Communications.IRC.Channel, SpikeLite">
+        <ref object="CSharpDevChannel"/>
+      </list>
+    </property>
+  </object>
+
+  <object id="CSharpDevChannel" type="SpikeLite.Communications.IRC.Channel, SpikeLite">
+    <property name="Name" value="#kog"/>
   </object>
   
   <!-- This is our default access manager. -->

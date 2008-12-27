@@ -5,7 +5,6 @@
  * This source is licensed under the terms of the MIT license. Please see the 
  * distributed license.txt for details.
  */
-
 namespace SpikeLite.Communications
 {
     public enum ResponseType
