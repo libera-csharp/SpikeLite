@@ -21,9 +21,9 @@
          xmlns:tx="http://www.springframework.net/tx">
 
   <!-- Provide our connection string. -->
-  <db:provider id="DbProvider" 
-               provider="Npgsql-2.0" 
-               connectionString="User ID=user;Password=password;Host=127.0.0.1;Port=5432;Database=db;"/>
+  <db:provider id="DbProvider"
+               provider="${db.provider}"
+               connectionString="${db.connectionstring}"/>
 
   <!-- Create a bean for our session factory, which gets injected into all our DAOs. -->
   <object id="HibernateSessionFactory" type="Spring.Data.NHibernate.LocalSessionFactoryObject, Spring.Data.NHibernate20">
@@ -36,8 +36,8 @@
     <property name="HibernateProperties">
       <dictionary>
         <entry key="connection.provider" value="NHibernate.Connection.DriverConnectionProvider"/>
-        <entry key="dialect" value="NHibernate.Dialect.PostgreSQLDialect"/>
-        <entry key="connection.driver_class" value="NHibernate.Driver.NpgsqlDriver"/>
+        <entry key="dialect" value="${db.dialect}"/>
+        <entry key="connection.driver_class" value="${db.driver}"/>
         <entry key="show_sql" value="false"/>
         <entry key="hbm2ddl.auto" value="update"/>
       </dictionary>
@@ -78,5 +78,4 @@
     <property name="DbProvider" ref="DbProvider"/>
     <property name="SessionFactory" ref="HibernateSessionFactory"/>
   </object>
-  
 </objects>

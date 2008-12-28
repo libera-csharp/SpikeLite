@@ -9,12 +9,12 @@
 -->
 
 <!-- 
-  This is our generic beans bootstrapper file. We currently don't have much in here. Look to the app.config
-  to see which XML files we're pulling into our application context, each should be labeled. 
+  This is our generic beans bootstrapper file. Here we set up the major collaborators of the bot: our
+  module manager which manages our modules, our communications manager that wraps our IRC lib and other misc
+  forms of communication, and our authentication manager which handles authentication.
 -->
 
 <objects xmlns="http://www.springframework.net">
-  
   <!-- 
        This is our Bot runner, brought in from the SpikeLite assembly. This is what we delegate control to. 
        You probably don't want to change the injected beans either, unless you have a good reason.
@@ -31,44 +31,9 @@
   -->
   <object id="ModuleManager" type="SpikeLite.Modules.ModuleManager, SpikeLite">
     <constructor-arg index="0" ref="CommunicationManager"/>
-    <property name="Modules">
-      <!-- Sets the list of loaded modules. These should be defined in the beans-modules.xml-->
-      <list element-type="SpikeLite.Modules.IModule, SpikeLite">
-        <ref object="AboutModule"/>
-        <ref object="WikiLinkModule"/>
-        <ref object="GeoipModule"/>
-        <ref object="HelpModule"/>
-        <ref object="KarmaModule"/>
-        <ref object="ConnectLinkModule"/>
-        <ref object="ForumLinkModule"/>
-        <ref object="PuppetModule"/>
-        <ref object="pInvokeModule"/>
-        <ref object="MSDNModule"/>
-        <ref object="PatternsModule"/>
-        <ref object="MSConnectModule"/>
-        <ref object="CodeplexModule"/>
-        <ref object="xkcdModule"/>
-        <ref object="MDocModule"/>
-        <ref object="CodeProjectModule"/>
-        <ref object="MSForumsModule"/>
-        <ref object="GoogleModule"/>
-        <ref object="LiveModule"/>
-        <ref object="DADSModule"/>
-        <ref object="RefactoringModule"/>
-        <ref object="ConnectionStringsModule"/>
-        <ref object="WikipediaModule"/>
-        <ref object="TellModule"/>
-      </list>
-    </property>
-  </object>
-  
-  <!-- Set up some API keys for our search -->
-  <object name="GoogleApiKey" type="String">
-    <constructor-arg index="0" value="NOT CONFIGURED"/>
-  </object>
-
-  <object name="LiveApiKey" type="String">
-    <constructor-arg index="0" value="NOT CONFIGURED"/>
+    
+    <!-- This property is actually set in beans-modules, but overridden in beans-overrides. -->
+    <property name="Modules" ref="ModuleList"/>
   </object>
 
   <!-- 
@@ -79,37 +44,40 @@
     <property name="AuthHandler" ref="DefaultAuthenticationManager"/>
     <property name="NetworkList">
       <list element-type="SpikeLite.Communications.IRC.Network, SpikeLite">
-        <ref object="FreeNodeNetwork"/>
+        <ref object="Network"/>
       </list>
     </property>
   </object>
 
-  <object id="FreeNodeNetwork" type="SpikeLite.Communications.IRC.Network, SpikeLite">
-    <property name="NetworkName" value="FreeNode"/>
-    <property name="BotNickname" value="SpikeLite"/>
-    <property name="BotRealname" value="##CSharp irc bot"/>
-    <property name="BotUsername" value="SpikeLite"/>
-    <property name="AccountPassword" value="password of death"/>
+  <object id="Network" type="SpikeLite.Communications.IRC.Network, SpikeLite">
+    <property name="NetworkName" value="${network.name}"/>
+    <property name="BotNickname" value="${bot.nick}"/>
+    <property name="BotRealname" value="${bot.realname}"/>
+    <property name="BotUsername" value="${bot.username}"/>
+    <property name="AccountPassword" value="${bot.accountpass}"/>
     <property name="ServerList">
       <list element-type="SpikeLite.Communications.IRC.Server, SpikeLite">
-        <ref object="FreeNodeRoundRobinServer"/>
+        <ref object="Server"/>
       </list>
     </property>
   </object>
 
-  <object id="FreeNodeRoundRobinServer" type="SpikeLite.Communications.IRC.Server, SpikeLite">
-    <property name="Host" value="127.0.0.1"/>
-    <property name="ChannelList">
+  <object id="Server" type="SpikeLite.Communications.IRC.Server, SpikeLite">
+    <property name="Host" value="${server.host}"/>
+    <property name="Port" value="${server.port}"/>
+    <property name="ChannelList" ref="ChannelList"/>
+  </object>
+
+  <object id="ChannelList" type="FrontEnd_Console.ChannelList, FrontEnd_Console">
+    <constructor-arg index="0">
       <list element-type="SpikeLite.Communications.IRC.Channel, SpikeLite">
-        <ref object="CSharpDevChannel"/>
+        <object id="TestingChannel" type="SpikeLite.Communications.IRC.Channel, SpikeLite">
+          <property name="Name" value="#kog"/>
+        </object>
       </list>
-    </property>
+    </constructor-arg>
   </object>
 
-  <object id="CSharpDevChannel" type="SpikeLite.Communications.IRC.Channel, SpikeLite">
-    <property name="Name" value="#kog"/>
-  </object>
-  
   <!-- This is our default access manager. -->
   <object id="DefaultAuthenticationManager" type="SpikeLite.AccessControl.RootAuthModule, SpikeLite">
     <property name="AuthModule" ref="IrcAuthenticationModule"/>
@@ -119,4 +87,34 @@
     <constructor-arg index="0" ref="KnownHostDao"/>
   </object>
 
+  <!-- We provide default values for all the placheolder values in the bot, so that if a user does not include
+       this in the beans-overrides.xml we don't wind up throwing a random, unhelpful exception. You really should
+       define this in your beans-overrides though. -->
+  <object name="botPropertyConfigurer" type="Spring.Objects.Factory.Config.PropertyPlaceholderConfigurer, Spring.Core">
+    <property name="Properties">
+      <name-values>
+
+        <!-- Set values for our bot's setup. -->
+        <add key="network.name" value="Localhost"/>
+        <add key="bot.nick" value="SpikeLite"/>
+        <add key="bot.realname" value="##CSharp irc bot"/>
+        <add key="bot.username" value="SpikeLite"/>
+        <add key="bot.accountpass" value="password"/>
+
+        <!-- Configure our server -->
+        <add key="server.host" value="127.0.0.1"/>
+        <add key="server.port" value="6667"/>
+
+        <!-- Configure our API keys -->
+        <add key="apikeys.google" value="NOT CONFIGURED"/>
+        <add key="apikeys.live" value="NOT CONFIGURED"/>
+
+        <!-- Database setup -->
+        <add key="db.provider" value="Npgsql-2.0"/>
+        <add key="db.connectionstring" value="User ID=user;Password=pass;Host=127.0.0.1;Port=5432;Database=db;"/>
+        <add key="db.dialect" value="NHibernate.Dialect.PostgreSQLDialect"/>
+        <add key="db.driver" value="NHibernate.Driver.NpgsqlDriver"/>
+      </name-values>
+    </property>
+  </object>
 </objects>

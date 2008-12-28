@@ -55,9 +55,13 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.configuration" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ChannelList.cs" />
     <Compile Include="ConsoleRunner.cs" />
+    <Compile Include="ModuleList.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -70,16 +74,16 @@
     <None Include="app.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="beans-modules.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="beans-nhibernate.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="beans.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
+    <EmbeddedResource Include="beans-modules.xml">
+    </EmbeddedResource>
+    <EmbeddedResource Include="beans-nhibernate.xml">
+    </EmbeddedResource>
+    <EmbeddedResource Include="beans.xml">
+    </EmbeddedResource>
     <Content Include="log4net.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="beans-overrides.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

@@ -1,0 +1,64 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+
+<!--
+  SpikeLite C# IRC Bot
+  Copyright (c) 2008 FreeNode ##Csharp Community
+
+  This source is licensed under the terms of the MIT license. Please see the 
+  distributed license.txt for details.
+-->
+
+<!--
+  This bean file is loaded last, and binds over any other bean definitions. We also contain a property placeholder
+  configurer, to configure properties that exist as NAnt style (${name.morename} syntax) placeholder values
+  in the other configurations.
+  
+  The purpose of this file is to simplify configuration, while still allowing people to do literal bean overrides.
+-->
+
+<objects xmlns="http://www.springframework.net" xmlns:db="http://www.springframework.net/database">
+  <!-- Replace all our NAnt style placeholders -->
+  <object name="botPropertyConfigurer" type="Spring.Objects.Factory.Config.PropertyPlaceholderConfigurer, Spring.Core">
+    <property name="Properties">
+      <name-values>
+        
+        <!-- Set values for our bot's setup. -->
+        <add key="network.name" value="Localhost"/>
+        <add key="bot.nick" value="SpikeLite"/>
+        <add key="bot.realname" value="##CSharp irc bot"/>
+        <add key="bot.username" value="SpikeLite"/>
+        <add key="bot.accountpass" value="password"/>
+
+        <!-- Configure our server -->
+        <add key="server.host" value="127.0.0.1"/>
+        <add key="server.port" value="6667"/>
+        
+        <!-- Configure our API keys -->
+        <add key="apikeys.google" value="NOT CONFIGURED"/>
+        <add key="apikeys.live" value="NOT CONFIGURED"/>
+        
+        <!-- Database setup -->
+        <add key="db.provider" value="Npgsql-2.0"/>
+        <add key="db.connectionstring" value="User ID=user;Password=pass;Host=127.0.0.1;Port=5432;Database=db;"/>
+        <add key="db.dialect" value="NHibernate.Dialect.PostgreSQLDialect"/>
+        <add key="db.driver" value="NHibernate.Driver.NpgsqlDriver"/>
+      </name-values>
+    </property>
+  </object>
+
+  <!-- Set the list of channels we're going to join. -->
+  <object id="ChannelList" type="FrontEnd_Console.ChannelList, FrontEnd_Console">
+    <constructor-arg index="0">
+      <list element-type="SpikeLite.Communications.IRC.Channel, SpikeLite">
+        
+        <!-- You probably want to alter this... -->
+        <object id="TestingChannel" type="SpikeLite.Communications.IRC.Channel, SpikeLite">
+          <property name="Name" value="#kog"/>
+        </object>
+        
+      </list>
+    </constructor-arg>
+  </object>
+  
+  <!-- For information about modules, please consult our dev wiki at http://svn.freenode-csharp.net/spikelite -->
+</objects>

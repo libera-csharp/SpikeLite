@@ -15,7 +15,7 @@
 -->
 
 <objects xmlns="http://www.springframework.net">
-  
+
   <!-- 
        This is the parent for all default search provided algorithms, IE things backed by
        LiveSearch instead of google. Please make sure to mark parent="AbstractLiveSearchModule."
@@ -26,7 +26,7 @@
   <object id="AbstractLiveSearchModule" abstract="true" type="SpikeLite.Modules.ModuleBase, SpikeLite" singleton="false">
     <property name="ApiKey" ref="LiveApiKey"/>
   </object>
-  
+
   <!-- Default search-based modules. -->
   <object id="ForumLinkModule" parent="AbstractLiveSearchModule" type="SpikeLite.Modules.MSLinks.ForumLinkModule, SpikeLite.Modules.MSLinks"/>
   <object id="pInvokeModule" parent="AbstractLiveSearchModule" type="SpikeLite.Modules.Search.PInvokeSearchModule, SpikeLite.Modules.Search"/>
@@ -43,18 +43,18 @@
   <object id="ConnectionStringsModule" parent="AbstractLiveSearchModule" type="SpikeLite.Modules.Search.ConnectionStringSearchModule, SpikeLite.Modules.Search"/>
   <object id="WikipediaModule" parent="AbstractLiveSearchModule" type="SpikeLite.Modules.Search.WikipediaSearchModule, SpikeLite.Modules.Search"/>
   <object id="MSForumsModule" parent="AbstractLiveSearchModule" type="SpikeLite.Modules.Search.MSForumsSearchModule, SpikeLite.Modules.Search"/>
-  
+
   <!-- Our non-default search-based modules. -->
   <object id="GoogleModule" type="SpikeLite.Modules.Search.GoogleSearchModule, SpikeLite.Modules.Search">
     <property name="ApiKey" ref="GoogleApiKey"/>
   </object>
-  
+
   <!-- Infrastructure modules. -->
   <object id="AboutModule" type="SpikeLite.Modules.About.AboutModule, SpikeLite.Modules.About"/>
   <object id="HelpModule" type="SpikeLite.Modules.Help.HelpModule, SpikeLite.Modules.Help"/>
   <object id="PuppetModule" type="SpikeLite.Modules.Puppet.PuppetModule, SpikeLite.Modules.Puppet"/>
   <object id="TellModule" type="SpikeLite.Modules.Tell.TellModule, SpikeLite.Modules.Tell"/>
-  
+
   <!-- Modules that wrap thinly veiled webservice calls. -->
   <object id="GeoipModule" type="SpikeLite.Modules.GeoIP.GeoIpLookupModule, SpikeLite.Modules.GeoIP"/>
 
@@ -66,4 +66,46 @@
   <!-- Static fact modules. -->
   <object id="WikiLinkModule" type="SpikeLite.Modules.CommunityLinks.WikiLinkModule, SpikeLite.Modules.CommunityLinks"/>
   <object id="ConnectLinkModule" type="SpikeLite.Modules.MSLinks.ConnectLinkModule, SpikeLite.Modules.MSLinks"/>
+
+  <!-- This is our default list of modules to load (the entire set). Please override this in the beans-overrides
+       if you wish a different set to be loaded. -->
+  <object id="ModuleList" type="FrontEnd_Console.ModuleList, FrontEnd_Console">
+    <constructor-arg index="0">
+      <list element-type="SpikeLite.Modules.IModule, SpikeLite">
+        <ref object="AboutModule"/>
+        <ref object="WikiLinkModule"/>
+        <ref object="GeoipModule"/>
+        <ref object="HelpModule"/>
+        <ref object="KarmaModule"/>
+        <ref object="ConnectLinkModule"/>
+        <ref object="ForumLinkModule"/>
+        <ref object="PuppetModule"/>
+        <ref object="pInvokeModule"/>
+        <ref object="MSDNModule"/>
+        <ref object="PatternsModule"/>
+        <ref object="MSConnectModule"/>
+        <ref object="CodeplexModule"/>
+        <ref object="xkcdModule"/>
+        <ref object="MDocModule"/>
+        <ref object="CodeProjectModule"/>
+        <ref object="MSForumsModule"/>
+        <ref object="GoogleModule"/>
+        <ref object="LiveModule"/>
+        <ref object="DADSModule"/>
+        <ref object="RefactoringModule"/>
+        <ref object="ConnectionStringsModule"/>
+        <ref object="WikipediaModule"/>
+        <ref object="TellModule"/>
+      </list>
+    </constructor-arg>
+  </object>
+
+  <!-- Our Google and MS Live API keys. Please define these in the beans-overrides.xml. -->
+  <object name="GoogleApiKey" type="String">
+    <constructor-arg index="0" value="${apikeys.google}"/>
+  </object>
+
+  <object name="LiveApiKey" type="String">
+    <constructor-arg index="0" value="${apikeys.live}"/>
+  </object>
 </objects>
