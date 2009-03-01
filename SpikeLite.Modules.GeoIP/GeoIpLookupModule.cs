@@ -66,7 +66,18 @@ namespace SpikeLite.Modules.GeoIP
 
                 if (expressionMatch.Success)
                 {
-                    _serviceProxy.GetGeoIPAsync(expressionMatch.Groups[1].Value, request);
+                    try
+                    {
+                        _serviceProxy.GetGeoIPAsync(expressionMatch.Groups[1].Value, request);
+                    }
+                    catch (Exception ex)
+                    {
+                       
+                        ModuleManagementContainer.HandleResponse(request.CreateResponse(ResponseType.Public, 
+                                                                    "{0}, The service is currently b00rked, please try again in a few minutes.", request.Nick));
+                        Logger.InfoFormat("Search threw an exception. Nick: {0}, terms: \"{1}\", stack message: {2}", request.Nick, expressionMatch.Groups[1].Value, ex.StackTrace);
+                    }
+                    
                 }
                 else
                 {

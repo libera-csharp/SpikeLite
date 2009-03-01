@@ -90,7 +90,7 @@ namespace SpikeLite.Modules.Karma
                     else
                     {
                         // Attempt to look the user up.
-                        KarmaItem karma = KarmaDao.FindKarma(nick) ?? new KarmaItem {KarmaLevel = 0, UserName = nick};
+                        KarmaItem karma = KarmaDao.FindKarma(nick.ToLower()) ?? new KarmaItem {KarmaLevel = 0, UserName = nick.ToLower()};
 
                         // If they're doing anything more than looking...
                         if (!String.IsNullOrEmpty(op))
@@ -107,7 +107,7 @@ namespace SpikeLite.Modules.Karma
                             KarmaDao.SaveKarma(karma);
                         }
 
-                        response = request.CreateResponse(ResponseType.Public, karma.ToString());
+                        response = request.CreateResponse(ResponseType.Public, String.Format("{0} has a karma of {1}", nick, karma.KarmaLevel));
                         ModuleManagementContainer.HandleResponse(response);
                     }
                 }
