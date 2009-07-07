@@ -80,8 +80,8 @@ namespace SpikeLite.Modules.Search
                                     searchTerms += messageArray[i] + " ";
                                 }
 
-                                Logger.InfoFormat("{0} - HandleRequest called on for {1} by {2}", 
-                                                  Name, request.Message, request.Addressee ?? request.Nick);
+                                Logger.DebugFormat("{0} - HandleRequest called on for {1} by {2}", 
+                                                   Name, request.Message, request.Addressee ?? request.Nick);
                                 SearchProvider.ExecuteSearch(searchTerms, SearchUrl, x => HandleResults(x, request, searchTerms));
                             }
                         }
@@ -103,8 +103,8 @@ namespace SpikeLite.Modules.Search
                                     searchTerms += messageArray[i] + " ";
                                 }
 
-                                Logger.InfoFormat("{0} - HandleRequest called on for {1} by {2}",
-                                                  Name, request.Message, request.Addressee ?? request.Nick);
+                                Logger.DebugFormat("{0} - HandleRequest called on for {1} by {2}",
+                                                   Name, request.Message, request.Addressee ?? request.Nick);
                                 SearchProvider.ExecuteSearch(searchTerms, SearchUrl, x => HandleResults(x, request, searchTerms));
                             }
                         }
