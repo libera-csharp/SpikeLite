@@ -62,6 +62,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AbstractSearchProvider.cs" />
+    <Compile Include="MicrosoftBingSearchProvider.cs" />
     <Compile Include="GoogleSearchProvider.cs" />
     <Compile Include="ISearchProvider.cs" />
     <Compile Include="MicrosoftLiveSearchProvider.cs" />
@@ -82,11 +83,27 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.map</DependentUpon>
     </Compile>
+    <Compile Include="Web References\net.bing.api\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.map</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <WebReferences Include="Web References\" />
   </ItemGroup>
   <ItemGroup>
+    <WebReferenceUrl Include="http://api.bing.net/search.wsdl%3fVersion=2.2">
+      <UrlBehavior>Dynamic</UrlBehavior>
+      <RelPath>Web References\net.bing.api\</RelPath>
+      <UpdateFromURL>http://api.bing.net/search.wsdl%3fVersion=2.2</UpdateFromURL>
+      <ServiceLocationURL>
+      </ServiceLocationURL>
+      <CachedDynamicPropName>
+      </CachedDynamicPropName>
+      <CachedAppSettingsObjectName>Settings</CachedAppSettingsObjectName>
+      <CachedSettingsPropName>SpikeLite_Modules_Search_net_bing_api_BingService</CachedSettingsPropName>
+    </WebReferenceUrl>
     <WebReferenceUrl Include="http://api.google.com/GoogleSearch.wsdl">
       <UrlBehavior>Dynamic</UrlBehavior>
       <RelPath>Web References\com.google.api\</RelPath>
@@ -132,6 +149,14 @@
       <DependentUpon>Reference.map</DependentUpon>
     </None>
     <None Include="Web References\com.msn.search.soap\webservices.wsdl" />
+    <None Include="Web References\net.bing.api\Reference.map">
+      <Generator>MSDiscoCodeGenerator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+    <None Include="Web References\net.bing.api\search.wsdl" />
+    <None Include="Web References\net.bing.api\SearchResponse.datasource">
+      <DependentUpon>Reference.map</DependentUpon>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SpikeLite.Persistence\SpikeLite.Persistence.csproj">

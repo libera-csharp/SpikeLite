@@ -27,6 +27,11 @@
     <property name="ModuleManagementContainer" ref="ModuleManager"/>
   </object>
 
+  <object id="MicrosoftBingSearchModule" abstract="true" type="SpikeLite.Modules.Search.SearchModulePrototype, SpikeLite.Modules.Search" singleton="false">
+	<property name="SearchProvider" ref="MicrosoftBingSearchProvider"/>
+	<property name="ModuleManagementContainer" ref="ModuleManager"/>
+  </object>
+
   <!-- Set up our search providers -->
   <object id="GoogleSearchProvider" type="SpikeLite.Modules.Search.GoogleSearchProvider, SpikeLite.Modules.Search">
     <property name="ApiKey" ref="GoogleApiKey"/>
@@ -34,6 +39,10 @@
 
   <object id="LiveSearchProvider" type="SpikeLite.Modules.Search.MicrosoftLiveSearchProvider, SpikeLite.Modules.Search">
     <property name="ApiKey" ref="LiveApiKey"/>
+  </object>
+	
+  <object id="MicrosoftBingSearchProvider" type="SpikeLite.Modules.Search.MicrosoftBingSearchProvider, SpikeLite.Modules.Search">
+    <property name="ApiKey" ref="BingApiKey"/>
   </object>
 
   <!-- Default search-based modules. -->
@@ -44,7 +53,14 @@
     <property name="SearchTrigger" value="~google"/>
   </object>
 
-  <object id="BingModule" parent="DefaultSearchModule" type="SpikeLite.Modules.Search.SearchModulePrototype, SpikeLite.Modules.Search">
+  <object id="LiveModule" parent="DefaultSearchModule" type="SpikeLite.Modules.Search.SearchModulePrototype, SpikeLite.Modules.Search">
+    <property name="Name" value="Live"/>
+    <property name="Description" value="Search Microsoft Live"/>
+    <property name="Instructions" value="~live [search terms]"/>
+    <property name="SearchTrigger" value="~live"/>
+  </object>
+	
+  <object id="BingModule" parent="MicrosoftBingSearchModule" type="SpikeLite.Modules.Search.SearchModulePrototype, SpikeLite.Modules.Search">
     <property name="Name" value="BING"/>
     <property name="Description" value="Search Microsoft BING"/>
     <property name="Instructions" value="~bing [search terms]"/>
@@ -222,7 +238,8 @@
     <constructor-arg index="0">
       <list element-type="SpikeLite.Modules.IModule, SpikeLite">
         <ref object="GoogleModule"/>
-        <ref object="BingModule"/>
+        <ref object="LiveModule"/>
+		<ref object="BingModule"/>
         <ref object="AboutModule"/> 
         <ref object="WikiLinkModule"/>
         <ref object="GeoipModule"/> 
@@ -255,5 +272,9 @@
 
   <object name="LiveApiKey" type="String">
     <constructor-arg index="0" value="${apikeys.live}"/>
+  </object>
+	
+  <object name="BingApiKey" type="String">
+    <constructor-arg index="0" value="${apikeys.bing}"/>
   </object>
 </objects>

@@ -94,26 +94,27 @@
     <property name="Properties">
       <name-values>
 
-        <!-- Set values for our bot's setup. -->
-        <add key="network.name" value="Localhost"/>
-        <add key="bot.nick" value="SpikeLite"/>
-        <add key="bot.realname" value="##CSharp irc bot"/>
-        <add key="bot.username" value="SpikeLite"/>
-        <add key="bot.accountpass" value="password"/>
+		  <!-- Set values for our bot's setup. -->
+		  <add key="network.name" value="Localhost"/>
+		  <add key="bot.nick" value="SpikeLite"/>
+		  <add key="bot.realname" value="##CSharp irc bot"/>
+		  <add key="bot.username" value="SpikeLite"/>
+		  <add key="bot.accountpass" value="password"/>
 
-        <!-- Configure our server -->
-        <add key="server.host" value="127.0.0.1"/>
-        <add key="server.port" value="6667"/>
+		  <!-- Configure our server -->
+		  <add key="server.host" value="127.0.0.1"/>
+		  <add key="server.port" value="6667"/>
 
-        <!-- Configure our API keys -->
-        <add key="apikeys.google" value="NOT CONFIGURED"/>
-        <add key="apikeys.live" value="NOT CONFIGURED"/>
+		  <!-- Configure our API keys -->
+		  <add key="apikeys.google" value="NOT CONFIGURED"/>
+		  <add key="apikeys.live" value="NOT CONFIGURED"/>
+		  <add key="apikeys.bing" value="NOT CONFIGURED"/>
 
-        <!-- Database setup -->
-        <add key="db.provider" value="Npgsql-2.0"/>
-        <add key="db.connectionstring" value="User ID=user;Password=pass;Host=127.0.0.1;Port=5432;Database=db;"/>
-        <add key="db.dialect" value="NHibernate.Dialect.PostgreSQLDialect"/>
-        <add key="db.driver" value="NHibernate.Driver.NpgsqlDriver"/>
+		  <!-- Database setup -->
+		  <add key="db.provider" value="Npgsql-2.0"/>
+		  <add key="db.connectionstring" value="User ID=user;Password=pass;Host=127.0.0.1;Port=5432;Database=db;"/>
+		  <add key="db.dialect" value="NHibernate.Dialect.PostgreSQLDialect"/>
+		  <add key="db.driver" value="NHibernate.Driver.NpgsqlDriver"/>
       </name-values>
     </property>
   </object>
