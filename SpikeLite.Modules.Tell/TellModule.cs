@@ -11,13 +11,12 @@ using SpikeLite.Persistence.Authentication;
 
 namespace SpikeLite.Modules.Tell
 {
-    [Module("Tell", "Tell allows you to direct a response from a speicifed command at a specified user.", "Usage Syntax: '~tell <NickName> <Command> <CommandArgs>' i.e. '~tell SomeUser google stuff'", AccessLevel.Public)]
     public class TellModule : ModuleBase
     {
         #region Methods
 
         #region InternalHandleRequest
-        protected override void InternalHandleRequest(Request request)
+        public override void HandleRequest(Request request)
         {
             string[] messageArray = request.Message.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
 

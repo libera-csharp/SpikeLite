@@ -11,10 +11,9 @@ using SpikeLite.Persistence.Authentication;
 
 namespace SpikeLite.Modules.CommunityLinks
 {
-    [Module("WikiLink", "Returns the link to the community wiki.", "~wiki", AccessLevel.Public)]
     public class WikiLinkModule : ModuleBase
     {
-        protected override void InternalHandleRequest(Request request)
+        public override void HandleRequest(Request request)
         {
             if (request.RequestFrom.AccessLevel >= AccessLevel.Public
                 && request.Message.Equals("~wiki", StringComparison.OrdinalIgnoreCase))

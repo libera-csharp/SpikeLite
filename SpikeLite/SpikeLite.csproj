@@ -38,6 +38,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Dependencies\log4net.dll</HintPath>
     </Reference>
+    <Reference Include="log4net.Ext.Trace, Version=1.2.10.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Dependencies\log4net.Ext.Trace.dll</HintPath>
+    </Reference>
     <Reference Include="Sharkbite.Thresher, Version=1.2.0.0, Culture=neutral, PublicKeyToken=e9ceddb3468b088a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Dependencies\Sharkbite.Thresher.dll</HintPath>
@@ -57,8 +61,10 @@
     <Reference Include="System" />
     <Reference Include="System.configuration" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.EnterpriseServices" />
     <Reference Include="System.Web.Services" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
@@ -77,7 +83,6 @@
     <Compile Include="Communications\Request.cs" />
     <Compile Include="Communications\Response.cs" />
     <Compile Include="Modules\IModule.cs" />
-    <Compile Include="Modules\ModuleAttribute.cs" />
     <Compile Include="Modules\ModuleBase.cs" />
     <Compile Include="Modules\ModuleManager.cs" />
     <Compile Include="SpikeLite.cs" />

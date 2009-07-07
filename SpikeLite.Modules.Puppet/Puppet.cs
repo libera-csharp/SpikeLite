@@ -11,10 +11,9 @@ using SpikeLite.Persistence.Authentication;
 
 namespace SpikeLite.Modules.Puppet
 {
-    [Module("Puppet Module", "NA", "NA", AccessLevel.Root)]
     public class PuppetModule : ModuleBase
     {
-        protected override void InternalHandleRequest(Request request)
+        public override void HandleRequest(Request request)
         {
             string[] messageArray = request.Message.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
 
@@ -35,7 +34,7 @@ namespace SpikeLite.Modules.Puppet
                 if (messageArray[1].Equals("say", StringComparison.OrdinalIgnoreCase))
                 {
                     Response response = request.CreateResponse(ResponseType.Public, message);
-                    response.ResponseType = ResponseType.Public; //force public response
+                    response.ResponseType = ResponseType.Public;
                     response.Channel = target;
                     ModuleManagementContainer.HandleResponse(response);
                 }

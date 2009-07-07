@@ -6,7 +6,7 @@
  * distributed license.txt for details.
  */
 using SpikeLite.Communications;
-using SpikeLite.Persistence;
+using SpikeLite.Persistence.Authentication;
 
 namespace SpikeLite.Modules
 {
@@ -27,5 +27,25 @@ namespace SpikeLite.Modules
         /// on a per-module basis.
         /// </remarks>
         void HandleRequest(Request request);
+
+        /// <summary>
+        /// Gets or sets the name of the module.
+        /// </summary>
+        string Name { get; set; }
+
+        /// <summary>
+        /// Gets or sets the description of the module.
+        /// </summary>
+        string Description { get; set; }
+
+        /// <summary>
+        /// Gets or sets the associated usage instructions of the module.
+        /// </summary>
+        string Instructions { get; set; }
+
+        /// <summary>
+        /// Gets or sets the minimum access requirements for using this module.
+        /// </summary>
+        AccessLevel RequiredAccessLevel { get; set; }
     }
 }

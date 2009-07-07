@@ -6,17 +6,15 @@
  * distributed license.txt for details.
  */
 using System.Reflection;
-using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
 
 [assembly: AssemblyTitle("SpikeLite Console Runner")]
 [assembly: AssemblyDescription("A console runner for SpikeLite IRC bot")]
 [assembly: AssemblyConfiguration("Standard")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("SpikeLite")]
-[assembly: AssemblyCopyright("2008 FreeNode ##CSharp Community")]
+[assembly: AssemblyCopyright("2009 FreeNode ##CSharp Community")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
-[assembly: AssemblyVersion("3.0.0.0")]
-[assembly: AssemblyFileVersion("3.0.0.0")]
+[assembly: AssemblyVersion("4.0.0.0")]
+[assembly: AssemblyFileVersion("4.0.0.0")]

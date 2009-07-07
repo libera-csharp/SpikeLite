@@ -5,7 +5,6 @@
  * This source is licensed under the terms of the MIT license. Please see the 
  * distributed license.txt for details.
  */
-using System;
 using System.Collections.Generic;
 
 namespace SpikeLite.Communications.IRC

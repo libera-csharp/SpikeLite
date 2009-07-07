@@ -11,10 +11,9 @@ using SpikeLite.Persistence.Authentication;
 
 namespace SpikeLite.Modules.MSLinks
 {
-    [Module("ForumLink", "Returns the link to the microsoft forums.", "~msforums", AccessLevel.Public)]
     public class ForumLinkModule : ModuleBase
     {
-        protected override void InternalHandleRequest(Request request)
+        public override void HandleRequest(Request request)
         {
             if (request.RequestFrom.AccessLevel >= AccessLevel.Public
                 && request.Message.Equals("~msforums", StringComparison.OrdinalIgnoreCase))

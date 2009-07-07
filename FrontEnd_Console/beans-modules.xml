@@ -15,71 +15,222 @@
 -->
 
 <objects xmlns="http://www.springframework.net">
+  
+  <!-- Set up some modules that can be prototyped for domain-specific searching. -->
+  <object id="DefaultSearchModule" abstract="true" type="SpikeLite.Modules.Search.SearchModulePrototype, SpikeLite.Modules.Search" singleton="false">
+    <property name="SearchProvider" ref="LiveSearchProvider"/>
+    <property name="ModuleManagementContainer" ref="ModuleManager"/>
+  </object>
 
-  <!-- 
-       This is the parent for all default search provided algorithms, IE things backed by
-       LiveSearch instead of google. Please make sure to mark parent="AbstractLiveSearchModule."
-       
-       This is a prototype scoped bean as it doesn't really need to survive past being used to construct the other
-       modules.
-  -->
-  <object id="AbstractLiveSearchModule" abstract="true" type="SpikeLite.Modules.ModuleBase, SpikeLite" singleton="false">
+  <object id="GoogleSearchModule" abstract="true" type="SpikeLite.Modules.Search.SearchModulePrototype, SpikeLite.Modules.Search" singleton="false">
+    <property name="SearchProvider" ref="GoogleSearchProvider"/>
+    <property name="ModuleManagementContainer" ref="ModuleManager"/>
+  </object>
+
+  <!-- Set up our search providers -->
+  <object id="GoogleSearchProvider" type="SpikeLite.Modules.Search.GoogleSearchProvider, SpikeLite.Modules.Search">
+    <property name="ApiKey" ref="GoogleApiKey"/>
+  </object>
+
+  <object id="LiveSearchProvider" type="SpikeLite.Modules.Search.MicrosoftLiveSearchProvider, SpikeLite.Modules.Search">
     <property name="ApiKey" ref="LiveApiKey"/>
   </object>
 
   <!-- Default search-based modules. -->
-  <object id="ForumLinkModule" parent="AbstractLiveSearchModule" type="SpikeLite.Modules.MSLinks.ForumLinkModule, SpikeLite.Modules.MSLinks"/>
-  <object id="pInvokeModule" parent="AbstractLiveSearchModule" type="SpikeLite.Modules.Search.PInvokeSearchModule, SpikeLite.Modules.Search"/>
-  <object id="MSDNModule" parent="AbstractLiveSearchModule" type="SpikeLite.Modules.Search.MSDNSearchModule, SpikeLite.Modules.Search"/>
-  <object id="PatternsModule" parent="AbstractLiveSearchModule" type="SpikeLite.Modules.Search.PatternSearchModule, SpikeLite.Modules.Search"/>
-  <object id="MSConnectModule" parent="AbstractLiveSearchModule" type="SpikeLite.Modules.Search.ConnectSearchModule, SpikeLite.Modules.Search"/>
-  <object id="CodeplexModule" parent="AbstractLiveSearchModule" type="SpikeLite.Modules.Search.CodeplexSearchModule, SpikeLite.Modules.Search"/>
-  <object id="xkcdModule" parent="AbstractLiveSearchModule" type="SpikeLite.Modules.Search.XkcdSearchModule, SpikeLite.Modules.Search"/>
-  <object id="MDocModule" parent="AbstractLiveSearchModule" type="SpikeLite.Modules.Search.MDocSearchModule, SpikeLite.Modules.Search"/>
-  <object id="CodeProjectModule" parent="AbstractLiveSearchModule" type="SpikeLite.Modules.Search.CodeProjectSearchModule, SpikeLite.Modules.Search"/>
-  <object id="LiveModule" parent="AbstractLiveSearchModule" type="SpikeLite.Modules.Search.LiveSearchModule, SpikeLite.Modules.Search"/>
-  <object id="DADSModule" parent="AbstractLiveSearchModule" type="SpikeLite.Modules.Search.DADSSearchModule, SpikeLite.Modules.Search"/>
-  <object id="RefactoringModule" parent="AbstractLiveSearchModule" type="SpikeLite.Modules.Search.RefactoringSearchModule, SpikeLite.Modules.Search"/>
-  <object id="ConnectionStringsModule" parent="AbstractLiveSearchModule" type="SpikeLite.Modules.Search.ConnectionStringSearchModule, SpikeLite.Modules.Search"/>
-  <object id="WikipediaModule" parent="AbstractLiveSearchModule" type="SpikeLite.Modules.Search.WikipediaSearchModule, SpikeLite.Modules.Search"/>
-  <object id="MSForumsModule" parent="AbstractLiveSearchModule" type="SpikeLite.Modules.Search.MSForumsSearchModule, SpikeLite.Modules.Search"/>
+  <object id="GoogleModule" parent="GoogleSearchModule" type="SpikeLite.Modules.Search.SearchModulePrototype, SpikeLite.Modules.Search">
+    <property name="Name" value="Google"/>
+    <property name="Description" value="Search Google SOAP API"/>
+    <property name="Instructions" value="~google [search terms]"/>
+    <property name="SearchTrigger" value="~google"/>
+  </object>
 
-  <!-- Our non-default search-based modules. -->
-  <object id="GoogleModule" type="SpikeLite.Modules.Search.GoogleSearchModule, SpikeLite.Modules.Search">
-    <property name="ApiKey" ref="GoogleApiKey"/>
+  <object id="BingModule" parent="DefaultSearchModule" type="SpikeLite.Modules.Search.SearchModulePrototype, SpikeLite.Modules.Search">
+    <property name="Name" value="BING"/>
+    <property name="Description" value="Search Microsoft BING"/>
+    <property name="Instructions" value="~bing [search terms]"/>
+    <property name="SearchTrigger" value="~bing"/>
+  </object>
+
+  <object id="pInvokeModule" parent="DefaultSearchModule" type="SpikeLite.Modules.Search.SearchModulePrototype, SpikeLite.Modules.Search">
+    <property name="Name" value="pInvoke"/>
+    <property name="Description" value="Search pInvoke.Net"/>
+    <property name="Instructions" value="~pinvoke [search terms]"/>
+    <property name="SearchUrl" value="pinvoke.net"/>
+    <property name="SearchTrigger" value="~pinvoke"/>
+  </object>
+
+  <object id="MSDNModule" parent="DefaultSearchModule" type="SpikeLite.Modules.Search.SearchModulePrototype, SpikeLite.Modules.Search">
+    <property name="Name" value="MSDN"/>
+    <property name="Description" value="Search MSDN"/>
+    <property name="Instructions" value="~msdn [search terms]"/>
+    <property name="SearchUrl" value="msdn.microsoft.com"/>
+    <property name="SearchTrigger" value="~msdn"/>
+  </object>
+
+  <object id="PatternsModule" parent="DefaultSearchModule" type="SpikeLite.Modules.Search.SearchModulePrototype, SpikeLite.Modules.Search">
+    <property name="Name" value="Pattern"/>
+    <property name="Description" value="Search DoFactory.com/Patterns/"/>
+    <property name="Instructions" value="~pattern [search terms]"/>
+    <property name="SearchUrl" value="www.dofactory.com/Patterns/"/>
+    <property name="SearchTrigger" value="~pattern"/>
+  </object>
+
+  <object id="MSConnectModule" parent="DefaultSearchModule" type="SpikeLite.Modules.Search.SearchModulePrototype, SpikeLite.Modules.Search">
+    <property name="Name" value="MSConnect"/>
+    <property name="Description" value="Search Microsoft Connect"/>
+    <property name="Instructions" value="~msconnect [search terms]"/>
+    <property name="SearchUrl" value="connect.microsoft.com"/>
+    <property name="SearchTrigger" value="~connect"/>
+  </object>
+
+  <object id="CodeplexModule" parent="DefaultSearchModule" type="SpikeLite.Modules.Search.SearchModulePrototype, SpikeLite.Modules.Search">
+    <property name="Name" value="Codeplex"/>
+    <property name="Description" value="Search Codeplex"/>
+    <property name="Instructions" value="~codeplex [search terms]"/>
+    <property name="SearchUrl" value="www.codeplex.com"/>
+    <property name="SearchTrigger" value="~codeplex"/>
+  </object>
+  
+  <object id="xkcdModule" parent="DefaultSearchModule" type="SpikeLite.Modules.Search.SearchModulePrototype, SpikeLite.Modules.Search">
+    <property name="Name" value="xkcd"/>
+    <property name="Description" value="Search the XKCD comic"/>
+    <property name="Instructions" value="~xkcd [search terms]"/>
+    <property name="SearchUrl" value="xkcd.com/"/>
+    <property name="SearchTrigger" value="~xkcd"/>
+  </object>
+  
+  <object id="MDocModule" parent="DefaultSearchModule" type="SpikeLite.Modules.Search.SearchModulePrototype, SpikeLite.Modules.Search">
+    <property name="Name" value="MDoc"/>
+    <property name="Description" value="Search MonoDoc"/>
+    <property name="Instructions" value="~mdoc [search terms]"/>
+    <property name="SearchUrl" value="www.go-mono.com/docs"/>
+    <property name="SearchTrigger" value="~mdoc"/>
+  </object>
+  
+  <object id="CodeProjectModule" parent="DefaultSearchModule" type="SpikeLite.Modules.Search.SearchModulePrototype, SpikeLite.Modules.Search">
+    <property name="Name" value="CodeProject"/>
+    <property name="Description" value="Search CodeProject"/>
+    <property name="Instructions" value="~codeproject [search terms]"/>
+    <property name="SearchUrl" value="codeproject.com"/>
+    <property name="SearchTrigger" value="~codeproject"/>
+  </object>
+  
+  <object id="DADSModule" parent="DefaultSearchModule" type="SpikeLite.Modules.Search.SearchModulePrototype, SpikeLite.Modules.Search">
+    <property name="Name" value="DADS"/>
+    <property name="Description" value="Search Dictionary of Algorithms and Data Structures at NIST"/>
+    <property name="Instructions" value="~dads [search terms]"/>
+    <property name="SearchUrl" value="www.nist.gov/dads/HTML"/>
+    <property name="SearchTrigger" value="~dads"/>
+  </object>
+  
+  <object id="RefactoringModule" parent="DefaultSearchModule" type="SpikeLite.Modules.Search.SearchModulePrototype, SpikeLite.Modules.Search">
+    <property name="Name" value="Refactoring"/>
+    <property name="Description" value="Search Refactoring.com"/>
+    <property name="Instructions" value="~refactoring [search terms]"/>
+    <property name="SearchUrl" value="www.refactoring.com/catalog/"/>
+    <property name="SearchTrigger" value="~refactoring"/>
+  </object>
+  
+  <object id="ConnectionStringsModule" parent="DefaultSearchModule" type="SpikeLite.Modules.Search.SearchModulePrototype, SpikeLite.Modules.Search">
+    <property name="Name" value="Connection Strings"/>
+    <property name="Description" value="Search ConnectionString.com"/>
+    <property name="Instructions" value="~connectionstring [search terms]"/>
+    <property name="SearchUrl" value="www.connectionstrings.com"/>
+    <property name="SearchTrigger" value="~connectionstring"/>
+  </object>
+  
+  <object id="WikipediaModule" parent="DefaultSearchModule" type="SpikeLite.Modules.Search.SearchModulePrototype, SpikeLite.Modules.Search">
+    <property name="Name" value="Wikipedia"/>
+    <property name="Description" value="Search Wikipedia"/>
+    <property name="Instructions" value="~wikipedia [search terms]"/>
+    <property name="SearchUrl" value="en.wikipedia.org"/>
+    <property name="SearchTrigger" value="~wikipedia"/>
   </object>
 
   <!-- Infrastructure modules. -->
-  <object id="AboutModule" type="SpikeLite.Modules.About.AboutModule, SpikeLite.Modules.About"/>
-  <object id="HelpModule" type="SpikeLite.Modules.Help.HelpModule, SpikeLite.Modules.Help"/>
-  <object id="PuppetModule" type="SpikeLite.Modules.Puppet.PuppetModule, SpikeLite.Modules.Puppet"/>
-  <object id="TellModule" type="SpikeLite.Modules.Tell.TellModule, SpikeLite.Modules.Tell"/>
+  <object id="AboutModule" type="SpikeLite.Modules.About.AboutModule, SpikeLite.Modules.About">
+    <property name="Name" value="About"/>
+    <property name="Description" value="Provides information about the bot."/>
+    <property name="Instructions" value="Usage Syntax: ~about"/>
+    <property name="ModuleManagementContainer" ref="ModuleManager"/>
+  </object>
+  
+  <object id="HelpModule" type="SpikeLite.Modules.Help.HelpModule, SpikeLite.Modules.Help">
+    <property name="Name" value="Help"/>
+    <property name="Description" value="Provides help for the set of modules currently loaded."/>
+    <property name="Instructions" value="Usage Syntax: ~help [module name]"/>
+    <property name="ModuleManagementContainer" ref="ModuleManager"/>
+  </object>
+  
+  <object id="PuppetModule" type="SpikeLite.Modules.Puppet.PuppetModule, SpikeLite.Modules.Puppet">
+    <property name="Name" value="Puppet"/>
+    <property name="Description" value="Not documented."/>
+    <property name="Instructions" value="Not documented."/>
+    <property name="RequiredAccessLevel" value="Root"/>
+    <property name="ModuleManagementContainer" ref="ModuleManager"/>
+  </object>
+  
+  <object id="TellModule" type="SpikeLite.Modules.Tell.TellModule, SpikeLite.Modules.Tell">
+    <property name="Name" value="Tell"/>
+    <property name="Description" value="Tell allows you to direct a response from a speicifed command at a specified user."/>
+    <property name="Instructions" value="Usage Syntax: '~tell [NickName] [Command] [CommandArgs]' i.e. '~tell SomeUser google stuff'"/>
+    <property name="ModuleManagementContainer" ref="ModuleManager"/>
+  </object>
 
   <!-- Modules that wrap thinly veiled webservice calls. -->
-  <object id="GeoipModule" type="SpikeLite.Modules.GeoIP.GeoIpLookupModule, SpikeLite.Modules.GeoIP"/>
+  <object id="GeoipModule" type="SpikeLite.Modules.GeoIP.GeoIpLookupModule, SpikeLite.Modules.GeoIP">
+    <property name="Name" value="Geoip"/>
+    <property name="Description" value="Resolve the country of a given IP."/>
+    <property name="Instructions" value="Usage Syntax: ~geoip [quad dotted IP]"/>
+    <property name="ModuleManagementContainer" ref="ModuleManager"/>
+  </object>
 
   <!-- Database-backed modules.  -->
   <object id="KarmaModule" type="SpikeLite.Modules.Karma.KarmaModule, SpikeLite.Modules.Karma">
+    <property name="Name" value="Karma"/>
+    <property name="Description" value="Stores users' Karma"/>
+    <property name="Instructions" value="~karma [NickName]++ to increment a users karma. ~karma [NickName]-- to decrement a users karma. ~karma [NickName] to query a user's karma."/>
     <property name="KarmaDao" ref="KarmaDao"/>
+    <property name="ModuleManagementContainer" ref="ModuleManager"/>
   </object>
 
   <!-- Static fact modules. -->
-  <object id="WikiLinkModule" type="SpikeLite.Modules.CommunityLinks.WikiLinkModule, SpikeLite.Modules.CommunityLinks"/>
-  <object id="ConnectLinkModule" type="SpikeLite.Modules.MSLinks.ConnectLinkModule, SpikeLite.Modules.MSLinks"/>
+  <object id="WikiLinkModule" type="SpikeLite.Modules.CommunityLinks.WikiLinkModule, SpikeLite.Modules.CommunityLinks">
+    <property name="Name" value="WikiLink"/>
+    <property name="Description" value="Returns the link to the community wiki."/>
+    <property name="Instructions" value="~wiki"/>
+    <property name="ModuleManagementContainer" ref="ModuleManager"/>
+  </object>
+  
+  <object id="ConnectLinkModule" type="SpikeLite.Modules.MSLinks.ConnectLinkModule, SpikeLite.Modules.MSLinks">
+    <property name="Name" value="ConnectLink"/>
+    <property name="Description" value="Returns the link to microsoft connect."/>
+    <property name="Instructions" value="~connect"/>
+    <property name="ModuleManagementContainer" ref="ModuleManager"/>
+  </object>
+
+  <object id="ForumLinkModule" type="SpikeLite.Modules.MSLinks.ForumLinkModule, SpikeLite.Modules.MSLinks">
+    <property name="Name" value="ForumLink"/>
+    <property name="Description" value="Returns the link to the microsoft forums."/>
+    <property name="Instructions" value="~msforums"/>
+    <property name="ModuleManagementContainer" ref="ModuleManager"/>
+  </object>
 
   <!-- This is our default list of modules to load (the entire set). Please override this in the beans-overrides
        if you wish a different set to be loaded. -->
   <object id="ModuleList" type="FrontEnd_Console.ModuleList, FrontEnd_Console">
     <constructor-arg index="0">
       <list element-type="SpikeLite.Modules.IModule, SpikeLite">
-        <ref object="AboutModule"/>
+        <ref object="GoogleModule"/>
+        <ref object="BingModule"/>
+        <ref object="AboutModule"/> 
         <ref object="WikiLinkModule"/>
-        <ref object="GeoipModule"/>
+        <ref object="GeoipModule"/> 
         <ref object="HelpModule"/>
-        <ref object="KarmaModule"/>
-        <ref object="ConnectLinkModule"/>
+        <ref object="KarmaModule"/> 
+        <ref object="ConnectLinkModule"/> 
         <ref object="ForumLinkModule"/>
-        <ref object="PuppetModule"/>
+        <ref object="PuppetModule"/> 
         <ref object="pInvokeModule"/>
         <ref object="MSDNModule"/>
         <ref object="PatternsModule"/>
@@ -88,9 +239,6 @@
         <ref object="xkcdModule"/>
         <ref object="MDocModule"/>
         <ref object="CodeProjectModule"/>
-        <ref object="MSForumsModule"/>
-        <ref object="GoogleModule"/>
-        <ref object="LiveModule"/>
         <ref object="DADSModule"/>
         <ref object="RefactoringModule"/>
         <ref object="ConnectionStringsModule"/>

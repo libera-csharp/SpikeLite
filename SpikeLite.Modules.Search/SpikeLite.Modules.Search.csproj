@@ -38,6 +38,14 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Dependencies\log4net.dll</HintPath>
     </Reference>
+    <Reference Include="log4net.Ext.Trace, Version=1.2.10.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Dependencies\log4net.Ext.Trace.dll</HintPath>
+    </Reference>
+    <Reference Include="Mono.Rocks, Version=0.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Dependencies\Mono.Rocks.dll</HintPath>
+    </Reference>
     <Reference Include="Sharkbite.Thresher, Version=1.2.0.0, Culture=neutral, PublicKeyToken=e9ceddb3468b088a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Dependencies\Sharkbite.Thresher.dll</HintPath>
@@ -47,31 +55,23 @@
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.EnterpriseServices" />
     <Reference Include="System.Web.Services" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CodeplexSearchModule.cs" />
-    <Compile Include="CodeProjectSearchModule.cs" />
-    <Compile Include="ConnectSearchModule.cs" />
-    <Compile Include="ConnectionStringSearchModule.cs" />
-    <Compile Include="PatternSearchModule.cs" />
-    <Compile Include="RefactoringSearchModule.cs" />
-    <Compile Include="MSDNSearchModule.cs" />
-    <Compile Include="MSForumsSearchModule.cs" />
-    <Compile Include="MDocSearchModule.cs" />
-    <Compile Include="LiveSearchModule.cs" />
-    <Compile Include="DADSSearchModule.cs" />
-    <Compile Include="GoogleSearchModule.cs" />
-    <Compile Include="Google\GoogleSearch.cs" />
-    <Compile Include="PInvokeSearchModule.cs" />
+    <Compile Include="AbstractSearchProvider.cs" />
+    <Compile Include="GoogleSearchProvider.cs" />
+    <Compile Include="ISearchProvider.cs" />
+    <Compile Include="MicrosoftLiveSearchProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
-    <Compile Include="SiteSearchModuleBase.cs" />
+    <Compile Include="SearchModulePrototype.cs" />
     <Compile Include="Web References\com.google.api\Reference.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -82,8 +82,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.map</DependentUpon>
     </Compile>
-    <Compile Include="WikipediaSearchModule.cs" />
-    <Compile Include="XkcdSearchModule.cs" />
   </ItemGroup>
   <ItemGroup>
     <WebReferences Include="Web References\" />

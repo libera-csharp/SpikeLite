@@ -1,20 +1,18 @@
 /**
  * SpikeLite C# IRC Bot
- * Copyright (c) 2008 FreeNode ##Csharp Community
+ * Copyright (c) 2009 FreeNode ##Csharp Community
  * 
  * This source is licensed under the terms of the MIT license. Please see the 
  * distributed license.txt for details.
  */
 using System;
 using System.Threading;
-using log4net;
+using log4net.Ext.Trace;
 using Sharkbite.Irc;
 using SpikeLite.AccessControl;
 using SpikeLite.Communications;
 using SpikeLite.Modules;
-using SpikeLite.Persistence;
 using SpikeLite.Communications.IRC;
-using System.Collections.Generic;
 
 namespace SpikeLite
 {
@@ -82,7 +80,7 @@ namespace SpikeLite
         /// <summary>
         /// This holds the instace of the logger we use for spamming whatever appender we so desire.
         /// </summary>
-        private ILog _logger;
+        private readonly TraceLogImpl _logger = (TraceLogImpl)TraceLogManager.GetLogger(typeof(SpikeLite));
 
         #endregion
 
@@ -95,7 +93,7 @@ namespace SpikeLite
         /// <remarks>
         /// This will need to be refactored for multi-network support.
         /// </remarks>
-        public bool IsConnected
+        private bool IsConnected
         {
             get { return _connection != null && _connection.Connected; }
         }
@@ -125,22 +123,6 @@ namespace SpikeLite
         public ModuleManager ModuleManager
         {
             get; set;
-        }
-
-        /// <summary>
-        /// Gets the Log4NET logger that we're using.
-        /// </summary>
-        protected virtual ILog Logger
-        {
-            get
-            {
-                if (_logger == null)
-                {
-                    _logger = LogManager.GetLogger(typeof(SpikeLite));
-                }
-
-                return _logger;
-            }
         }
 
         #endregion
@@ -239,7 +221,7 @@ namespace SpikeLite
         /// </para>
         /// 
         /// </remarks>
-        public void Connect()
+        private void Connect()
         {
             if (!IsConnected)
             {
@@ -273,7 +255,7 @@ namespace SpikeLite
         /// </remarks>
         private void OnRawMessageSent(string message)
         {
-            Logger.DebugFormat("Sent: {0}", message);
+            _logger.TraceFormat("Sent: {0}", message);
         }
 
         /// <summary>
@@ -287,7 +269,7 @@ namespace SpikeLite
         /// </remarks>
         private void OnRawMessageReceived(string message)
         {
-            Logger.DebugFormat("Received: {0}", message);
+            _logger.TraceFormat("Received: {0}", message);
         }
 
         /// <summary>
@@ -328,7 +310,7 @@ namespace SpikeLite
                          notice.EndsWith("is not registered", StringComparison.OrdinalIgnoreCase))
                     )
                 {
-                    Logger.Info("Handshake completed, joining channels.");
+                    _logger.Info("Handshake completed, joining channels.");
 
                     // TODO: Kog 12/26/2008 - Yeah, the network support is hacked in to only support a single
                     // TODO:                  network. We can't support multiples right now anyway, it's a TODO.
@@ -336,14 +318,14 @@ namespace SpikeLite
                     {
                         // TODO: Kog 12/26/2008 - We need to support the API listed in the channel class docs.
                         _connection.Sender.Join(channel.Name);
-                        Logger.InfoFormat("joining {0}...", channel.Name);
+                        _logger.InfoFormat("joining {0}...", channel.Name);
                     }
                 }
                 // log auth failures
                 else
                 {
                     // TODO: Kog JUN-05 2008 - do we want to quit here, or what?
-                    Logger.Info("AUTHENTICATION FAILURE");
+                    _logger.Info("AUTHENTICATION FAILURE");
                 }
             }
         }
@@ -375,7 +357,7 @@ namespace SpikeLite
 
                     if (!IsConnected)
                     {
-                        Logger.WarnFormat("Failed whilst attempting reconnection attempt #{0}", reconnectCount);
+                        _logger.WarnFormat("Failed whilst attempting reconnection attempt #{0}", reconnectCount);
 
                         // Because of the do-while we end up with n+1 sleeps... not a big deal, but just remember.
                         Thread.Sleep(60000);

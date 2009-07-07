@@ -11,10 +11,9 @@ using SpikeLite.Persistence.Authentication;
 
 namespace SpikeLite.Modules.MSLinks
 {
-    [Module("ConnectLink", "Returns the link to microsoft connect.", "~connect", AccessLevel.Public)]
     public class ConnectLinkModule : ModuleBase
     {
-        protected override void InternalHandleRequest(Request request)
+        public override void HandleRequest(Request request)
         {
             if (request.RequestFrom.AccessLevel >= AccessLevel.Public
                 && request.Message.Equals("~connect", StringComparison.OrdinalIgnoreCase))

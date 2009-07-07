@@ -8,7 +8,7 @@
 using System;
 using Sharkbite.Irc;
 using SpikeLite.AccessControl;
-using log4net;
+using log4net.Ext.Trace;
 using SpikeLite.Communications.IRC;
 using System.Collections.Generic;
 
@@ -58,7 +58,7 @@ namespace SpikeLite.Communications
         /// <summary>
         /// Stores our log4net logger.
         /// </summary>
-        private ILog _logger;
+        private readonly TraceLogImpl _logger = (TraceLogImpl)TraceLogManager.GetLogger(typeof(SpikeLite));
 
         /// <summary>
         /// Allows the getting or setting of our connection object.
@@ -84,22 +84,6 @@ namespace SpikeLite.Communications
 
                 _connection.Listener.OnPublic += Listener_OnPublic;
                 _connection.Listener.OnPrivate += Listener_OnPrivate;
-            }
-        }
-
-        /// <summary>
-        /// Gets the Log4NET logger that we're using.
-        /// </summary>
-        protected virtual ILog Logger
-        {
-            get
-            {
-                if (_logger == null)
-                {
-                    _logger = LogManager.GetLogger(typeof(CommunicationManager));
-                }
-
-                return _logger;
             }
         }
 
@@ -136,7 +120,7 @@ namespace SpikeLite.Communications
             {
                 if (response.Channel == null)
                 {
-                    Logger.WarnFormat("Attempted to send a public-targeted message in response to a private message. Nick: {0} Message: {1}", 
+                    _logger.WarnFormat("Attempted to send a public-targeted message in response to a private message. Nick: {0} Message: {1}", 
                                        response.Nick, 
                                        response.Message);
                 }
@@ -145,7 +129,7 @@ namespace SpikeLite.Communications
             }
             else
             {
-                Logger.WarnFormat("Received an unknown responsetype: {0}", response.ResponseType);
+                _logger.WarnFormat("Received an unknown responsetype: {0}", response.ResponseType);
             }
         }
 
@@ -165,7 +149,7 @@ namespace SpikeLite.Communications
             UserToken userToken = _userTokenCache.RetrieveToken(userInfo);
             AuthToken authToken = AuthHandler.Authenticate(userToken);
 
-            Request request = new Request()
+            Request request = new Request
             {
                 RequestFrom = authToken,
                 Channel = channel,
@@ -189,7 +173,7 @@ namespace SpikeLite.Communications
             UserToken userToken = _userTokenCache.RetrieveToken(userInfo);
             AuthToken authToken = AuthHandler.Authenticate(userToken);
             
-			Request request = new Request()
+			Request request = new Request
             {
                 RequestFrom = authToken,
                 Channel = null,

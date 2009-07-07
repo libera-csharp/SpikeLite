@@ -9,33 +9,89 @@ using SpikeLite.AccessControl;
 
 namespace SpikeLite.Communications
 {
+    /// <summary>
+    /// This enum represents the types of request possible, in this case either a 1:1 or 1:N message.
+    /// </summary>
     public enum RequestType
     {
+        /// <summary>
+        /// This is a 1:N message, being targeted at a channel.
+        /// </summary>
         Public,
+
+        /// <summary>
+        /// This is a 1:1 message, being targeted at a single user.
+        /// </summary>
         Private
     }
 
+    /// <summary>
+    /// This struct contains information about a message being sent to the bot.
+    /// </summary>
     public struct Request
     {
+        #region Properties
+
+        /// <summary>
+        /// Gets or sets an authentication token containing authorization and other details.
+        /// </summary>
         public AuthToken RequestFrom { get; set; }
+
+        /// <summary>
+        /// Gets or sets the channel from which the request was sent.
+        /// </summary>
         public string Channel { get; set; }
+
+        /// <summary>
+        /// Gets or sets the nick of the user from which the request was sent.
+        /// </summary>
         public string Nick { get; set; }
+
+        /// <summary>
+        /// Gets or sets the <see cref="RequestType"/> of the message.
+        /// </summary>
         public RequestType RequestType { get; set; }
+
+        /// <summary>
+        /// Gets or sets the name of the user to respond to. This may, or may not, be the nickname of the request originator.
+        /// </summary>
         public string Addressee { get; set; }
+
+        /// <summary>
+        /// Gets or sets the actual message payload of the given request.
+        /// </summary>
         public string Message { get; set; }
 
+        #endregion 
+
         #region CreateResponse
-        
+
+        /// <summary>
+        /// Creates a response for a given response type.
+        /// </summary>
+        /// 
+        /// <param name="maxResponse">The type of response to yield.</param>
+        /// 
+        /// <returns>A response structure capable of being sent along the application as a message.</returns>
         public Response CreateResponse( ResponseType maxResponse )
         {
             return CreateResponse(maxResponse, "");
         }
 
+
+        /// <summary>
+        /// Creates a response for a given response type with a given message payload.
+        /// </summary>
+        /// 
+        /// <param name="maxResponse">The type of response to yield.</param>
+        /// <param name="message">The message payload to deliver.</param>
+        /// 
+        /// <returns>A response structure capable of being sent along the application as a message.</returns>
         public Response CreateResponse( ResponseType maxResponse, string message )
         {
             ResponseType responseType = GetResponseType(maxResponse);
 
-            return new Response()
+            return new Response
             {
                 Channel = Channel,
                 Nick = Nick,

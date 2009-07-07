@@ -30,7 +30,6 @@ namespace SpikeLite.Modules.Karma
     /// </para>
     /// 
     /// </remarks>
-    [Module("Karma", "Stores user's Karma", "~karma <NickName>++ to increment a users karma. ~karma <NickName>-- to decrement a users karma. ~karma <NickName> to query a user's karma.", AccessLevel.Public)]
     public class KarmaModule : ModuleBase
     {
         /// <summary>
@@ -68,7 +67,7 @@ namespace SpikeLite.Modules.Karma
         /// we don't want users to spam us offline.
         /// </para>
         /// </remarks>
-        protected override void InternalHandleRequest(Request request)
+        public override void HandleRequest(Request request)
         {
             if (request.RequestFrom.AccessLevel >= AccessLevel.Public)
             {

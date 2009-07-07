@@ -12,10 +12,9 @@ using SpikeLite.Persistence.Authentication;
 
 namespace SpikeLite.Modules.About
 {
-    [Module("About", "Provides information about the bot.", "Usage Syntax: ~about", AccessLevel.Public)]
     public class AboutModule : ModuleBase
     {
-        protected override void InternalHandleRequest(Request request)
+        public override void HandleRequest(Request request)
         {
             if (request.RequestFrom.AccessLevel >= AccessLevel.Public
                 && request.RequestType == RequestType.Public
@@ -25,7 +24,7 @@ namespace SpikeLite.Modules.About
             }
         }
 
-        protected void SendResponse(Request request)
+        private void SendResponse(Request request)
         {
             string message = string.Format("{0} (V{1}) is the ##csharp irc bot on freenode.net", 
                                            NetworkConnectionInformation.BotNickname, 

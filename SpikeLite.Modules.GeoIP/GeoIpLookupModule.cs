@@ -21,7 +21,6 @@ namespace SpikeLite.Modules.GeoIP
     /// The module will not perform a name lookup. This is a basically a glorified async
     /// web call, so expect delay.
     /// </remarks>
-    [Module("Geoip", "Resolve the country of a given IP.", "Usage Syntax: ~geoip <quad dotted IP>", AccessLevel.Public)]
     public class GeoIpLookupModule : ModuleBase
     {
         #region Data Members
@@ -29,12 +28,12 @@ namespace SpikeLite.Modules.GeoIP
         /// <summary>
         /// A regex grouped such that we only care about the IP.
         /// </summary>
-        private const string _geoIpRegexPattern = @"~geoip\s(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})";
+        private const string GeoIpRegexPattern = @"~geoip\s(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})";
         
         /// <summary>
         /// A regular expression object for match checking and grouping.
         /// </summary>
-        private static readonly Regex _geoIpRegex = new Regex(_geoIpRegexPattern);
+        private static readonly Regex GeoIpRegex = new Regex(GeoIpRegexPattern);
 
         /// <summary>
         /// Holds a reference to our WS proxy.
@@ -58,11 +57,11 @@ namespace SpikeLite.Modules.GeoIP
 
         #region Behavior
 
-        protected override void InternalHandleRequest(Request request)
+        public override void HandleRequest(Request request)
         {
             if (request.Message.StartsWith("~geoip") && request.RequestFrom.AccessLevel >= AccessLevel.Public)
             {
-                Match expressionMatch = _geoIpRegex.Match(request.Message);
+                Match expressionMatch = GeoIpRegex.Match(request.Message);
 
                 if (expressionMatch.Success)
                 {
@@ -96,7 +95,7 @@ namespace SpikeLite.Modules.GeoIP
         /// <param name="sender">Our service proxy, ignored.</param>
         /// 
         /// <param name="e">Our GeoIP lookup containing our <see cref="GeoIP"/> response from the service.</param>
-        protected void IpLookupCompletionHandler(object sender, GetGeoIPCompletedEventArgs e)
+        private void IpLookupCompletionHandler(object sender, GetGeoIPCompletedEventArgs e)
         {
             Request requestContext = (Request)e.UserState;
 

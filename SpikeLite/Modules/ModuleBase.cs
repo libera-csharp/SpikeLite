@@ -7,8 +7,8 @@
  */
 using SpikeLite.Communications;
 using SpikeLite.Communications.IRC;
-using SpikeLite.Persistence;
-using log4net;
+using log4net.Ext.Trace;
+using SpikeLite.Persistence.Authentication;
 
 namespace SpikeLite.Modules
 {
@@ -19,10 +19,12 @@ namespace SpikeLite.Modules
     /// </summary>
     public abstract class ModuleBase : IModule
     {
+        #region Plumbing Properties
+
         /// <summary>
         /// Holds our log4net logger.
         /// </summary>
-        private ILog _logger;
+        private TraceLogImpl _logger;
 
         /// <summary>
         /// This property exposes the module container to implementations of this module.
@@ -32,27 +34,17 @@ namespace SpikeLite.Modules
         /// <summary>
         /// Gets the Log4NET logger that we're using.
         /// </summary>
-        protected virtual ILog Logger
+        protected virtual TraceLogImpl Logger
         {
             get
             {
                 if (_logger == null)
                 {
-                    _logger = LogManager.GetLogger(typeof(ModuleBase));
+                    _logger = (TraceLogImpl) TraceLogManager.GetLogger(GetType());
                 }
 
                 return _logger;
             }
-        }
-
-        // TODO: Kog 12/25/2008 replace this with inheritence - have a "licensed module" or something.
-
-        /// <summary>
-        /// Gets or sets an optional API or license key that a module may require.
-        /// </summary>
-        public virtual string ApiKey
-        {
-            get; set;
         }
 
         // TODO: Kog 12/26/2008 - This totally sucks, we need to replace this idea. Messages should most likely
@@ -67,24 +59,50 @@ namespace SpikeLite.Modules
             get; set;
         }
 
-        /// <summary>
-        /// We've received a message, let's see if we can handle it.
-        /// </summary>
-        /// 
-        /// <param name="request">The message we've received.</param>
-        /// 
-        /// <remarks>
-        /// This was originally added to support the tell module, but for now we're sorta half-assing that.
-        /// While we should probably get rid of this, I have a feeling that we'll probably need this soon so 
-        /// I left it in. Delete if you'd like.
-        /// </remarks>
-        public void HandleRequest(Request request)
-        {
-            InternalHandleRequest(request);
-        }
+        #endregion 
+
+        #region IModule Implementation
+
+        #region Module Information Properties
 
         /// <summary>
-        /// Provide a method that modules can implement and has the wiring already done by HandleRequest.
+        /// By default all modules are "public" level access. Please see the access level enumeration for details.
+        /// </summary>
+        private AccessLevel _requiredAccessLevel = AccessLevel.Public;
+
+        /// <summary>
+        /// Gets or sets the name of the associated module. This would be something like "Google search module."
+        /// </summary>
+        public string Name { get; set; }
+
+        /// <summary>
+        /// Gets or sets the description of the associated module. This would be something like "Searches the internet."
+        /// </summary>
+        public string Description { get; set; }
+
+        /// <summary>
+        /// Gets or sets a short summary of usage instructions. This would be something like "~google [topic]."
+        /// </summary>
+        public string Instructions { get; set; }
+
+        /// <summary>
+        /// Gets or sets the <see cref="AccessLevel"/> required to run the module.
+        /// </summary>
+        /// 
+        /// <remarks>
+        /// If no value is supplied, a default access level of Public is assumed.
+        /// </remarks>
+        public AccessLevel RequiredAccessLevel
+        {
+            get { return _requiredAccessLevel; }
+            set { _requiredAccessLevel = value; }
+        }
+
+        #endregion
+
+        /// <summary>
+        /// Given from our contract in IModule. This class does not actually provide any implementation
+        /// details.
         /// </summary>
         /// 
         /// <param name="request">A message relayed to this module.</param>
@@ -95,6 +113,8 @@ namespace SpikeLite.Modules
         /// currently no mechanism for stopping propagation of the message (IE: we've handled the message). This
         /// may come when we hook up AOP (then we'll expect a 1:1 between message and consumer, sans advice points).
         /// </remarks>
-        protected abstract void InternalHandleRequest(Request request);
+        public abstract void HandleRequest(Request request);
+
+        #endregion
     }
 }
