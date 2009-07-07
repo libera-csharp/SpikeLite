@@ -21,7 +21,7 @@ namespace SpikeLite.Modules.Search
     /// second being that Microsoft allows a higher number of searches per day. This provider is only used, by default, for the Google search
     /// itself.
     /// </remarks>
-    public class GoogleSearchProvider : AbstractSearchProvider
+    public class GoogleSearchProvider : AbstractApiKeySearchProvider
     {
         private readonly GoogleSearchService _searchBroker;
 

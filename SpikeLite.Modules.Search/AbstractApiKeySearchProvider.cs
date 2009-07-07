@@ -13,7 +13,7 @@ namespace SpikeLite.Modules.Search
     /// <summary>
     /// An abstract class for our search providers, allowing for some wiring and simple re-use.
     /// </summary>
-    public abstract class AbstractSearchProvider : ISearchProvider
+    public abstract class AbstractApiKeySearchProvider : ISearchProvider
     {
         public string ApiKey
         {

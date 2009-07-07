@@ -21,6 +21,11 @@
     <property name="SearchProvider" ref="LiveSearchProvider"/>
     <property name="ModuleManagementContainer" ref="ModuleManager"/>
   </object>
+	
+  <object id="GoogleAjaxSearchModule" abstract="true" type="SpikeLite.Modules.Search.SearchModulePrototype, SpikeLite.Modules.Search" singleton="false">
+    <property name="SearchProvider" ref="GoogleAjaxSearchProvider"/>
+    <property name="ModuleManagementContainer" ref="ModuleManager"/>
+  </object>
 
   <object id="GoogleSearchModule" abstract="true" type="SpikeLite.Modules.Search.SearchModulePrototype, SpikeLite.Modules.Search" singleton="false">
     <property name="SearchProvider" ref="GoogleSearchProvider"/>
@@ -33,6 +38,9 @@
   </object>
 
   <!-- Set up our search providers -->
+  <object id="GoogleAjaxSearchProvider" type="SpikeLite.Modules.Search.GoogleAjaxSearchProvider, SpikeLite.Modules.Search">
+    <property name="Referrer" ref="GoogleAjaxReferrer"/>
+  </object>
   <object id="GoogleSearchProvider" type="SpikeLite.Modules.Search.GoogleSearchProvider, SpikeLite.Modules.Search">
     <property name="ApiKey" ref="GoogleApiKey"/>
   </object>
@@ -46,6 +54,13 @@
   </object>
 
   <!-- Default search-based modules. -->
+  <object id="GoogleAjaxModule" parent="GoogleAjaxSearchModule" type="SpikeLite.Modules.Search.SearchModulePrototype, SpikeLite.Modules.Search">
+	<property name="Name" value="GoogleAjax"/>
+	<property name="Description" value="Search Google AJAX API"/>
+	<property name="Instructions" value="~googleajax [search terms]"/>
+	<property name="SearchTrigger" value="~googleajax"/>
+  </object>
+	
   <object id="GoogleModule" parent="GoogleSearchModule" type="SpikeLite.Modules.Search.SearchModulePrototype, SpikeLite.Modules.Search">
     <property name="Name" value="Google"/>
     <property name="Description" value="Search Google SOAP API"/>
@@ -237,6 +252,7 @@
   <object id="ModuleList" type="FrontEnd_Console.ModuleList, FrontEnd_Console">
     <constructor-arg index="0">
       <list element-type="SpikeLite.Modules.IModule, SpikeLite">
+		<ref object="GoogleAjaxModule"/>
         <ref object="GoogleModule"/>
         <ref object="LiveModule"/>
 		<ref object="BingModule"/>
@@ -266,6 +282,10 @@
   </object>
 
   <!-- Our Google and MS Live API keys. Please define these in the beans-overrides.xml. -->
+  <object name="GoogleAjaxReferrer" type="String">
+	<constructor-arg index="0" value="${referrers.googleajax}"/>
+  </object>
+	
   <object name="GoogleApiKey" type="String">
     <constructor-arg index="0" value="${apikeys.google}"/>
   </object>

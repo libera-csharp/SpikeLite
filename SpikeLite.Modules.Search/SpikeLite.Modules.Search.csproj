@@ -57,11 +57,20 @@
     </Reference>
     <Reference Include="System.Data" />
     <Reference Include="System.EnterpriseServices" />
+    <Reference Include="System.Runtime.Serialization">
+      <RequiredTargetFramework>3.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.ServiceModel.Web">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Web" />
     <Reference Include="System.Web.Services" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AbstractSearchProvider.cs" />
+    <Compile Include="AbstractApiKeySearchProvider.cs" />
+    <Compile Include="AbstractReferrerSearchProvider.cs" />
+    <Compile Include="GoogleAjaxSearchProvider.cs" />
     <Compile Include="MicrosoftBingSearchProvider.cs" />
     <Compile Include="GoogleSearchProvider.cs" />
     <Compile Include="ISearchProvider.cs" />

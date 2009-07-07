@@ -17,11 +17,6 @@ namespace SpikeLite.Modules.Search
     public interface ISearchProvider
     {
         /// <summary>
-        /// Gets or sets the associated API key that our search provider demands.
-        /// </summary>
-        string ApiKey { get; set; }
-
-        /// <summary>
         /// Attempts to execute a search against internally held proxy. See the remarks section
         /// for details.
         /// </summary>

@@ -21,7 +21,7 @@ namespace SpikeLite.Modules.Search
     /// allowed per Google was less than Live, and Live seems to do a decent enough job (and, indeed powers MSDN itself). Given the higher
     /// allowance of searches, this is the preffered provider at the moment.
     /// </remarks>
-    public class MicrosoftLiveSearchProvider : AbstractSearchProvider
+    public class MicrosoftLiveSearchProvider : AbstractApiKeySearchProvider
     {
         private readonly MSNSearchService _searchBroker;
 

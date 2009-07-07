@@ -38,6 +38,9 @@
 		  <add key="apikeys.live" value="NOT CONFIGURED"/>
 		  <add key="apikeys.bing" value="NOT CONFIGURED"/>
 
+		  <!-- Configure our referrers -->
+		  <add key="referrers.googleajax" value="NOT CONFIGURED"/>
+
 		  <!-- Database setup -->
 		  <add key="db.provider" value="Npgsql-2.0"/>
 		  <add key="db.connectionstring" value="User ID=user;Password=pass;Host=127.0.0.1;Port=5432;Database=db;"/>

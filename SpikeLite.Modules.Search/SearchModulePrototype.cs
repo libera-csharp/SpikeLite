@@ -56,11 +56,6 @@ namespace SpikeLite.Modules.Search
         /// <param name="request">Our incoming message.</param>
         public override void HandleRequest(Request request)
         {
-            if (string.IsNullOrEmpty(SearchProvider.ApiKey))
-            {
-                return;
-            }
-
             if (request.RequestType == RequestType.Public)
             {
                 string[] messageArray = request.Message.Split(' ');
