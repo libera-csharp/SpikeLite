@@ -112,8 +112,7 @@ namespace SpikeLite.Modules.GeoIP
         /// </summary>
         public GeoIpLookupModule()
         {
-            _client = new WebClient();
-            _client.DownloadStringCompleted += SearchCompletionHandler;
+
         }
 
         /// <summary>
@@ -125,7 +124,10 @@ namespace SpikeLite.Modules.GeoIP
         private void ExecuteSearch(string ipAddress, Request request)
         {
             Uri searchUri = new Uri(string.Format("{0}?ip={1}", SearchUri.AbsoluteUri, HttpUtility.UrlEncode(ipAddress)));
-            _client.DownloadStringAsync(searchUri, new Tuple<Request, string>(request, ipAddress));
+
+            WebClient webClient = new WebClient();
+            webClient.DownloadStringCompleted += SearchCompletionHandler;
+            webClient.DownloadStringAsync(searchUri, new Tuple<Request, string, WebClient>(request, ipAddress, webClient));
         }
 
         /// <summary>
@@ -137,7 +139,7 @@ namespace SpikeLite.Modules.GeoIP
         private void SearchCompletionHandler(object sender, DownloadStringCompletedEventArgs e)
         {
             // Blargh this is nasty. Pull out our context and start casting crap.
-            Tuple<Request, string> userContext = (Tuple<Request, string>)e.UserState;
+            Tuple<Request, string, WebClient> userContext = (Tuple<Request, string, WebClient>)e.UserState;
             Request requestContext = userContext._1;
             string ip = userContext._2;
 

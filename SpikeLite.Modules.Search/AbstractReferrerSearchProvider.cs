@@ -15,7 +15,7 @@ namespace SpikeLite.Modules.Search
     /// </summary>
     public abstract class AbstractReferrerSearchProvider : ISearchProvider
     {
-        public string Referrer
+        public Uri Referrer
         {
             get; set;
         }

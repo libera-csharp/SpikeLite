@@ -46,6 +46,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Dependencies\Mono.Rocks.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=3.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Dependencies\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="Sharkbite.Thresher, Version=1.2.0.0, Culture=neutral, PublicKeyToken=e9ceddb3468b088a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Dependencies\Sharkbite.Thresher.dll</HintPath>
@@ -187,6 +191,7 @@
   -->
   <PropertyGroup>
     <PostBuildEvent>copy "$(ProjectDir)$(OutDir)$(TargetName).dll"  "$(SolutionDir)FrontEnd_Console\$(OutDir)"
-copy "$(ProjectDir)$(OutDir)$(TargetName).pdb"  "$(SolutionDir)FrontEnd_Console\$(OutDir)"</PostBuildEvent>
+copy "$(ProjectDir)$(OutDir)$(TargetName).pdb"  "$(SolutionDir)FrontEnd_Console\$(OutDir)"
+copy "$(ProjectDir)$(OutDir)Newtonsoft.Json.dll"  "$(SolutionDir)FrontEnd_Console\$(OutDir)"</PostBuildEvent>
   </PropertyGroup>
 </Project>

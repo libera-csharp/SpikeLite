@@ -294,7 +294,7 @@
   </object>
 
   <!-- Our Google and MS Live API keys. Please define these in the beans-overrides.xml. -->
-  <object name="GoogleAjaxReferrer" type="String">
+  <object name="GoogleAjaxReferrer" type="System.Uri">
 	<constructor-arg index="0" value="${referrers.googleajax}"/>
   </object>
 	

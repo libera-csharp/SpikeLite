@@ -14,6 +14,8 @@ using System.Net;
 using System.IO;
 using System.Runtime.Serialization.Json;
 using System.Runtime.Serialization;
+using Newtonsoft.Json.Linq;
+using System.Linq;
 
 namespace SpikeLite.Modules.Search
 {
@@ -35,138 +37,12 @@ namespace SpikeLite.Modules.Search
 
         #endregion
 
-        #region Properties
-
-        public Uri ReferrerUri { get { return new Uri(Referrer); } }
-
-        #endregion
-
         #region Inner Classes
-
-        [Serializable]
-        internal class WebSearchResponseMessage
-        {
-            #region Inner Classes
-
-            [Serializable]
-            internal class WebSearchResponseData
-            {
-                #region Inner Classes
-
-                [Serializable]
-                internal class WebSearchResultItem
-                {
-                    #region Fields
-
-                    [OptionalField]
-                    private string gsearchResultClass;
-
-                    private string unescapedUrl;
-                    private string url;
-                    private string visibleUrl;
-                    private string cacheUrl;
-                    private string title;
-                    private string titleNoFormatting;
-                    private string content;
-
-                    #endregion
-
-                    #region Properties
-
-                    internal string GsearchResultClass { get { return gsearchResultClass; } }
-                    internal string UnescapedUrl { get { return unescapedUrl; } }
-                    internal string Url { get { return url; } }
-                    internal string VisibleUrl { get { return visibleUrl; } }
-                    internal string CacheUrl { get { return cacheUrl; } }
-                    internal string Title { get { return title; } }
-                    internal string TitleNoFormatting { get { return titleNoFormatting; } }
-                    internal string Content { get { return content; } }
-
-                    #endregion
-                }
-
-                #endregion
-
-                #region Fields
-
-                private WebSearchResultItem[] results;
-                private Cursor cursor;
-
-                #endregion
-
-                #region Properties
-
-                internal WebSearchResultItem[] Results { get { return results; } }
-                internal Cursor Cursor { get { return cursor; } }
-
-                #endregion
-            }
-
-            //AJ: Moved here to prevent name clashes
-            [Serializable]
-            internal class Cursor
-            {
-                #region Inner Classes
-                [Serializable]
-                internal class Page
-                {
-                    #region Fields
-                    private string start = string.Empty;
-                    private string label = string.Empty;
-                    #endregion
-
-                    #region Properties
-                    internal string Start { get { return start; } }
-                    internal string Label { get { return label; } }
-                    #endregion
-                }
-                #endregion
-
-                #region Fields
-                [OptionalField]
-                private Page[] pages;
-
-                [OptionalField]
-                private string estimatedResultCount;
-
-                [OptionalField]
-                private string currentPageIndex;
-
-                [OptionalField]
-                private string moreResultsUrl;
-                #endregion
-
-                #region Properties
-                internal Page[] Pages { get { return pages; } }
-                internal string EstimatedResultCount { get { return estimatedResultCount; } }
-                internal string CurrentPageIndex { get { return currentPageIndex; } }
-                internal string MoreResultsUrl { get { return moreResultsUrl; } }
-                #endregion
-            }
-            #endregion
-
-            #region Fields
-            [OptionalField]
-            internal string rawText = string.Empty;
-
-            internal string responseDetails;
-            internal string responseStatus;
-            private WebSearchResponseData responseData = new WebSearchResponseData();
-            #endregion
-
-            #region Properties
-            internal string RawText { get { return rawText; } }
-            internal string ResponseDetails { get { return responseDetails; } }
-            internal string ResponseStatus { get { return responseStatus; } }
-            internal WebSearchResponseData ResponseData { get { return responseData; } }
-            #endregion
-        }
 
         internal class State
         {
-            public string SearchCriteria { get; set; }
-            public Action<string[]> CallbackHandler { get; set; }
-            public HttpWebRequest HttpWebRequest { get; set; }
+            internal string SearchCriteria { get; set; }
+            internal Action<string[]> CallbackHandler { get; set; }
         }
 
         #endregion
@@ -175,51 +51,45 @@ namespace SpikeLite.Modules.Search
 
         public override void ExecuteSearch(string searchCriteria, string domain, Action<string[]> callbackHandler)
         {
+            WebClient webClient = new WebClient();
+            webClient.Headers.Add("Referer", Referrer.AbsoluteUri);
+            webClient.DownloadStringCompleted += SearchCompletionHandler;
+
             //AJ: Currently only web search is supported
             Uri searchUri = BuildQueryUri(searchCriteria, "web");
-
-            HttpWebRequest httpWebRequest = (HttpWebRequest)WebRequest.Create(searchUri);
-            httpWebRequest.Referer = ReferrerUri.AbsoluteUri;
 
             State state = new State
             {
                 SearchCriteria = searchCriteria,
                 CallbackHandler = callbackHandler,
-                HttpWebRequest = httpWebRequest
             };
 
-            httpWebRequest.BeginGetResponse(GetResponseCallback, state);
+            webClient.DownloadStringAsync(searchUri, state);
         }
 
-        private void GetResponseCallback(IAsyncResult asynchronousResult)
+                /// <summary>
+        /// Our callback to use when we've received our data from our "provider."
+        /// </summary>
+        /// 
+        /// <param name="sender">Ignored.</param>
+        /// <param name="e">The respose from our provider, including the state that we shoved in.</param>
+        private void SearchCompletionHandler(object sender, DownloadStringCompletedEventArgs e)
         {
-            State state = (State)asynchronousResult.AsyncState;
-            HttpWebResponse httpWebResponse = (HttpWebResponse)state.HttpWebRequest.GetResponse();
-            string response;
-
-            using (StreamReader streamReader = new StreamReader(httpWebResponse.GetResponseStream()))
-            {
-                response = streamReader.ReadToEnd();
-            }
-
-            WebSearchResponseMessage webSearchResponseMessage;
-
-            using (MemoryStream memoryStream = new MemoryStream(Encoding.Unicode.GetBytes(response)))
-            {
-                DataContractJsonSerializer dataContractJsonSerializer = new DataContractJsonSerializer(typeof(WebSearchResponseMessage));
-                webSearchResponseMessage = (WebSearchResponseMessage)dataContractJsonSerializer.ReadObject(memoryStream);
-            }
-
+            State state = (State)e.UserState;
             List<string> results = new List<string>();
 
             try
             {
-                if (webSearchResponseMessage.ResponseData.Results.Length > 0)
+                JObject json = JObject.Parse(e.Result);
+
+                if (json["responseData"]["results"].Children().Count() > 0)
                 {
+                    var result = json["responseData"]["results"].Children().First();
+
                     results.Add(String.Format("'{0}': {1} | {2}",
                                               state.SearchCriteria,
-                                              webSearchResponseMessage.ResponseData.Results[0].TitleNoFormatting,
-                                              webSearchResponseMessage.ResponseData.Results[0].Url));
+                                              result["titleNoFormatting"],
+                                              result["url"]));
                 }
                 else
                 {
