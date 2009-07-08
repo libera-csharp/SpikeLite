@@ -226,25 +226,36 @@
   </object>
 
   <!-- Static fact modules. -->
-  <object id="WikiLinkModule" type="SpikeLite.Modules.CommunityLinks.WikiLinkModule, SpikeLite.Modules.CommunityLinks">
-    <property name="Name" value="WikiLink"/>
-    <property name="Description" value="Returns the link to the community wiki."/>
-    <property name="Instructions" value="~wiki"/>
+  <object id="SayModulePrototype" type="SpikeLite.Modules.Say.SayModule, SpikeLite.Modules.Say" abstract="true" singleton="false">
     <property name="ModuleManagementContainer" ref="ModuleManager"/>
   </object>
   
-  <object id="ConnectLinkModule" type="SpikeLite.Modules.MSLinks.ConnectLinkModule, SpikeLite.Modules.MSLinks">
-    <property name="Name" value="ConnectLink"/>
+  <object id="WikiLinkModule" type="SpikeLite.Modules.Say.SayModule, SpikeLite.Modules.Say" parent="SayModulePrototype">
+    <property name="Name" value="wiki"/>
+    <property name="Description" value="Returns the link to the community wiki."/>
+    <property name="Instructions" value="~say wiki"/>
+    <property name="Phrase" value="http://www.freenode-csharp.net/wiki/"/>
+  </object>
+  
+  <object id="ConnectLinkModule" type="SpikeLite.Modules.Say.SayModule, SpikeLite.Modules.Say" parent="SayModulePrototype">
+    <property name="Name" value="connect"/>
     <property name="Description" value="Returns the link to microsoft connect."/>
-    <property name="Instructions" value="~connect"/>
-    <property name="ModuleManagementContainer" ref="ModuleManager"/>
+    <property name="Instructions" value="~say connect"/>
+    <property name="Phrase" value="http://connect.microsoft.com/"/>
   </object>
 
-  <object id="ForumLinkModule" type="SpikeLite.Modules.MSLinks.ForumLinkModule, SpikeLite.Modules.MSLinks">
-    <property name="Name" value="ForumLink"/>
+  <object id="ForumLinkModule" type="SpikeLite.Modules.Say.SayModule, SpikeLite.Modules.Say" parent="SayModulePrototype">
+    <property name="Name" value="forum"/>
     <property name="Description" value="Returns the link to the microsoft forums."/>
-    <property name="Instructions" value="~msforums"/>
-    <property name="ModuleManagementContainer" ref="ModuleManager"/>
+    <property name="Instructions" value="~say forum"/>
+    <property name="Phrase" value="http://forums.microsoft.com/"/>
+  </object>
+
+  <object id="KhaanModule" type="SpikeLite.Modules.Say.SayModule, SpikeLite.Modules.Say" parent="SayModulePrototype">
+    <property name="Name" value="khaaan"/>
+    <property name="Description" value="Does the Shatner."/>
+    <property name="Instructions" value="~say khaaan"/>
+    <property name="Phrase" value="KHAAAAAAAN"/>
   </object>
 
   <!-- This is our default list of modules to load (the entire set). Please override this in the beans-overrides
@@ -252,10 +263,10 @@
   <object id="ModuleList" type="FrontEnd_Console.ModuleList, FrontEnd_Console">
     <constructor-arg index="0">
       <list element-type="SpikeLite.Modules.IModule, SpikeLite">
-		<ref object="GoogleAjaxModule"/>
+		    <ref object="GoogleAjaxModule"/>
         <ref object="GoogleModule"/>
         <ref object="LiveModule"/>
-		<ref object="BingModule"/>
+		    <ref object="BingModule"/>
         <ref object="AboutModule"/> 
         <ref object="WikiLinkModule"/>
         <ref object="GeoipModule"/> 
@@ -276,6 +287,7 @@
         <ref object="RefactoringModule"/>
         <ref object="ConnectionStringsModule"/>
         <ref object="WikipediaModule"/>
+        <ref object="KhaanModule"/>
         <ref object="TellModule"/>
       </list>
     </constructor-arg>
