@@ -1,12 +1,18 @@
 ﻿/**
  * SpikeLite C# IRC Bot
- * Copyright (c) 2008 FreeNode ##Csharp Community
+ * Copyright (c) 2009 FreeNode ##Csharp Community
  * 
  * This source is licensed under the terms of the MIT license. Please see the 
  * distributed license.txt for details.
  */
+
+using System.Collections.Generic;
+using System.Linq;
+using System.Net;
+using System.Web;
+using System.Xml.Linq;
+using Mono.Rocks;
 using SpikeLite.Communications;
-using SpikeLite.Modules.GeoIP.net.webservicex.www;
 using System.Text.RegularExpressions;
 using System;
 using SpikeLite.Persistence.Authentication;
@@ -18,12 +24,17 @@ namespace SpikeLite.Modules.GeoIP
     /// </summary>
     /// 
     /// <remarks>
-    /// The module will not perform a name lookup. This is a basically a glorified async
-    /// web call, so expect delay.
+    /// This module uses the HostIP.info plain XML "api," where we make an HTTP/GET request and get back an XML document describing the information we want.
+    /// We then parse the XML using XLINQ and spit out either the information the user wants, or a lack of informaiton should the IP not be in the DB.
+    /// 
+    /// No guarantees are made about the integrity of the provider or of the data that is returned. This is also a public service with no SLAs, so you gets
+    /// what you gets.
     /// </remarks>
     public class GeoIpLookupModule : ModuleBase
     {
         #region Data Members
+
+        // TODO: Kog 07/08/2009 - Can we add an NSlookup call for non quad dots? How bad of an idea would that be?
 
         /// <summary>
         /// A regex grouped such that we only care about the IP.
@@ -36,22 +47,29 @@ namespace SpikeLite.Modules.GeoIP
         private static readonly Regex GeoIpRegex = new Regex(GeoIpRegexPattern);
 
         /// <summary>
-        /// Holds a reference to our WS proxy.
+        /// Holds a template const that we can use for the HostIP.info URL.
         /// </summary>
-        private readonly GeoIPService _serviceProxy;
-
-        #endregion
-
-        #region Construction
+        private static readonly Uri SearchUri = new Uri("http://api.hostip.info/");
 
         /// <summary>
-        /// Creates our proxy, wires up our callback.
+        /// Provides the XML namespace for the nodes we're after. 
         /// </summary>
-        public GeoIpLookupModule()
-        {
-            _serviceProxy = new GeoIPService();
-            _serviceProxy.GetGeoIPCompleted += IpLookupCompletionHandler;
-        }
+        /// 
+        /// <remarks>
+        /// According to several MSDN articles this seems to be the best way to find the elements we want - ns + eltname. This seems pretty bizarre, but perhaps
+        /// that is the canonical method. This needs to be checked (Kog 07/08/2009).
+        /// </remarks>
+        private static readonly XNamespace ApiNamespace = "http://www.hostip.info/api";
+
+        /// <summary>
+        /// Holds a reference to the <see cref="WebClient"/> we use to make our requests.
+        /// </summary>
+        private readonly WebClient _client;
+
+        /// <summary>
+        /// Provides a response template that we can use to respond to users. 
+        /// </summary>
+        private const string ResponseTemplate = "{0}, the IP {1} maps to the country '{2}', ISO code {3}";
 
         #endregion
 
@@ -67,59 +85,82 @@ namespace SpikeLite.Modules.GeoIP
                 {
                     try
                     {
-                        _serviceProxy.GetGeoIPAsync(expressionMatch.Groups[1].Value, request);
+                       ExecuteSearch(expressionMatch.Groups[1].Value, request);
                     }
                     catch (Exception ex)
                     {
                        
                         ModuleManagementContainer.HandleResponse(request.CreateResponse(ResponseType.Public, 
-                                                                    "{0}, The service is currently b00rked, please try again in a few minutes.", request.Nick));
-                        Logger.InfoFormat("Search threw an exception. Nick: {0}, terms: \"{1}\", stack message: {2}", request.Nick, expressionMatch.Groups[1].Value, ex.StackTrace);
+                                                                 "{0}, The service is currently b00rked, please try again in a few minutes.", request.Nick));
+                        Logger.WarnFormat("Search threw an exception. Nick: {0}, terms: \"{1}\", stack message: {2}", 
+                                          request.Nick, expressionMatch.Groups[1].Value, ex.StackTrace);
                     }
                     
                 }
                 else
                 {
                     // If the message format isn't correct, notify the user.
-                    ModuleManagementContainer.HandleResponse(request.CreateResponse(
-                                                 GetResponseTypeForRequestType(request.RequestType),
-                                                 String.Format("{0}, invalid geoip syntax, please try again.", request.Nick)));
+                    ModuleManagementContainer.HandleResponse(request.CreateResponse(ResponseType.Public, 
+                                                                                    String.Format("{0}, invalid geoip syntax, please try again.", 
+                                                                                    request.Nick)));
                 }
             }
         }
 
         /// <summary>
-        /// Our async callback, called when our GeoIP lookup is completed. This is a potentially expensive query.
+        /// Construct our module, write up all our Async handlers.
         /// </summary>
-        /// 
-        /// <param name="sender">Our service proxy, ignored.</param>
-        /// 
-        /// <param name="e">Our GeoIP lookup containing our <see cref="GeoIP"/> response from the service.</param>
-        private void IpLookupCompletionHandler(object sender, GetGeoIPCompletedEventArgs e)
+        public GeoIpLookupModule()
         {
-            Request requestContext = (Request)e.UserState;
-
-            string response = string.Format("{0}, the IP {1} maps to the country '{2}', ISO code {3}.",
-                                            requestContext.Addressee,
-                                            e.Result.IP,
-                                            e.Result.CountryName,
-                                            e.Result.CountryCode);
-
-            ModuleManagementContainer.HandleResponse(requestContext.CreateResponse(
-                                         GetResponseTypeForRequestType(requestContext.RequestType), 
-                                         response));
+            _client = new WebClient();
+            _client.DownloadStringCompleted += SearchCompletionHandler;
         }
 
         /// <summary>
-        /// Do a quick translation between <see cref="RequestType"/> and <see cref="ResponseType"/>.
+        /// Performs a search for information on the given criteria (in this case a quad-dotted IP).
         /// </summary>
         /// 
-        /// <param name="requestType">The <see cref="RequestType"/> you'd like a corresponding <see cref="ResponseType"/> for.</param>
-        /// 
-        /// <returns>The corresponding <see cref="ResponseType"/> for your request.</returns>
-        private static ResponseType GetResponseTypeForRequestType(RequestType requestType)
+        /// <param name="ipAddress">The IPv4 IP, in quad-dotted notation, to search for.</param>
+        /// <param name="request">Context about our request, useful for constructing our ResponseTemplate to the user.</param>
+        private void ExecuteSearch(string ipAddress, Request request)
         {
-            return requestType.Equals(RequestType.Public) ? ResponseType.Public : ResponseType.Private;
+            Uri searchUri = new Uri(string.Format("{0}?ip={1}", SearchUri.AbsoluteUri, HttpUtility.UrlEncode(ipAddress)));
+            _client.DownloadStringAsync(searchUri, new Tuple<Request, string>(request, ipAddress));
+        }
+
+        /// <summary>
+        /// Our callback to use when we've received our data from our "provider."
+        /// </summary>
+        /// 
+        /// <param name="sender">Ignored.</param>
+        /// <param name="e">The respose from our provider, including the state that we shoved in.</param>
+        private void SearchCompletionHandler(object sender, DownloadStringCompletedEventArgs e)
+        {
+            // Blargh this is nasty. Pull out our context and start casting crap.
+            Tuple<Request, string> userContext = (Tuple<Request, string>)e.UserState;
+            Request requestContext = userContext._1;
+            string ip = userContext._2;
+
+            // Construct an XLinq document fragment and start anonymously pulling things out.
+            XDocument xmlResponse = XDocument.Parse(e.Result);
+            string response;
+
+            try  
+            {
+                IEnumerable<XElement> root = xmlResponse.Descendants(ApiNamespace + "Hostip");
+                response = String.Format(ResponseTemplate,
+                                         requestContext.Addressee ?? requestContext.Nick,
+                                         ip,
+                                         root.Elements(ApiNamespace + "countryName").FirstOrDefault().Value,
+                                         root.Elements(ApiNamespace + "countryAbbrev").FirstOrDefault().Value); 
+            }  
+            catch (NullReferenceException ex)  
+            {  
+                Logger.WarnFormat("GeoIPLookupModule search failure for IP {0} by {1}. Message: {2}", ip, requestContext.Nick, ex.Message);
+                response = "No such IP, or the service lookup has failed.";
+            }
+
+            ModuleManagementContainer.HandleResponse(requestContext.CreateResponse(ResponseType.Public, response));
         }
 
         #endregion 

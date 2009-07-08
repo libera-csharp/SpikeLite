@@ -59,15 +59,15 @@ namespace SpikeLite.Modules.Search
                     #region Fields
 
                     [OptionalField]
-                    private string gsearchResultClass = null;
+                    private string gsearchResultClass;
 
-                    private string unescapedUrl = null;
-                    private string url = null;
-                    private string visibleUrl = null;
-                    private string cacheUrl = null;
-                    private string title = null;
-                    private string titleNoFormatting = null;
-                    private string content = null;
+                    private string unescapedUrl;
+                    private string url;
+                    private string visibleUrl;
+                    private string cacheUrl;
+                    private string title;
+                    private string titleNoFormatting;
+                    private string content;
 
                     #endregion
 
@@ -89,8 +89,8 @@ namespace SpikeLite.Modules.Search
 
                 #region Fields
 
-                private WebSearchResultItem[] results = null;
-                private Cursor cursor = null;
+                private WebSearchResultItem[] results;
+                private Cursor cursor;
 
                 #endregion
 
@@ -124,16 +124,16 @@ namespace SpikeLite.Modules.Search
 
                 #region Fields
                 [OptionalField]
-                private Page[] pages = null;
+                private Page[] pages;
 
                 [OptionalField]
-                private string estimatedResultCount = null;
+                private string estimatedResultCount;
 
                 [OptionalField]
-                private string currentPageIndex = null;
+                private string currentPageIndex;
 
                 [OptionalField]
-                private string moreResultsUrl = null;
+                private string moreResultsUrl;
                 #endregion
 
                 #region Properties
@@ -149,8 +149,8 @@ namespace SpikeLite.Modules.Search
             [OptionalField]
             internal string rawText = string.Empty;
 
-            internal string responseDetails = null;
-            internal string responseStatus = null;
+            internal string responseDetails;
+            internal string responseStatus;
             private WebSearchResponseData responseData = new WebSearchResponseData();
             #endregion
 
@@ -182,13 +182,13 @@ namespace SpikeLite.Modules.Search
             httpWebRequest.Referer = ReferrerUri.AbsoluteUri;
 
             State state = new State
-                              {
+            {
                 SearchCriteria = searchCriteria,
                 CallbackHandler = callbackHandler,
                 HttpWebRequest = httpWebRequest
             };
 
-            httpWebRequest.BeginGetResponse(new AsyncCallback(GetResponseCallback), state);
+            httpWebRequest.BeginGetResponse(GetResponseCallback, state);
         }
 
         private void GetResponseCallback(IAsyncResult asynchronousResult)
