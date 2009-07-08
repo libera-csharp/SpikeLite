@@ -22,6 +22,7 @@ namespace SpikeLite.Modules.Search
         /// </summary>
         /// 
         /// <param name="searchCriteria">The search criteria to search for.</param>
+        /// <param name="domain">The site:domain tag to give to our search provider, allowing for domain specific searches.</param>
         /// <param name="callbackHandler">A tuple containing our request and our callback handler.</param>
         /// 
         /// <remarks>

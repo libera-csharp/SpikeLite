@@ -42,15 +42,15 @@ namespace SpikeLite.Modules.Search
                 domainSpecificSearchCriteria += String.Format(" site:{0}", domain);
             }
 
-            SearchRequest searchRequest = new SearchRequest()
+            SearchRequest searchRequest = new SearchRequest
             {
                 Adult = AdultOption.Off,
                 AppId = ApiKey,
                 Market = "en-US",
                 Query = domainSpecificSearchCriteria,
-                Sources = new SourceType[] { SourceType.Web },
+                Sources = new[] { SourceType.Web },
                 Version = "2.2",
-                Web = new WebRequest() { Count = 1 }
+                Web = new WebRequest { Count = 1 }
             };
 
             _searchBroker.SearchAsync(searchRequest, callbackHandler);

@@ -22,7 +22,7 @@ namespace SpikeLite.Modules.Say
         public string Phrase { get; set; }
 
         /// <summary>
-        /// Handles responding to a user IFF they have proper access, the trigger is "~say" and we know the phrase to say.
+        /// Handles responding to a user IFF they have proper access, the trigger is "~say" and we know the phrase to say as determined by module name.
         /// </summary>
         /// 
         /// <param name="request">A <see cref="Request"/> representing a message sent to the bot.</param>
@@ -35,18 +35,8 @@ namespace SpikeLite.Modules.Say
                 && messageArray[0].Equals("~say", StringComparison.OrdinalIgnoreCase) 
                 && messageArray[1].Equals(Name, StringComparison.OrdinalIgnoreCase))
             {
-                SendResponse(request);
+                ModuleManagementContainer.HandleResponse(request.CreateResponse(ResponseType.Public, Phrase));
             }
-        }
-
-        /// <summary>
-        /// Sends the actual response to the user.
-        /// </summary>
-        /// 
-        /// <param name="request">A <see cref="Request"/> representing a message sent to the bot.</param>
-        private void SendResponse(Request request)
-        {
-            ModuleManagementContainer.HandleResponse(request.CreateResponse(ResponseType.Public, Phrase));
         }
     }
 }

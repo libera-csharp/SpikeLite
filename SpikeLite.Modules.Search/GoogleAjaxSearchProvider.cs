@@ -8,7 +8,6 @@
 
 using System;
 using System.Collections.Generic;
-using SpikeLite.Modules.Search.com.google.api;
 using System.Text;
 using System.Web;
 using System.Net;
@@ -30,27 +29,35 @@ namespace SpikeLite.Modules.Search
     public class GoogleAjaxSearchProvider : AbstractReferrerSearchProvider
     {
         #region Constants
+
         private static readonly Uri SearchUri = new Uri("http://ajax.googleapis.com/ajax/services/search/");
-        private static readonly string ApiVersion = "v=1.0";
+        private const string ApiVersion = "v=1.0";
+
         #endregion
 
         #region Properties
+
         public Uri ReferrerUri { get { return new Uri(Referrer); } }
+
         #endregion
 
         #region Inner Classes
+
         [Serializable]
         internal class WebSearchResponseMessage
         {
             #region Inner Classes
+
             [Serializable]
             internal class WebSearchResponseData
             {
                 #region Inner Classes
+
                 [Serializable]
                 internal class WebSearchResultItem
                 {
                     #region Fields
+
                     [OptionalField]
                     private string gsearchResultClass = null;
 
@@ -61,9 +68,11 @@ namespace SpikeLite.Modules.Search
                     private string title = null;
                     private string titleNoFormatting = null;
                     private string content = null;
+
                     #endregion
 
                     #region Properties
+
                     internal string GsearchResultClass { get { return gsearchResultClass; } }
                     internal string UnescapedUrl { get { return unescapedUrl; } }
                     internal string Url { get { return url; } }
@@ -72,18 +81,24 @@ namespace SpikeLite.Modules.Search
                     internal string Title { get { return title; } }
                     internal string TitleNoFormatting { get { return titleNoFormatting; } }
                     internal string Content { get { return content; } }
+
                     #endregion
                 }
+
                 #endregion
 
                 #region Fields
+
                 private WebSearchResultItem[] results = null;
                 private Cursor cursor = null;
+
                 #endregion
 
                 #region Properties
+
                 internal WebSearchResultItem[] Results { get { return results; } }
                 internal Cursor Cursor { get { return cursor; } }
+
                 #endregion
             }
 
@@ -146,15 +161,18 @@ namespace SpikeLite.Modules.Search
             internal WebSearchResponseData ResponseData { get { return responseData; } }
             #endregion
         }
+
         internal class State
         {
             public string SearchCriteria { get; set; }
             public Action<string[]> CallbackHandler { get; set; }
             public HttpWebRequest HttpWebRequest { get; set; }
         }
+
         #endregion
 
         #region Methods
+
         public override void ExecuteSearch(string searchCriteria, string domain, Action<string[]> callbackHandler)
         {
             //AJ: Currently only web search is supported
@@ -163,14 +181,14 @@ namespace SpikeLite.Modules.Search
             HttpWebRequest httpWebRequest = (HttpWebRequest)WebRequest.Create(searchUri);
             httpWebRequest.Referer = ReferrerUri.AbsoluteUri;
 
-            State state = new State()
-            {
+            State state = new State
+                              {
                 SearchCriteria = searchCriteria,
                 CallbackHandler = callbackHandler,
                 HttpWebRequest = httpWebRequest
             };
 
-            IAsyncResult result = (IAsyncResult)httpWebRequest.BeginGetResponse(new AsyncCallback(GetResponseCallback), state);
+            httpWebRequest.BeginGetResponse(new AsyncCallback(GetResponseCallback), state);
         }
 
         private void GetResponseCallback(IAsyncResult asynchronousResult)
@@ -221,6 +239,7 @@ namespace SpikeLite.Modules.Search
         {
             return new Uri(string.Format("{0}{1}?{2}&q={3}", SearchUri.AbsoluteUri, searchType, ApiVersion, HttpUtility.UrlEncode(searchCriteria)));
         }
+
         #endregion
     }
 }
