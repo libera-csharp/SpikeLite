@@ -47,28 +47,16 @@ namespace SpikeLite.Modules
             }
         }
 
-        // TODO: Kog 12/26/2008 - This totally sucks, we need to replace this idea. Messages should most likely
-        // TODO:                  have some sort of information as to what network they were received on, so we can
-        // TODO:                  pull this in the proper place... for now let's just kludge.
-
-        /// <summary>
-        /// Gets or sets our network information, including the severs and channels.
-        /// </summary>
-        public Network NetworkConnectionInformation
-        {
-            get; set;
-        }
-
         #endregion 
 
         #region IModule Implementation
 
         #region Module Information Properties
 
-        /// <summary>
-        /// By default all modules are "public" level access. Please see the access level enumeration for details.
-        /// </summary>
-        private AccessLevel _requiredAccessLevel = AccessLevel.Public;
+        public ModuleBase()
+        {
+            RequiredAccessLevel = AccessLevel.Public;
+        }
 
         /// <summary>
         /// Gets or sets the name of the associated module. This would be something like "Google search module."
@@ -92,11 +80,16 @@ namespace SpikeLite.Modules
         /// <remarks>
         /// If no value is supplied, a default access level of Public is assumed.
         /// </remarks>
-        public AccessLevel RequiredAccessLevel
-        {
-            get { return _requiredAccessLevel; }
-            set { _requiredAccessLevel = value; }
-        }
+        public AccessLevel RequiredAccessLevel { get; set; }
+
+        // TODO: Kog 12/26/2008 - This totally sucks, we need to replace this idea. Messages should most likely
+        // TODO:                  have some sort of information as to what network they were received on, so we can
+        // TODO:                  pull this in the proper place... for now let's just kludge.
+
+        /// <summary>
+        /// Gets or sets our network information, including the severs and channels.
+        /// </summary>
+        public Network NetworkConnectionInformation { get; set; }
 
         #endregion
 

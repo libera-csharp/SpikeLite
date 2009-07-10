@@ -159,10 +159,9 @@ namespace SpikeLite
             _botStatus = BotStatus.Starting;
 
             // Attempt to connect.
-            Connect();
-
-            CommunicationManager.Connection = _connection;
             ModuleManager.LoadModules();
+            Connect();
+            CommunicationManager.Connection = _connection;
 
             // Alright, we're cooking now.
             _botStatus = BotStatus.Started;

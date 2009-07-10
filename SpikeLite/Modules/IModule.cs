@@ -6,6 +6,7 @@
  * distributed license.txt for details.
  */
 using SpikeLite.Communications;
+using SpikeLite.Communications.IRC;
 using SpikeLite.Domain.Authentication;
 
 namespace SpikeLite.Modules
@@ -47,5 +48,14 @@ namespace SpikeLite.Modules
         /// Gets or sets the minimum access requirements for using this module.
         /// </summary>
         AccessLevel RequiredAccessLevel { get; set; }
+
+        // TODO: Kog 12/26/2008 - This totally sucks, we need to replace this idea. Messages should most likely
+        // TODO:                  have some sort of information as to what network they were received on, so we can
+        // TODO:                  pull this in the proper place... for now let's just kludge.
+
+        /// <summary>
+        /// Gets or sets our network information, including the severs and channels.
+        /// </summary>
+        Network NetworkConnectionInformation { get; set; }
     }
 }

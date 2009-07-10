@@ -30,10 +30,18 @@
       We make use of the beans-modules to define all the individual modules inserted here.
   -->
   <object id="ModuleManager" type="SpikeLite.Modules.ModuleManager, SpikeLite">
-    <constructor-arg index="0" ref="CommunicationManager"/>
+    <!-- Inject our messaging bean. -->
+    <property name ="CommunicationManager" ref="CommunicationManager"/>
     
     <!-- This property is actually set in beans-modules, but overridden in beans-overrides. -->
     <property name="Modules" ref="ModuleList"/>
+
+    <!-- Inject our proxy for intercepting messages. -->
+    <property name="ModuleMessageHandler" ref="MessageHandler"/>
+  </object>
+
+  <object id="MessageHandler" type="SpikeLite.Modules.MessageHandler, SpikeLite">
+    <property name="ModuleManager" ref="ModuleManager"/>
   </object>
 
   <!-- 
