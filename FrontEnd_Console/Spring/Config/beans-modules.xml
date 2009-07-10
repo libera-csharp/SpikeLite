@@ -252,7 +252,7 @@
   </object>
 
   <object id="KhaanModule" type="SpikeLite.Modules.Say.SayModule, SpikeLite.Modules.Say" parent="SayModulePrototype">
-    <property name="Name" value="khaaan"/>
+    <property name="Name" value="khan"/>
     <property name="Description" value="Does the Shatner."/>
     <property name="Instructions" value="~khan"/>
     <property name="Phrase" value="KHAAAAAAAN"/>
