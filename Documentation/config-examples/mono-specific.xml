@@ -1,0 +1,20 @@
+  <!-- Put this at the end of your list of objects, copying as-is. It shuts off the proxy validator, which apparently doesn't work in Mono -->
+  <object id="HibernateSessionFactory" type="Spring.Data.NHibernate.LocalSessionFactoryObject, Spring.Data.NHibernate20">
+    <property name="DbProvider" ref="DbProvider"/>
+    <property name="MappingAssemblies">
+      <list>
+        <value>SpikeLite.Persistence</value>
+      </list>
+    </property>
+    <property name="HibernateProperties">
+      <dictionary>
+        <entry key="connection.provider" value="NHibernate.Connection.DriverConnectionProvider"/>
+        <entry key="dialect" value="${db.dialect}"/>
+        <entry key="connection.driver_class" value="${db.driver}"/>
+        <entry key="show_sql" value="false"/>
+        <entry key="hbm2ddl.auto" value="update"/>
+        <entry key="use_proxy_validator" value="false"/>
+      </dictionary>
+    </property>
+    <property name="ExposeTransactionAwareSessionFactory" value="true" />
+  </object>
