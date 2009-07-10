@@ -22,7 +22,7 @@ namespace SpikeLite.Modules.Say
         public string Phrase { get; set; }
 
         /// <summary>
-        /// Handles responding to a user IFF they have proper access, the trigger is "~say" and we know the phrase to say as determined by module name.
+        /// Handles responding to a user IFF they have proper access, and the trigger is ~name.
         /// </summary>
         /// 
         /// <param name="request">A <see cref="Request"/> representing a message sent to the bot.</param>
@@ -32,8 +32,7 @@ namespace SpikeLite.Modules.Say
 
             if (request.RequestFrom.AccessLevel >= AccessLevel.Public
                 && request.RequestType == RequestType.Public
-                && messageArray[0].Equals("~say", StringComparison.OrdinalIgnoreCase) 
-                && messageArray[1].Equals(Name, StringComparison.OrdinalIgnoreCase))
+                && messageArray[0].Equals("~"+Name, StringComparison.OrdinalIgnoreCase))
             {
                 ModuleManagementContainer.HandleResponse(request.CreateResponse(ResponseType.Public, Phrase));
             }

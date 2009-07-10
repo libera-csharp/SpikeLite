@@ -233,28 +233,28 @@
   <object id="WikiLinkModule" type="SpikeLite.Modules.Say.SayModule, SpikeLite.Modules.Say" parent="SayModulePrototype">
     <property name="Name" value="wiki"/>
     <property name="Description" value="Returns the link to the community wiki."/>
-    <property name="Instructions" value="~say wiki"/>
+    <property name="Instructions" value="~wiki"/>
     <property name="Phrase" value="http://www.freenode-csharp.net/wiki/"/>
   </object>
   
   <object id="ConnectLinkModule" type="SpikeLite.Modules.Say.SayModule, SpikeLite.Modules.Say" parent="SayModulePrototype">
     <property name="Name" value="connect"/>
     <property name="Description" value="Returns the link to microsoft connect."/>
-    <property name="Instructions" value="~say connect"/>
+    <property name="Instructions" value="~connect"/>
     <property name="Phrase" value="http://connect.microsoft.com/"/>
   </object>
 
   <object id="ForumLinkModule" type="SpikeLite.Modules.Say.SayModule, SpikeLite.Modules.Say" parent="SayModulePrototype">
     <property name="Name" value="forum"/>
     <property name="Description" value="Returns the link to the microsoft forums."/>
-    <property name="Instructions" value="~say forum"/>
+    <property name="Instructions" value="~forum"/>
     <property name="Phrase" value="http://forums.microsoft.com/"/>
   </object>
 
   <object id="KhaanModule" type="SpikeLite.Modules.Say.SayModule, SpikeLite.Modules.Say" parent="SayModulePrototype">
     <property name="Name" value="khaaan"/>
     <property name="Description" value="Does the Shatner."/>
-    <property name="Instructions" value="~say khaaan"/>
+    <property name="Instructions" value="~khan"/>
     <property name="Phrase" value="KHAAAAAAAN"/>
   </object>
 
