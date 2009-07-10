@@ -5,7 +5,7 @@
  * This source is licensed under the terms of the MIT license. Please see the 
  * distributed license.txt for details.
  */
-using SpikeLite.Persistence.Authentication;
+using SpikeLite.Domain.Authentication;
 
 namespace SpikeLite.AccessControl
 {

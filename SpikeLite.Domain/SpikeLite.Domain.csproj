@@ -8,8 +8,8 @@
     <ProjectGuid>{A9084592-C90E-4A8E-AFF9-00709EE6513C}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>SpikeLite.Persistence</RootNamespace>
-    <AssemblyName>SpikeLite.Persistence</AssemblyName>
+    <RootNamespace>SpikeLite.Domain</RootNamespace>
+    <AssemblyName>SpikeLite.Domain</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -81,10 +81,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Karma\SpikeLite.Persistence.Karma.KarmaItem.hbm.xml" />
+    <EmbeddedResource Include="Karma\SpikeLite.Domain.Karma.KarmaItem.hbm.xml" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Authentication\SpikeLite.Persistence.Authentication.Cloak.hbm.xml" />
+    <EmbeddedResource Include="Authentication\SpikeLite.Domain.Authentication.Cloak.hbm.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

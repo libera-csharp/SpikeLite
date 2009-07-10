@@ -7,7 +7,7 @@
  */
 using System;
 
-namespace SpikeLite.Persistence.Authentication
+namespace SpikeLite.Domain.Authentication
 {
     // TODO: Kog 10/19/2008 - Refactor enums, also make cloaks use an expression instead of "type" for things like partials.
 

@@ -7,8 +7,8 @@
  */
 using System;
 using SpikeLite.Communications;
-using SpikeLite.Persistence.Authentication;
-using SpikeLite.Persistence.Karma;
+using SpikeLite.Domain.Authentication;
+using SpikeLite.Domain.Karma;
 using System.Text.RegularExpressions;
 
 namespace SpikeLite.Modules.Karma

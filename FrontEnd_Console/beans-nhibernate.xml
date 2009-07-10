@@ -30,7 +30,7 @@
     <property name="DbProvider" ref="DbProvider"/>
     <property name="MappingAssemblies">
       <list>
-        <value>SpikeLite.Persistence</value>
+        <value>SpikeLite.Domain</value>
       </list>
     </property>
     <property name="HibernateProperties">
@@ -46,7 +46,7 @@
   </object>
 
   <!-- Wire up our DAOs. -->
-  <object id="KnownHostDaoImpl" type="SpikeLite.Persistence.Authentication.KnownHostDao, SpikeLite.Persistence">
+  <object id="KnownHostDaoImpl" type="SpikeLite.Domain.Authentication.KnownHostDao, SpikeLite.Domain">
     <property name="sessionFactory" ref="HibernateSessionFactory"/>
   </object>
 
@@ -54,7 +54,7 @@
     <property name="Target" ref="KnownHostDaoImpl"/>
   </object>
 
-  <object id="KarmaDaoImpl" type="SpikeLite.Persistence.Karma.KarmaDao, SpikeLite.Persistence">
+  <object id="KarmaDaoImpl" type="SpikeLite.Domain.Karma.KarmaDao, SpikeLite.Domain">
     <property name="sessionFactory" ref="HibernateSessionFactory"/>
   </object>
 

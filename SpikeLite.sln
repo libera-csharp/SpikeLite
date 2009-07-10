@@ -7,7 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FrontEnd_Console", "FrontEn
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpikeLite.Modules.Search", "SpikeLite.Modules.Search\SpikeLite.Modules.Search.csproj", "{454DE4CA-4F2D-4D0F-86D8-F8086706DF1B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpikeLite.Persistence", "SpikeLite.Persistence\SpikeLite.Persistence.csproj", "{A9084592-C90E-4A8E-AFF9-00709EE6513C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpikeLite.Domain", "SpikeLite.Domain\SpikeLite.Domain.csproj", "{A9084592-C90E-4A8E-AFF9-00709EE6513C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpikeLite.Modules.Tell", "SpikeLite.Modules.Tell\SpikeLite.Modules.Tell.csproj", "{E3A8EA92-1787-4D21-A322-742466D36951}"
 EndProject

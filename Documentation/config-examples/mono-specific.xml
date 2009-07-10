@@ -3,7 +3,7 @@
     <property name="DbProvider" ref="DbProvider"/>
     <property name="MappingAssemblies">
       <list>
-        <value>SpikeLite.Persistence</value>
+        <value>SpikeLite.Domain</value>
       </list>
     </property>
     <property name="HibernateProperties">

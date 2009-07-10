@@ -15,7 +15,7 @@ using Mono.Rocks;
 using SpikeLite.Communications;
 using System.Text.RegularExpressions;
 using System;
-using SpikeLite.Persistence.Authentication;
+using SpikeLite.Domain.Authentication;
 
 namespace SpikeLite.Modules.GeoIP
 {

@@ -9,7 +9,7 @@
 -->
 
 <hibernate-mapping xmlns="urn:nhibernate-mapping-2.2">
-  <class name=" SpikeLite.Persistence.Karma.KarmaItem,  SpikeLite.Persistence" table="KARMA">
+  <class name=" SpikeLite.Domain.Karma.KarmaItem,  SpikeLite.Domain" table="KARMA">
     <id name="UserName" column="user_name" type="string" length="20">
       <generator class="assigned" />
     </id>

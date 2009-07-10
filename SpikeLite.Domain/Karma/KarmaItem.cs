@@ -5,7 +5,7 @@
  * This source is licensed under the terms of the MIT license. Please see the 
  * distributed license.txt for details.
  */
-namespace SpikeLite.Persistence.Karma
+namespace SpikeLite.Domain.Karma
 {
     /// <summary>
     /// An entity for a user's Karma

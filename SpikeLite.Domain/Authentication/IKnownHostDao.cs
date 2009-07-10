@@ -5,10 +5,9 @@
  * This source is licensed under the terms of the MIT license. Please see the 
  * distributed license.txt for details.
  */
-using System;
 using System.Collections.Generic;
 
-namespace SpikeLite.Persistence.Authentication
+namespace SpikeLite.Domain.Authentication
 {
     /// <summary>
     /// Provides a contract for what our known host DAO can do.

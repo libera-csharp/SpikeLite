@@ -7,7 +7,7 @@
  */
 using System;
 using SpikeLite.Communications;
-using SpikeLite.Persistence.Authentication;
+using SpikeLite.Domain.Authentication;
 
 namespace SpikeLite.Modules.Puppet
 {

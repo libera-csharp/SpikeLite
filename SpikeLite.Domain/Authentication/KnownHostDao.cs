@@ -9,7 +9,7 @@ using System.Collections.Generic;
 using NHibernate;
 using Spring.Data.NHibernate.Support;
 
-namespace SpikeLite.Persistence.Authentication
+namespace SpikeLite.Domain.Authentication
 {
     /// <summary>
     /// This class represents a cheap DAO to do DAO-like things upon known hosts (previously 'cloaks').
@@ -38,7 +38,7 @@ namespace SpikeLite.Persistence.Authentication
             // Yeah, this sucks, we need to get rid of it ASAP.
             if (hostList.Count < 1)
             {
-                SeedACLs();
+                SeedAcLs();
                 hostList = query.List<KnownHost>();
             }
 
@@ -48,7 +48,7 @@ namespace SpikeLite.Persistence.Authentication
         /// <summary>
         /// When we do not have a database on hand we call this method to seed some accounts.
         /// </summary>
-        private void SeedACLs()
+        private void SeedAcLs()
         {
             ISession sess = DoGetSession(false);
 

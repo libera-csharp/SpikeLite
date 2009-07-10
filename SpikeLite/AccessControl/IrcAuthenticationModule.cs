@@ -6,7 +6,7 @@
  * distributed license.txt for details.
  */
 using System.Collections.Generic;
-using SpikeLite.Persistence.Authentication;
+using SpikeLite.Domain.Authentication;
 
 namespace SpikeLite.AccessControl
 {

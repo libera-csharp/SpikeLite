@@ -6,14 +6,12 @@
  * distributed license.txt for details.
  */
 using System.Reflection;
-using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
 
-[assembly: AssemblyTitle("SpikeLite.Persistence")]
-[assembly: AssemblyDescription("Provides a persistence layer for the bot.")]
-[assembly: AssemblyConfiguration("Hibernate")]
+[assembly: AssemblyTitle("SpikeLite.Domain")]
+[assembly: AssemblyDescription("Provides a domain model for the bot.")]
+[assembly: AssemblyConfiguration("NHibernate")]
 [assembly: AssemblyCompany("FreeNode CSharp Community")]
-[assembly: AssemblyProduct("SpikeLite.Persistence")]
+[assembly: AssemblyProduct("SpikeLite.Domain")]
 [assembly: AssemblyCopyright("Copyright (c) 2008 the FreeNode Csharp Community.")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

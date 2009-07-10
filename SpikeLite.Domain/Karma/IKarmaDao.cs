@@ -5,8 +5,8 @@
  * This source is licensed under the terms of the MIT license. Please see the 
  * distributed license.txt for details.
  */
- 
-namespace SpikeLite.Persistence.Karma
+
+namespace SpikeLite.Domain.Karma
 {
     /// <summary>
     /// This interface provides a contract for what our karma dao does.

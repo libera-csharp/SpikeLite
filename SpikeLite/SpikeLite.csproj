@@ -89,9 +89,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\SpikeLite.Persistence\SpikeLite.Persistence.csproj">
+    <ProjectReference Include="..\SpikeLite.Domain\SpikeLite.Domain.csproj">
       <Project>{A9084592-C90E-4A8E-AFF9-00709EE6513C}</Project>
-      <Name>SpikeLite.Persistence</Name>
+      <Name>SpikeLite.Domain</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

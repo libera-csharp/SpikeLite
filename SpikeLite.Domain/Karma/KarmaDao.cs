@@ -10,7 +10,7 @@ using NHibernate;
 using NHibernate.Criterion;
 using Spring.Data.NHibernate.Support;
 
-namespace SpikeLite.Persistence.Karma
+namespace SpikeLite.Domain.Karma
 {
     /// <summary>
     /// A very light, cheap wrapper around KarmaItems

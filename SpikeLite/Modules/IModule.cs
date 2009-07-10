@@ -6,7 +6,7 @@
  * distributed license.txt for details.
  */
 using SpikeLite.Communications;
-using SpikeLite.Persistence.Authentication;
+using SpikeLite.Domain.Authentication;
 
 namespace SpikeLite.Modules
 {
