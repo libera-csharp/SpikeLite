@@ -62,11 +62,6 @@ namespace SpikeLite.Modules.GeoIP
         private static readonly XNamespace ApiNamespace = "http://www.hostip.info/api";
 
         /// <summary>
-        /// Holds a reference to the <see cref="WebClient"/> we use to make our requests.
-        /// </summary>
-        private readonly WebClient _client;
-
-        /// <summary>
         /// Provides a response template that we can use to respond to users. 
         /// </summary>
         private const string ResponseTemplate = "{0}, the IP {1} maps to the country '{2}', ISO code {3}";
@@ -108,14 +103,6 @@ namespace SpikeLite.Modules.GeoIP
         }
 
         /// <summary>
-        /// Construct our module, write up all our Async handlers.
-        /// </summary>
-        public GeoIpLookupModule()
-        {
-
-        }
-
-        /// <summary>
         /// Performs a search for information on the given criteria (in this case a quad-dotted IP).
         /// </summary>
         /// 
@@ -127,7 +114,7 @@ namespace SpikeLite.Modules.GeoIP
 
             WebClient webClient = new WebClient();
             webClient.DownloadStringCompleted += SearchCompletionHandler;
-            webClient.DownloadStringAsync(searchUri, new Tuple<Request, string, WebClient>(request, ipAddress, webClient));
+            webClient.DownloadStringAsync(searchUri, new Tuple<Request, string, WebClient>(request, ipAddress, webClient));               
         }
 
         /// <summary>
@@ -142,6 +129,7 @@ namespace SpikeLite.Modules.GeoIP
             Tuple<Request, string, WebClient> userContext = (Tuple<Request, string, WebClient>)e.UserState;
             Request requestContext = userContext._1;
             string ip = userContext._2;
+            WebClient webclient = userContext._3;
 
             // Construct an XLinq document fragment and start anonymously pulling things out.
             XDocument xmlResponse = XDocument.Parse(e.Result);
@@ -160,6 +148,11 @@ namespace SpikeLite.Modules.GeoIP
             {  
                 Logger.WarnFormat("GeoIPLookupModule search failure for IP {0} by {1}. Message: {2}", ip, requestContext.Nick, ex.Message);
                 response = "No such IP, or the service lookup has failed.";
+            }
+            finally
+            {
+                webclient.DownloadStringCompleted += SearchCompletionHandler;
+                webclient.Dispose();
             }
 
             ModuleManagementContainer.HandleResponse(requestContext.CreateResponse(ResponseType.Public, response));
