@@ -31,11 +31,6 @@ namespace SpikeLite.Modules
         public IList<IModule> Modules { get; set; }
 
         /// <summary>
-        /// Holds a module message handler we can wrap with a proxy.
-        /// </summary>
-        public IModuleMessageHandler ModuleMessageHandler { get; set; }
-
-        /// <summary>
         /// This stores our communications manager, which we intercept messages from.
         /// </summary>
         protected CommunicationManager CommunicationManager { get; set; }
@@ -44,15 +39,16 @@ namespace SpikeLite.Modules
 
         #region Construction and Module Loading
 
+        // TODO: Kog 12/26/2008 - Yeah, the network support is hacked in to only support a single network. We can't support multiples right 
+        // TODO:                  now anyway, it's a TODO.
+
         /// <summary>
         /// Loads all our modules and sets up our message interception.
         /// </summary>
         public void LoadModules()
         {
-            CommunicationManager.RequestReceived += ModuleMessageHandler.ConsumeRawMessage;
+            CommunicationManager.RequestReceived += (sender, args) => HandleRequest(args.Request);
 
-            // TODO: Kog 12/26/2008 - Yeah, the network support is hacked in to only support a single network. We can't support multiples right 
-            // TODO:                  now anyway, it's a TODO.
             Modules.ForEach(module => { module.NetworkConnectionInformation = CommunicationManager.NetworkList[0]; 
                                         _logger.InfoFormat("Loaded Module {0}", module.Name); });
         }

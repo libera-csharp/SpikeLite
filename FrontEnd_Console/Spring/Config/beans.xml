@@ -35,26 +35,19 @@
     
     <!-- This property is actually set in beans-modules, but overridden in beans-overrides. -->
     <property name="Modules" ref="ModuleList"/>
-
-    <!-- Inject our proxy for intercepting messages. -->
-    <property name="ModuleMessageHandler" ref="MessageHandler"/>
   </object>
-
-  <object id="MessageHandler" type="SpikeLite.Modules.MessageHandler, SpikeLite">
-    <property name="ModuleManager" ref="ModuleManager"/>
-  </object>
-
+  
   <!-- 
        This is our communication manager, responsible for passing messages bettween modules and the outside
        world.
   -->
   <object id="CommunicationManager" type="SpikeLite.Communications.CommunicationManager, SpikeLite">
-    <property name="AuthHandler" ref="DefaultAuthenticationManager"/>
     <property name="NetworkList">
       <list element-type="SpikeLite.Communications.IRC.Network, SpikeLite">
         <ref object="Network"/>
       </list>
     </property>
+    <property name="MessageParser" ref="MessageParserAdvice"/>
   </object>
 
   <object id="Network" type="SpikeLite.Communications.IRC.Network, SpikeLite">
@@ -86,6 +79,24 @@
     </constructor-arg>
   </object>
 
+  <object id="MessageParser" type="SpikeLite.Communications.Messaging.PrivmsgParser, SpikeLite">
+    <property name="AuthHandler" ref="DefaultAuthenticationManager"/>
+    <property name="CommunicationManager" ref="CommunicationManager"/>
+    <property name="UserTokenCache" ref="UserTokenCache"/>
+  </object>
+
+  <object id="MessageParserProxy" type="SpikeLite.Communications.Messaging.PrivmsgParserAdvice, SpikeLite"/>
+
+  <object id="MessageParserAdvice" type="Spring.Aop.Framework.ProxyFactoryObject, Spring.Aop">
+    <property name="proxyInterfaces" value="SpikeLite.Communications.Messaging.IPrivmsgParser"/>
+    <property name="targetName" value="MessageParser"/>
+    <property name="InterceptorNames">
+      <list>
+        <value>MessageParserProxy</value>
+      </list>
+    </property>
+  </object>
+
   <!-- This is our default access manager. -->
   <object id="DefaultAuthenticationManager" type="SpikeLite.AccessControl.RootAuthModule, SpikeLite">
     <property name="AuthModule" ref="IrcAuthenticationModule"/>
@@ -94,6 +105,8 @@
   <object id="IrcAuthenticationModule" type="SpikeLite.AccessControl.IrcAuthenticationModule, SpikeLite">
     <constructor-arg index="0" ref="KnownHostDao"/>
   </object>
+
+  <object id="UserTokenCache" type="SpikeLite.AccessControl.UserTokenCache, SpikeLite"/>
 
   <!-- We provide default values for all the placheolder values in the bot, so that if a user does not include
        this in the beans-overrides.xml we don't wind up throwing a random, unhelpful exception. You really should

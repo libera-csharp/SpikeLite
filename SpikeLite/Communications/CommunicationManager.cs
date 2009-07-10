@@ -7,10 +7,10 @@
  */
 using System;
 using Sharkbite.Irc;
-using SpikeLite.AccessControl;
 using log4net.Ext.Trace;
 using SpikeLite.Communications.IRC;
 using System.Collections.Generic;
+using SpikeLite.Communications.Messaging;
 
 namespace SpikeLite.Communications
 {
@@ -39,26 +39,19 @@ namespace SpikeLite.Communications
         private event EventHandler<RequestReceivedEventArgs> _requestReceived;
 
         /// <summary>
-        /// A cache for storing user tokens that we'll use for determining the access level of incoming
-        /// messages.
-        /// </summary>
-        private readonly UserTokenCache _userTokenCache = new UserTokenCache();
-
-        /// <summary>
         /// Holds the connection object handed to us from SpikeLite, which handles reconnections etc.
         /// </summary>
         private Connection _connection;
 
         /// <summary>
-        /// Stores our collaborator that we can use for generating access tokens on our messages we're going
-        /// to pass around our system.
-        /// </summary>
-        public AuthenticationModule AuthHandler { get; set; }
-
-        /// <summary>
         /// Stores our log4net logger.
         /// </summary>
         private readonly TraceLogImpl _logger = (TraceLogImpl)TraceLogManager.GetLogger(typeof(SpikeLite));
+
+        /// <summary>
+        /// Gets or sets a collaborator we use to parse PRIVMSGes from our IRC library into internal <see cref="Request"/> structs.
+        /// </summary>
+        public IPrivmsgParser MessageParser { get; set; }
 
         /// <summary>
         /// Allows the getting or setting of our connection object.
@@ -76,14 +69,14 @@ namespace SpikeLite.Communications
             {
                 if (null != _connection)
                 {
-                    _connection.Listener.OnPublic -= Listener_OnPublic;
-                    _connection.Listener.OnPrivate -= Listener_OnPrivate;
+                    _connection.Listener.OnPublic -= MessageParser.HandleMultiTargetMessage;
+                    _connection.Listener.OnPrivate -= MessageParser.HandleSingleTargetMessage;
                 }
 
                 _connection = value;
 
-                _connection.Listener.OnPublic += Listener_OnPublic;
-                _connection.Listener.OnPrivate += Listener_OnPrivate;
+                _connection.Listener.OnPublic += MessageParser.HandleMultiTargetMessage;
+                _connection.Listener.OnPrivate += MessageParser.HandleSingleTargetMessage;
             }
         }
 
@@ -102,7 +95,7 @@ namespace SpikeLite.Communications
             remove { _requestReceived -= value; }
         }
 
-        #region Message Passing
+        #region Outgoing Messages
 
         /// <summary>
         /// Attempts to send an outgoing message to the world.
@@ -127,70 +120,18 @@ namespace SpikeLite.Communications
                 
                 _connection.Sender.PrivateMessage(response.Nick, response.Message);
             }
-            else
-            {
-                _logger.WarnFormat("Received an unknown responsetype: {0}", response.ResponseType);
-            }
         }
 
         #endregion
 
-        #region Event Handlers
-
-        /// <summary>
-        /// Attempts to parse an incoming message via a 1:N PRIVMSG.
-        /// </summary>
-        /// 
-        /// <param name="userInfo">Information about the user who sent the message (nick, host etc).</param>
-        /// <param name="channel">The channel the message came from.</param>
-        /// <param name="message">The text of our message.</param>
-        void Listener_OnPublic(UserInfo userInfo, string channel, string message)
-        {
-            UserToken userToken = _userTokenCache.RetrieveToken(userInfo);
-            AuthToken authToken = AuthHandler.Authenticate(userToken);
-
-            Request request = new Request
-            {
-                RequestFrom = authToken,
-                Channel = channel,
-                Nick = userInfo.Nick,
-                RequestType = RequestType.Public,
-                Addressee = userInfo.Nick,
-                Message = message
-            };
-
-            OnRequestReceived(request);
-        }
-
-        /// <summary>
-        /// Attempts to parse an incoming message via a 1:1 PRIVMSG.
-        /// </summary>
-        /// 
-        /// <param name="userInfo">Information about the user who sent the message (nick, host etc).</param>
-        /// <param name="message">The text of our message.</param>
-        void Listener_OnPrivate(UserInfo userInfo, string message)
-        {
-            UserToken userToken = _userTokenCache.RetrieveToken(userInfo);
-            AuthToken authToken = AuthHandler.Authenticate(userToken);
-            
-			Request request = new Request
-            {
-                RequestFrom = authToken,
-                Channel = null,
-                Nick = userInfo.Nick,
-                RequestType = RequestType.Private,
-                Message = message
-            };
-
-            OnRequestReceived(request);
-        }
+        #region Incoming Messages
 
         /// <summary>
         /// Passes our internal message format to all subscribers.
         /// </summary>
         /// 
         /// <param name="request">Our message to pass.</param>
-        protected virtual void OnRequestReceived(Request request)
+        public void HandleRequestReceived(Request request)
         {
             if (_requestReceived != null)
             {

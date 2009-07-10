@@ -50,6 +50,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Dependencies\Sharkbite.Thresher.dll</HintPath>
     </Reference>
+    <Reference Include="Spring.Aop, Version=1.2.0.20313, Culture=neutral, PublicKeyToken=65e474d141e25e07, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Dependencies\Spring.Aop.dll</HintPath>
+    </Reference>
     <Reference Include="Spring.Core, Version=1.2.0.20313, Culture=neutral, PublicKeyToken=65e474d141e25e07, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Dependencies\Spring.Core.dll</HintPath>
@@ -87,11 +91,12 @@
     <Compile Include="Communications\IRC\Channel.cs" />
     <Compile Include="Communications\IRC\Network.cs" />
     <Compile Include="Communications\IRC\Server.cs" />
+    <Compile Include="Communications\Messaging\IPrivmsgParser.cs" />
+    <Compile Include="Communications\Messaging\PrivmsgParser.cs" />
+    <Compile Include="Communications\Messaging\PrivmsgParserAdvice.cs" />
     <Compile Include="Communications\Request.cs" />
     <Compile Include="Communications\Response.cs" />
     <Compile Include="Modules\IModule.cs" />
-    <Compile Include="Modules\IModuleMessageHandler.cs" />
-    <Compile Include="Modules\MessageHandler.cs" />
     <Compile Include="Modules\ModuleBase.cs" />
     <Compile Include="Modules\ModuleManager.cs" />
     <Compile Include="SpikeLite.cs" />
