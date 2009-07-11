@@ -27,11 +27,9 @@ namespace SpikeLite.Domain.Persistence.Karma
         /// <returns>A <see cref="KarmaItem"/> for your username, or null if no curent entries</returns>
         public virtual KarmaItem FindKarma(string userName)
         {
-            IList<KarmaItem> karma = HibernateTemplate.ExecuteFind(x => x.CreateQuery("from KarmaItem k where k.UserName = ?")
-                                                                         .SetParameter(0, userName)
-                                                                         .List<KarmaItem>());
-
-            return karma.FirstOrDefault();
+            return HibernateTemplate.ExecuteFind(x => x.CreateQuery("from KarmaItem k where k.UserName = ?")
+                                                                    .SetParameter(0, userName)
+                                                                    .List<KarmaItem>()).FirstOrDefault();
         }
 
         /// <summary>
@@ -45,7 +43,7 @@ namespace SpikeLite.Domain.Persistence.Karma
         /// </remarks>
         public virtual void SaveKarma(KarmaItem karma)
         {
-            HibernateTemplate.SessionFactory.GetCurrentSession().SaveOrUpdate(karma);
+            HibernateTemplate.SaveOrUpdate(karma);
         }
     }
 }
