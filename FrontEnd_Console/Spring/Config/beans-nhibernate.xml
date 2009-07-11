@@ -46,7 +46,7 @@
   </object>
 
   <!-- Wire up our DAOs. -->
-  <object id="KnownHostDaoImpl" type="SpikeLite.Domain.Authentication.KnownHostDao, SpikeLite.Domain">
+  <object id="KnownHostDaoImpl" type="SpikeLite.Domain.Persistence.Authentication.KnownHostDao, SpikeLite.Domain">
     <property name="sessionFactory" ref="HibernateSessionFactory"/>
   </object>
 
@@ -54,7 +54,7 @@
     <property name="Target" ref="KnownHostDaoImpl"/>
   </object>
 
-  <object id="KarmaDaoImpl" type="SpikeLite.Domain.Karma.KarmaDao, SpikeLite.Domain">
+  <object id="KarmaDaoImpl" type="SpikeLite.Domain.Persistence.Karma.KarmaDao, SpikeLite.Domain">
     <property name="sessionFactory" ref="HibernateSessionFactory"/>
   </object>
 
@@ -69,6 +69,7 @@
       <name-values>
         <add key="Find*" value="PROPAGATION_REQUIRED,readOnly"/>
         <add key="Save*" value="PROPAGATION_REQUIRED"/>
+        <add key="SeedAcLs*" value="PROPAGATION_REQUIRED"/>
       </name-values>
     </property>
   </object>

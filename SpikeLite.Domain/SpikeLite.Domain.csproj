@@ -68,23 +68,26 @@
       <HintPath>..\Dependencies\Spring.Data.NHibernate20.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Authentication\IKnownHostDao.cs" />
-    <Compile Include="Authentication\KnownHost.cs" />
-    <Compile Include="Authentication\KnownHostDao.cs" />
-    <Compile Include="Karma\IKarmaDao.cs" />
-    <Compile Include="Karma\KarmaDao.cs" />
-    <Compile Include="Karma\KarmaItem.cs" />
+    <Compile Include="Persistence\Authentication\IKnownHostDao.cs" />
+    <Compile Include="Model\Authentication\KnownHost.cs" />
+    <Compile Include="Persistence\Authentication\KnownHostDao.cs" />
+    <Compile Include="Persistence\Karma\IKarmaDao.cs" />
+    <Compile Include="Persistence\Karma\KarmaDao.cs" />
+    <Compile Include="Model\Karma\KarmaItem.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Karma\SpikeLite.Domain.Karma.KarmaItem.hbm.xml" />
+    <EmbeddedResource Include="Model\Karma\SpikeLite.Domain.Karma.KarmaItem.hbm.xml" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Authentication\SpikeLite.Domain.Authentication.Cloak.hbm.xml" />
+    <EmbeddedResource Include="Model\Authentication\SpikeLite.Domain.Authentication.Cloak.hbm.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

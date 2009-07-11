@@ -7,7 +7,7 @@
  */
 using System.Collections.Generic;
 
-namespace SpikeLite.Domain.Authentication
+namespace SpikeLite.Domain.Persistence.Authentication
 {
     /// <summary>
     /// Provides a contract for what our known host DAO can do.
@@ -20,6 +20,11 @@ namespace SpikeLite.Domain.Authentication
         /// </summary>
         /// 
         /// <returns>An enumeration of known hosts. May be empty, but will not be null.</returns>
-        IEnumerable<KnownHost> FindAll();
+        IList<Model.Authentication.KnownHost> FindAll();
+
+        /// <summary>
+        /// Attempts to stock a base set of ACLs.
+        /// </summary>
+        void SeedAcLs();
     }
 }

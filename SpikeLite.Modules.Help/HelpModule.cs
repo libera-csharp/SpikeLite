@@ -8,9 +8,9 @@
 using System;
 using System.Text;
 using SpikeLite.Communications;
-using SpikeLite.Domain.Authentication;
 using Mono.Rocks;
 using System.Linq;
+using SpikeLite.Domain.Model.Authentication;
 
 namespace SpikeLite.Modules.Help
 {

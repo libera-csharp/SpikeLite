@@ -8,7 +8,7 @@
 using SpikeLite.Communications;
 using SpikeLite.Communications.IRC;
 using log4net.Ext.Trace;
-using SpikeLite.Domain.Authentication;
+using SpikeLite.Domain.Model.Authentication;
 
 namespace SpikeLite.Modules
 {

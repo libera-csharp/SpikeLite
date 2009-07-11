@@ -6,7 +6,9 @@
  * distributed license.txt for details.
  */
 
-namespace SpikeLite.Domain.Karma
+using SpikeLite.Domain.Model.Karma;
+
+namespace SpikeLite.Domain.Persistence.Karma
 {
     /// <summary>
     /// This interface provides a contract for what our karma dao does.

@@ -5,8 +5,10 @@
  * This source is licensed under the terms of the MIT license. Please see the 
  * distributed license.txt for details.
  */
+
 using System.Collections.Generic;
-using SpikeLite.Domain.Authentication;
+using SpikeLite.Domain.Model.Authentication;
+using SpikeLite.Domain.Persistence.Authentication;
 
 namespace SpikeLite.AccessControl
 {
@@ -36,7 +38,25 @@ namespace SpikeLite.AccessControl
         public IrcAuthenticationModule(IKnownHostDao hostDao)
         {
             _hostDao = hostDao;
-            _cloaks = _hostDao.FindAll();
+            _cloaks = FindOrSeedAcls();
+        }
+
+        /// <summary>
+        /// A hacktastical convenience method to ensure that we at least have the default set of ACLs. This should be in some sort of installer.
+        /// </summary>
+        /// 
+        /// <returns>The set of all ACLs within the system, or the default set from <see cref="KnownHostDao.SeedAcLs"/> if the cloaks table is empty.</returns>
+        private IEnumerable<KnownHost> FindOrSeedAcls()
+        {
+            IList<KnownHost> cloaks = _hostDao.FindAll();
+
+            if (cloaks.Count < 1)
+            {
+                _hostDao.SeedAcLs();
+                cloaks = _hostDao.FindAll();
+            }
+
+            return cloaks;
         }
 
         /// <summary>

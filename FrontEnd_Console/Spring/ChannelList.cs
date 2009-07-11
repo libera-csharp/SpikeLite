@@ -8,7 +8,7 @@
 using System.Collections.Generic;
 using SpikeLite.Communications.IRC;
 
-namespace FrontEnd_Console
+namespace FrontEnd_Console.Spring
 {
     /// <summary>
     /// Unfortunately Spring.NET doesn't implement something like the Java version's util:map, so

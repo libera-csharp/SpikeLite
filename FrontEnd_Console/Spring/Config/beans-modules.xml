@@ -260,7 +260,7 @@
 
   <!-- This is our default list of modules to load (the entire set). Please override this in the beans-overrides
        if you wish a different set to be loaded. -->
-  <object id="ModuleList" type="FrontEnd_Console.ModuleList, FrontEnd_Console">
+  <object id="ModuleList" type="FrontEnd_Console.Spring.ModuleList, FrontEnd_Console">
     <constructor-arg index="0">
       <list element-type="SpikeLite.Modules.IModule, SpikeLite">
 		    <ref object="GoogleAjaxModule"/>

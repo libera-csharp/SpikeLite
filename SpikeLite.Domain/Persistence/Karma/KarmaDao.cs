@@ -5,12 +5,13 @@
  * This source is licensed under the terms of the MIT license. Please see the 
  * distributed license.txt for details.
  */
-using System.Collections.Generic;
-using NHibernate;
-using NHibernate.Criterion;
-using Spring.Data.NHibernate.Support;
 
-namespace SpikeLite.Domain.Karma
+using System.Collections.Generic;
+using SpikeLite.Domain.Model.Karma;
+using Spring.Data.NHibernate.Generic.Support;
+using System.Linq;
+
+namespace SpikeLite.Domain.Persistence.Karma
 {
     /// <summary>
     /// A very light, cheap wrapper around KarmaItems
@@ -26,14 +27,11 @@ namespace SpikeLite.Domain.Karma
         /// <returns>A <see cref="KarmaItem"/> for your username, or null if no curent entries</returns>
         public virtual KarmaItem FindKarma(string userName)
         {
-            ISession sess = DoGetSession(false);
+            IList<KarmaItem> karma = HibernateTemplate.ExecuteFind(x => x.CreateQuery("from KarmaItem k where k.UserName = ?")
+                                                                         .SetParameter(0, userName)
+                                                                         .List<KarmaItem>());
 
-            ICriteria query = sess.CreateCriteria(typeof(KarmaItem))
-                                .Add(Restrictions.Eq("UserName", userName));
-
-            IList<KarmaItem> karmaItems = query.List<KarmaItem>();
-
-            return (karmaItems.Count > 0) ? karmaItems[0] : null;
+            return karma.FirstOrDefault();
         }
 
         /// <summary>
@@ -47,7 +45,7 @@ namespace SpikeLite.Domain.Karma
         /// </remarks>
         public virtual void SaveKarma(KarmaItem karma)
         {
-            DoGetSession(false).SaveOrUpdateCopy(karma);
+            HibernateTemplate.SessionFactory.GetCurrentSession().SaveOrUpdate(karma);
         }
     }
 }

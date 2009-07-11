@@ -7,9 +7,10 @@
  */
 using System;
 using SpikeLite.Communications;
-using SpikeLite.Domain.Authentication;
-using SpikeLite.Domain.Karma;
 using System.Text.RegularExpressions;
+using SpikeLite.Domain.Model.Authentication;
+using SpikeLite.Domain.Model.Karma;
+using SpikeLite.Domain.Persistence.Karma;
 
 namespace SpikeLite.Modules.Karma
 {

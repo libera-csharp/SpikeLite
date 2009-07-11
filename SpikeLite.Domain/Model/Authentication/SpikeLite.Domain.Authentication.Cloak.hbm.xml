@@ -9,7 +9,7 @@
 -->
 
 <hibernate-mapping xmlns="urn:nhibernate-mapping-2.2">
-  <class name="SpikeLite.Domain.Authentication.KnownHost,  SpikeLite.Domain" table="CLOAKS">
+  <class name="SpikeLite.Domain.Model.Authentication.KnownHost,  SpikeLite.Domain" table="CLOAKS">
     <!-- 
       The increment type is inherently thread unsafe. This is only here because ACLs are presently
       immutable. If this changes we probably want to use something like a hi-lo.

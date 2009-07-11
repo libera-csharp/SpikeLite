@@ -8,7 +8,7 @@
 
 using System.Collections.Generic;
 using SpikeLite.Communications;
-using SpikeLite.Domain.Authentication;
+using SpikeLite.Domain.Model.Authentication;
 
 namespace SpikeLite.Modules.Search
 {

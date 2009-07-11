@@ -7,10 +7,8 @@
  */
 using System;
 
-namespace SpikeLite.Domain.Authentication
+namespace SpikeLite.Domain.Model.Authentication
 {
-    // TODO: Kog 10/19/2008 - Refactor enums, also make cloaks use an expression instead of "type" for things like partials.
-
     /// <summary>
     /// This enumeration (temporarily) stands in for having an expression for our cloaks. By this we can tell
     /// how we should be matching the hosts - full requiring a complete match, start is akin to String.StartsWith,

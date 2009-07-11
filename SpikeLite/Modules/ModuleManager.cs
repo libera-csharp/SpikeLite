@@ -69,6 +69,10 @@ namespace SpikeLite.Modules
 
         // TODO: Kog 12/27/2008 - Can we refactor the Tell module not to need this?
 
+        // TODO AJ ??/??/???? :Add Chain of Responsability for command modules to allow for better message handling
+        // TODO AJ ??/??/???? :Once CoR has been added the include a dictionary of the first level of modules to make lookup faster
+        // TODO AJ ??/??/???? :and stop messages being passed to modules that aren't interested.
+
         /// <summary>
         /// Routes an incoming message to all modules for consumption.
         /// </summary>
@@ -80,9 +84,6 @@ namespace SpikeLite.Modules
         /// </remarks>
         public void HandleRequest(Request request)
         {
-            //TODO AJ:Add Chain of Responsability for command modules to allow for better message handling
-            //TODO AJ:Once CoR has been added the include a dictionary of the first level of modules to make lookup faster
-            //TODO AJ:and stop messages being passed to modules that aren't interested.
             Modules.ForEach(module => module.HandleRequest(request));
         }
 

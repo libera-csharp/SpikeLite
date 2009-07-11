@@ -8,7 +8,7 @@
 using System;
 using SpikeLite.Communications;
 using System.Reflection;
-using SpikeLite.Domain.Authentication;
+using SpikeLite.Domain.Model.Authentication;
 
 namespace SpikeLite.Modules.About
 {
