@@ -43,6 +43,7 @@ namespace SpikeLite.Modules.Search
         {
             internal string SearchCriteria { get; set; }
             internal Action<string[]> CallbackHandler { get; set; }
+            internal WebClient WebClient { get; set; }
         }
 
         #endregion
@@ -62,6 +63,7 @@ namespace SpikeLite.Modules.Search
             {
                 SearchCriteria = searchCriteria,
                 CallbackHandler = callbackHandler,
+                WebClient = webClient
             };
 
             webClient.DownloadStringAsync(searchUri, state);
@@ -99,6 +101,10 @@ namespace SpikeLite.Modules.Search
             catch (Exception)
             {
                 results.Add("The service is currently b00rked, please try again in a few minutes.");
+            }
+            finally
+            {
+                state.WebClient.Dispose();
             }
 
             // Call back our callback from our container.
