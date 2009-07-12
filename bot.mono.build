@@ -1,0 +1,196 @@
+<?xml version="1.0"?>
+
+<!--
+  SpikeLite C# IRC Bot
+  Copyright (c) 2009 FreeNode ##Csharp Community
+
+  This source is licensed under the terms of the MIT license. Please see the 
+  distributed license.txt for details.
+-->
+
+<project name="SharpBot-Mono" default="release" basedir=".">
+	<description>FreeNode Csharp Bot Custom Mono Build</description>
+	
+	<target name="build" description="Builds a release mode binary" depends="clean">
+
+		<!-- Build the domain first -->
+		<exec program="xbuild">
+			<arg value="SpikeLite.Domain/SpikeLite.Domain.csproj"/>
+			<arg value="/target:Build"/>
+			<arg value="/p:Configuration=Release"/>
+		</exec>
+
+		<!-- Now SpikeLite -->
+                <exec program="xbuild">
+                        <arg value="SpikeLite/SpikeLite.csproj"/>
+                        <arg value="/target:Build"/>
+                        <arg value="/p:Configuration=Release"/>
+                </exec>
+
+                <!-- Now The rest of the modules -->
+                <exec program="xbuild">
+                        <arg value="SpikeLite.Modules.GeoIP/SpikeLite.Modules.GeoIP.csproj"/>
+                        <arg value="/target:Build"/>
+                        <arg value="/p:Configuration=Release"/>
+                </exec>
+
+                <exec program="xbuild">
+                        <arg value="SpikeLite.Modules.Puppet/SpikeLite.Modules.Puppet.csproj"/>
+                        <arg value="/target:Build"/>
+                        <arg value="/p:Configuration=Release"/>
+                </exec>
+
+                <exec program="xbuild">
+                        <arg value="SpikeLite.Modules.Karma/SpikeLite.Modules.Karma.csproj"/>
+                        <arg value="/target:Build"/>
+                        <arg value="/p:Configuration=Release"/>
+                </exec>
+
+                <exec program="xbuild">
+                        <arg value="SpikeLite.Modules.Help/SpikeLite.Modules.Help.csproj"/>
+                        <arg value="/target:Build"/>
+                        <arg value="/p:Configuration=Release"/>
+                </exec>
+
+                <exec program="xbuild">
+                        <arg value="SpikeLite.Modules.Tell/SpikeLite.Modules.Tell.csproj"/>
+                        <arg value="/target:Build"/>
+                        <arg value="/p:Configuration=Release"/>
+                </exec>
+
+                <exec program="xbuild">
+                        <arg value="SpikeLite.Modules.About/SpikeLite.Modules.About.csproj"/>
+                        <arg value="/target:Build"/>
+                        <arg value="/p:Configuration=Release"/>
+                </exec>
+
+                <exec program="xbuild">
+                        <arg value="SpikeLite.Modules.Say/SpikeLite.Modules.Say.csproj"/>
+                        <arg value="/target:Build"/>
+                        <arg value="/p:Configuration=Release"/>
+                </exec>
+
+                <exec program="xbuild">
+                        <arg value="SpikeLite.Modules.Search/SpikeLite.Modules.Search.csproj"/>
+                        <arg value="/target:Build"/>
+                        <arg value="/p:Configuration=Release"/>
+                </exec>
+
+                <exec program="xbuild">
+                        <arg value="SpikeLite.Modules.Admin/SpikeLite.Modules.Admin.csproj"/>
+                        <arg value="/target:Build"/>
+                        <arg value="/p:Configuration=Release"/>
+                </exec>
+
+		<!-- Now build the Front_End Console -->
+                <exec program="xbuild">
+	                <arg value="FrontEnd_Console/FrontEnd_Console.csproj"/>
+	                <arg value="/target:Build"/>
+	                <arg value="/p:Configuration=Release"/>
+	        </exec>
+	</target>
+
+	<target name="clean" description="Clean previously built artifacts">
+		<delete dir="SpikeLite.Domain/bin"/>
+		<delete dir="SpikeLite.Domain/obj"/>
+		<delete dir="SpikeLite/bin"/>
+		<delete dir="SpikeLite/obj"/>
+		<delete dir="SpikeLite.Modules.GeoIP/bin"/>
+		<delete dir="SpikeLite.Modules.GeoIP/obj"/>
+		<delete dir="SpikeLite.Modules.Puppet/bin"/>
+		<delete dir="SpikeLite.Modules.Puppet/obj"/>
+		<delete dir="SpikeLite.Modules.Karma/bin"/>
+		<delete dir="SpikeLite.Modules.Karma/obj"/>
+		<delete dir="SpikeLite.Modules.Help/bin"/>
+		<delete dir="SpikeLite.Modules.Help/obj"/>
+		<delete dir="SpikeLite.Modules.Tell/bin"/>
+		<delete dir="SpikeLite.Modules.Tell/obj"/>
+		<delete dir="SpikeLite.Modules.About/bin"/>
+		<delete dir="SpikeLite.Modules.About/obj"/>
+		<delete dir="SpikeLite.Modules.Say/bin"/>
+		<delete dir="SpikeLite.Modules.Say/obj"/>
+		<delete dir="SpikeLite.Modules.Search/bin"/>
+		<delete dir="SpikeLite.Modules.Search/obj"/>
+		<delete dir="SpikeLite.Modules.Admin/bin"/>
+		<delete dir="SpikeLite.Modules.Admin/obj"/>
+		<delete dir="FrontEnd_Console/bin"/>
+		<delete dir="FrontEnd_Console/obj"/>
+	</target>
+
+	<target name="release" description="Creates a release artifact" depends="build">
+		<!-- Copy our Modules and libs -->
+		<copy todir="FrontEnd_Console/bin/Release">
+			<fileset basedir="SpikeLite.Modules.Admin/bin/Release">
+				<include name="SpikeLite.Modules.Admin.dll"/>
+			</fileset>
+		</copy>
+
+                <copy todir="FrontEnd_Console/bin/Release">
+                        <fileset basedir="SpikeLite.Modules.About/bin/Release">
+                                <include name="SpikeLite.Modules.About.dll"/>
+                        </fileset>
+                </copy>
+
+                <copy todir="FrontEnd_Console/bin/Release">
+                        <fileset basedir="SpikeLite.Modules.GeoIP/bin/Release">
+                                <include name="SpikeLite.Modules.GeoIP.dll"/>
+                        </fileset>
+                </copy>
+
+                <copy todir="FrontEnd_Console/bin/Release">
+                        <fileset basedir="SpikeLite.Modules.Help/bin/Release">
+                                <include name="SpikeLite.Modules.Help.dll"/>
+                        </fileset>
+                </copy>
+
+                <copy todir="FrontEnd_Console/bin/Release">
+                        <fileset basedir="SpikeLite.Modules.Karma/bin/Release">
+                                <include name="SpikeLite.Modules.Karma.dll"/>
+                        </fileset>
+                </copy>
+
+                <copy todir="FrontEnd_Console/bin/Release">
+                        <fileset basedir="SpikeLite.Modules.Puppet/bin/Release">
+                                <include name="SpikeLite.Modules.Puppet.dll"/>
+                        </fileset>
+                </copy>
+
+                <copy todir="FrontEnd_Console/bin/Release">
+                        <fileset basedir="SpikeLite.Modules.Say/bin/Release">
+                                <include name="SpikeLite.Modules.Say.dll"/>
+                        </fileset>
+                </copy>
+
+                <copy todir="FrontEnd_Console/bin/Release">
+                        <fileset basedir="SpikeLite.Modules.Search/bin/Release">
+                                <include name="SpikeLite.Modules.Search.dll"/>
+                        </fileset>
+                </copy>
+
+                <copy todir="FrontEnd_Console/bin/Release">
+                        <fileset basedir="SpikeLite.Modules.Tell/bin/Release">
+                                <include name="SpikeLite.Modules.Tell.dll"/>
+                        </fileset>
+                </copy>
+
+		<!-- Get our PGSQL libs -->
+                <copy todir="FrontEnd_Console/bin/Release">
+                        <fileset basedir="SpikeLite.Domain/PostgreSQL/">
+                                <include name="*.*"/>
+                        </fileset>
+                </copy>
+
+		<!-- Get our app.config -->
+		<copy file="FrontEnd_Console/app.config" tofile="FrontEnd_Console/bin/Release/FrontEnd_Console.exe.config"/>
+
+		<!-- Get our JSON lib -->
+		<copy file="Dependencies/Newtonsoft.Json.dll" tofile="FrontEnd_Console/bin/Release/Newtonsoft.Json.dll"/>
+
+                <!-- Zip the Release quality artifacts -->
+		<zip zipfile="SpikeLite-Release.zip">
+	                <fileset basedir="FrontEnd_Console\bin\Release">
+		                <include name="**/*"/>
+		        </fileset>
+		</zip>
+	</target>
+</project>
