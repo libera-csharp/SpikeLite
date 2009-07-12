@@ -11,18 +11,18 @@ namespace SpikeLite.AccessControl
 {
     public class AuthToken
     {
-        private readonly AuthenticationModule _issuer;
+        private readonly IAuthenticationModule _issuer;
         private readonly UserToken _user;
         private readonly AccessLevel _accessLevel;
 
-        public AuthToken(AuthenticationModule issuer, UserToken user, AccessLevel accessLevel)
+        public AuthToken(IAuthenticationModule issuer, UserToken user, AccessLevel accessLevel)
         {
             _issuer = issuer;
             _user = user;
             _accessLevel = accessLevel;
         }
 
-        public AuthenticationModule Issuer
+        public IAuthenticationModule Issuer
         {
             get { return _issuer; }
         }

@@ -102,7 +102,7 @@ namespace SpikeLite
         /// Gets or sets the authentication module that we're using. This is usually injected via our IoC container.
         /// This must not be null.
         /// </summary>
-        public AuthenticationModule AuthenticationManager
+        public IAuthenticationModule AuthenticationManager
         {
             get; set;
         }

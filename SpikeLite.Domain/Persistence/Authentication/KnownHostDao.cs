@@ -10,6 +10,9 @@ using System.Collections.Generic;
 using SpikeLite.Domain.Model.Authentication;
 using Spring.Data.NHibernate.Generic.Support;
 
+// TODO: Kog 07/10/2009 - We should be able to do stuff like generic parameterless CRUD from either hibernate template or we need to
+// TODO:                  to implement an abstract DAO that we can wrap it with.
+
 namespace SpikeLite.Domain.Persistence.Authentication
 {
     /// <summary>
@@ -19,27 +22,11 @@ namespace SpikeLite.Domain.Persistence.Authentication
     /// </summary>
     public class KnownHostDao : HibernateDaoSupport, IKnownHostDao
     {
-        // TODO: Kog 07/10/2009 - We should be able to do stuff like generic parameterless CRUD from either hibernate template or we need to
-        // TODO:                  to implement an abstract DAO that we can wrap it with.
-
-        /// <summary>
-        /// Attempt to find all known hosts in our ACL database. 
-        /// </summary>
-        /// 
-        /// <returns>0 or more known hosts.</returns>
-        /// 
-        /// <remarks>
-        /// We do not currently use any caching mechanism, and instead make use of an in-memory copy within
-        /// our ACL manager. There doesn't seem to be much value in any other strategy.
-        /// </remarks>
         public virtual IList<KnownHost> FindAll()
         {
             return HibernateTemplate.ExecuteFind(x => x.CreateCriteria(typeof(KnownHost)).List<KnownHost>());
         }
 
-        /// <summary>
-        /// When we do not have a database on hand we call this method to seed some accounts.
-        /// </summary>
         public virtual void SeedAcLs()
         {
             // Get most of the regulars
@@ -81,6 +68,16 @@ namespace SpikeLite.Domain.Persistence.Authentication
                                        HostMatchType = HostMatchType.Start,
                                        HostMask = "doot.doot"
                                    });
+        }
+
+        public void Save(KnownHost host)
+        {
+            HibernateTemplate.Save(host);
+        }
+
+        public void Delete(KnownHost host)
+        {
+            HibernateTemplate.Delete(host);
         }
     }
 }

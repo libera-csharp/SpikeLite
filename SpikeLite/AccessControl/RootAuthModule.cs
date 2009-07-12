@@ -14,17 +14,17 @@ namespace SpikeLite.AccessControl
     /// </summary>
     /// 
     /// <remarks>
-    /// This should only be used as the top level (root) AuthenticationModule, as all other
-    /// AuthenticationModule are expected to return null to indicate that they could not authenticate
+    /// This should only be used as the top level (root) IAuthenticationModule, as all other
+    /// IAuthenticationModule are expected to return null to indicate that they could not authenticate
     /// the request.
     /// 
-    /// This AuthenticationModule ensures that if no AuthenticationModule can authenticate the request
+    /// This IAuthenticationModule ensures that if no IAuthenticationModule can authenticate the request
     /// that an AuthToken with the AccessLevel None is returned so that the callee can always safely
     /// test AuthToken.AccessLevel without having to worry about null values.
     /// </remarks>
-    class RootAuthModule : AuthenticationModule
+    class RootAuthModule : IAuthenticationModule
     {
-        public AuthenticationModule AuthModule { get; set; }
+        public IAuthenticationModule AuthModule { get; set; }
 
         public AuthToken Authenticate( UserToken user )
         {

@@ -6,6 +6,7 @@
  * distributed license.txt for details.
  */
 using System.Collections.Generic;
+using SpikeLite.Domain.Model.Authentication;
 
 namespace SpikeLite.Domain.Persistence.Authentication
 {
@@ -20,11 +21,25 @@ namespace SpikeLite.Domain.Persistence.Authentication
         /// </summary>
         /// 
         /// <returns>An enumeration of known hosts. May be empty, but will not be null.</returns>
-        IList<Model.Authentication.KnownHost> FindAll();
+        IList<KnownHost> FindAll();
 
         /// <summary>
         /// Attempts to stock a base set of ACLs.
         /// </summary>
         void SeedAcLs();
+
+        /// <summary>
+        /// Attempts to persist a given <see cref="KnownHost"/>.
+        /// </summary>
+        /// 
+        /// <param name="host">An implementation of <see cref="KnownHost"/> to persist.</param>
+        void Save(KnownHost host);
+
+        /// <summary>
+        /// Attempts to delete a given <see cref="KnownHost"/>.
+        /// </summary>
+        /// 
+        /// <param name="host">An implementation of <see cref="KnownHost"/> to delete.</param>
+        void Delete(KnownHost host);
     }
 }

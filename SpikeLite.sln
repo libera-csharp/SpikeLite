@@ -23,6 +23,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpikeLite.Modules.GeoIP", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpikeLite.Modules.Say", "SpikeLite.Modules.Say\SpikeLite.Modules.Say.csproj", "{9763C45D-FE49-4ACD-99B2-E9FEC3E5F366}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpikeLite.Modules.Admin", "SpikeLite.Modules.Admin\SpikeLite.Modules.Admin.csproj", "{37178E30-0074-4998-B015-416D609CE47D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -73,6 +75,10 @@ Global
 		{9763C45D-FE49-4ACD-99B2-E9FEC3E5F366}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9763C45D-FE49-4ACD-99B2-E9FEC3E5F366}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9763C45D-FE49-4ACD-99B2-E9FEC3E5F366}.Release|Any CPU.Build.0 = Release|Any CPU
+		{37178E30-0074-4998-B015-416D609CE47D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{37178E30-0074-4998-B015-416D609CE47D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{37178E30-0074-4998-B015-416D609CE47D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{37178E30-0074-4998-B015-416D609CE47D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

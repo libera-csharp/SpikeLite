@@ -257,9 +257,25 @@
     <property name="Instructions" value="~khan"/>
     <property name="Phrase" value="KHAAAAAAAN"/>
   </object>
+  
+  <!-- Administrative modules -->
+  
+  <object id="ShutdownModule" type="SpikeLite.Modules.Admin.ShutdownModule, SpikeLite.Modules.Admin">
+    <property name="Name" value="Shutdown"/>
+    <property name="Description" value="Shuts down the bot with an optional quit message."/>
+    <property name="Instructions" value="Usage Syntax: ~shutdown [message]"/>
+    <property name="ModuleManagementContainer" ref="ModuleManager"/>
+  </object>
 
-  <!-- This is our default list of modules to load (the entire set). Please override this in the beans-overrides
-       if you wish a different set to be loaded. -->
+  <object id="UsermManagementModule" type="SpikeLite.Modules.Admin.UserManagementModule, SpikeLite.Modules.Admin">
+    <property name="Name" value="Users"/>
+    <property name="Description" value="Provides rudimentary user management."/>
+    <property name="Instructions" value="Usage Syntax: ~users (add [hostmask] ['admin' | 'user']) (del [hostmask]) ([list])"/>
+    <property name="ModuleManagementContainer" ref="ModuleManager"/>
+    <property name="AuthenticationManager" ref="IrcAuthenticationModule"/>
+  </object>
+
+  <!-- This is our default list of modules to load (the entire set). Please override this in the beans-overrides if you wish a different set to be loaded. -->
   <object id="ModuleList" type="FrontEnd_Console.Spring.ModuleList, FrontEnd_Console">
     <constructor-arg index="0">
       <list element-type="SpikeLite.Modules.IModule, SpikeLite">
@@ -289,6 +305,8 @@
         <ref object="WikipediaModule"/>
         <ref object="KhaanModule"/>
         <ref object="TellModule"/>
+        <ref object="ShutdownModule"/>
+        <ref object="UsermManagementModule"/>
       </list>
     </constructor-arg>
   </object>

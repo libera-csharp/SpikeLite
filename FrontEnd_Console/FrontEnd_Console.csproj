@@ -67,7 +67,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Spring\ChannelList.cs" />
+    <Compile Include="Spring\Config\ChannelList.cs" />
     <Compile Include="ConsoleRunner.cs" />
     <Compile Include="Spring\ModuleList.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

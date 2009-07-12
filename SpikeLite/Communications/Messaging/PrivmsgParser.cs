@@ -23,9 +23,9 @@ namespace SpikeLite.Communications.Messaging
         public CommunicationManager CommunicationManager { get; set; }
 
         /// <summary>
-        /// Gets or sets a <see cref="AuthenticationModule"/> implementaiton that handles shoving authentication tokens into our parsed messages.
+        /// Gets or sets a <see cref="IAuthenticationModule"/> implementaiton that handles shoving authentication tokens into our parsed messages.
         /// </summary>
-        public AuthenticationModule AuthHandler { get; set; }
+        public IAuthenticationModule AuthHandler { get; set; }
 
         /// <summary>
         /// Gets or sets a <see cref="UserTokenCache"/> repository of cached user tokens for our <see cref="AuthHandler"/>.
