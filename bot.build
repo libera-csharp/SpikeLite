@@ -1,4 +1,13 @@
 <?xml version="1.0"?>
+
+<!--
+  SpikeLite C# IRC Bot
+  Copyright (c) 2009 FreeNode ##Csharp Community
+
+  This source is licensed under the terms of the MIT license. Please see the 
+  distributed license.txt for details.
+-->
+
 <project name="SharpBot" default="build" basedir=".">
 	<description>FreeNode Csharp Bot</description>
 	
