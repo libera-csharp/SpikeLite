@@ -16,13 +16,16 @@
   
   Our default level of logging is INFO, so you'll want to override any non-default values here, which should
   propagate without a restart. You'll probably want to add another appender.
+  
+  Alternatively, if you'd like to toggle the treshold of your appenders at runtime, please see the LoggingModule.cs in the administrative modules. This will not alter
+  the filtering that comes out of the box (see below), but it will toggle what your existing appenders threshold's are.
 -->
 <log4net>
   
   <!-- INFO level logs and greater go out to spikelite.log. -->
   <appender name="DefaultFileBasedLogger" type="log4net.Appender.FileAppender">
     <file value="spikelite.log" />
-    <appendToFile value="false" />
+    <appendToFile value="true" />
     <layout type="log4net.Layout.PatternLayout">
       <conversionPattern value="%date %-5level %logger - %message%newline" />
     </layout>

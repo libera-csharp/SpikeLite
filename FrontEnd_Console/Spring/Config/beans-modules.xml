@@ -267,12 +267,19 @@
     <property name="ModuleManagementContainer" ref="ModuleManager"/>
   </object>
 
-  <object id="UsermManagementModule" type="SpikeLite.Modules.Admin.UserManagementModule, SpikeLite.Modules.Admin">
+  <object id="UserManagementModule" type="SpikeLite.Modules.Admin.UserManagementModule, SpikeLite.Modules.Admin">
     <property name="Name" value="Users"/>
     <property name="Description" value="Provides rudimentary user management."/>
     <property name="Instructions" value="Usage Syntax: ~users (add [hostmask] ['admin' | 'user']) (del [hostmask]) ([list])"/>
     <property name="ModuleManagementContainer" ref="ModuleManager"/>
     <property name="AuthenticationManager" ref="IrcAuthenticationModule"/>
+  </object>
+
+  <object id="LoggingModule" type="SpikeLite.Modules.Admin.LoggingModule, SpikeLite.Modules.Admin">
+    <property name="Name" value="Logging"/>
+    <property name="Description" value="Toggles the Log4Net logging level."/>
+    <property name="Instructions" value="Usage Syntax: ~logging [TRACE | DEBUG | INFO | WARN]"/>
+    <property name="ModuleManagementContainer" ref="ModuleManager"/>
   </object>
 
   <!-- This is our default list of modules to load (the entire set). Please override this in the beans-overrides if you wish a different set to be loaded. -->
@@ -306,7 +313,8 @@
         <ref object="KhaanModule"/>
         <ref object="TellModule"/>
         <ref object="ShutdownModule"/>
-        <ref object="UsermManagementModule"/>
+        <ref object="UserManagementModule"/>
+        <ref object="LoggingModule"/>
       </list>
     </constructor-arg>
   </object>
