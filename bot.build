@@ -12,6 +12,7 @@
 	<description>FreeNode Csharp Bot</description>
 	
 	<target name="build" description="Build in debug mode" depends="clean">
+	
 		<!-- 
 			GregF 12/11/2008 -
 
