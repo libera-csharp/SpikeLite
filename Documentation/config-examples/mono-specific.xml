@@ -14,6 +14,7 @@
         <entry key="show_sql" value="false"/>
         <entry key="hbm2ddl.auto" value="update"/>
         <entry key="use_proxy_validator" value="false"/>
+		<entry key="proxyfactory.factory_class" value="NHibernate.ByteCode.LinFu.ProxyFactoryFactory, NHibernate.ByteCode.LinFu"/>
       </dictionary>
     </property>
     <property name="ExposeTransactionAwareSessionFactory" value="true" />
