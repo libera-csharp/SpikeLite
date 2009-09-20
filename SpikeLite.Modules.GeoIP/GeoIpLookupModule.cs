@@ -52,16 +52,6 @@ namespace SpikeLite.Modules.GeoIP
         private static readonly Uri SearchUri = new Uri("http://api.hostip.info/");
 
         /// <summary>
-        /// Provides the XML namespace for the nodes we're after. 
-        /// </summary>
-        /// 
-        /// <remarks>
-        /// According to several MSDN articles this seems to be the best way to find the elements we want - ns + eltname. This seems pretty bizarre, but perhaps
-        /// that is the canonical method. This needs to be checked (Kog 07/08/2009).
-        /// </remarks>
-        private static readonly XNamespace ApiNamespace = "http://www.hostip.info/api";
-
-        /// <summary>
         /// Provides a response template that we can use to respond to users. 
         /// </summary>
         private const string ResponseTemplate = "{0}, the IP {1} maps to the country '{2}', ISO code {3}";
@@ -137,12 +127,12 @@ namespace SpikeLite.Modules.GeoIP
 
             try  
             {
-                IEnumerable<XElement> root = xmlResponse.Descendants(ApiNamespace + "Hostip");
+                IEnumerable<XElement> root = xmlResponse.Descendants("Hostip");
                 response = String.Format(ResponseTemplate,
                                          requestContext.Addressee ?? requestContext.Nick,
                                          ip,
-                                         root.Elements(ApiNamespace + "countryName").FirstOrDefault().Value,
-                                         root.Elements(ApiNamespace + "countryAbbrev").FirstOrDefault().Value); 
+                                         root.Elements("countryName").FirstOrDefault().Value,
+                                         root.Elements("countryAbbrev").FirstOrDefault().Value); 
             }  
             catch (NullReferenceException ex)  
             {  

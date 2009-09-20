@@ -8,12 +8,8 @@
 
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Web;
 using System.Net;
-using System.IO;
-using System.Runtime.Serialization.Json;
-using System.Runtime.Serialization;
 using Newtonsoft.Json.Linq;
 using System.Linq;
 
@@ -39,7 +35,7 @@ namespace SpikeLite.Modules.Search
 
         #region Inner Classes
 
-        internal class State
+        private class State
         {
             internal string SearchCriteria { get; set; }
             internal Action<string[]> CallbackHandler { get; set; }

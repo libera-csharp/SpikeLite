@@ -8,6 +8,7 @@
 
 using System;
 using System.Collections.Generic;
+using log4net.Ext.Trace;
 using SpikeLite.Modules.Search.com.google.api;
 
 namespace SpikeLite.Modules.Search
@@ -23,7 +24,15 @@ namespace SpikeLite.Modules.Search
     /// </remarks>
     public class GoogleSearchProvider : AbstractApiKeySearchProvider
     {
+        /// <summary>
+        /// This holds a reference to the web proxy we use for making search requests.
+        /// </summary>
         private readonly GoogleSearchService _searchBroker;
+
+        /// <summary>
+        /// This holds a reference to a log4net instance that we can use for logging noteworthy schtuff.
+        /// </summary>
+        private readonly TraceLogImpl _logger = (TraceLogImpl)TraceLogManager.GetLogger(typeof(GoogleSearchProvider));
 
         public GoogleSearchProvider()
         {
@@ -49,7 +58,7 @@ namespace SpikeLite.Modules.Search
                 );
         }
 
-        private static void SearchCompletedHandler(object sender, doGoogleSearchCompletedEventArgs e)
+        private void SearchCompletedHandler(object sender, doGoogleSearchCompletedEventArgs e)
         {
             List<string> results  = new List<string>();
 
@@ -68,9 +77,10 @@ namespace SpikeLite.Modules.Search
                     results.Add(String.Format("'{0}': No Results.", e.Result.searchQuery));    
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                results.Add("The service is currently b00rked, please try again in a few minutes.");    
+                results.Add("The service is currently b00rked, please try again in a few minutes.");
+                _logger.WarnFormat("Failed to execute search request, inner exception details: {0} - {1}", ex.InnerException.Message, ex.InnerException.StackTrace);
             }
 
             // Call back our callback from our container.
