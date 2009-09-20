@@ -76,7 +76,6 @@
     <Compile Include="AbstractReferrerSearchProvider.cs" />
     <Compile Include="GoogleAjaxSearchProvider.cs" />
     <Compile Include="MicrosoftBingSearchProvider.cs" />
-    <Compile Include="GoogleSearchProvider.cs" />
     <Compile Include="ISearchProvider.cs" />
     <Compile Include="MicrosoftLiveSearchProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -86,11 +85,6 @@
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
     <Compile Include="SearchModulePrototype.cs" />
-    <Compile Include="Web References\com.google.api\Reference.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Reference.map</DependentUpon>
-    </Compile>
     <Compile Include="Web References\com.msn.search.soap\Reference.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -117,17 +111,6 @@
       <CachedAppSettingsObjectName>Settings</CachedAppSettingsObjectName>
       <CachedSettingsPropName>SpikeLite_Modules_Search_net_bing_api_BingService</CachedSettingsPropName>
     </WebReferenceUrl>
-    <WebReferenceUrl Include="http://api.google.com/GoogleSearch.wsdl">
-      <UrlBehavior>Dynamic</UrlBehavior>
-      <RelPath>Web References\com.google.api\</RelPath>
-      <UpdateFromURL>http://api.google.com/GoogleSearch.wsdl</UpdateFromURL>
-      <ServiceLocationURL>
-      </ServiceLocationURL>
-      <CachedDynamicPropName>
-      </CachedDynamicPropName>
-      <CachedAppSettingsObjectName>Settings</CachedAppSettingsObjectName>
-      <CachedSettingsPropName>SpikeLite_Modules_Search_com_google_api_GoogleSearchService</CachedSettingsPropName>
-    </WebReferenceUrl>
     <WebReferenceUrl Include="http://soap.search.msn.com/webservices.asmx%3fwsdl">
       <UrlBehavior>Dynamic</UrlBehavior>
       <RelPath>Web References\com.msn.search.soap\</RelPath>
@@ -145,14 +128,6 @@
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
-    </None>
-    <None Include="Web References\com.google.api\GoogleSearch.wsdl" />
-    <None Include="Web References\com.google.api\GoogleSearchResult.datasource">
-      <DependentUpon>Reference.map</DependentUpon>
-    </None>
-    <None Include="Web References\com.google.api\Reference.map">
-      <Generator>MSDiscoCodeGenerator</Generator>
-      <LastGenOutput>Reference.cs</LastGenOutput>
     </None>
     <None Include="Web References\com.msn.search.soap\Reference.map">
       <Generator>MSDiscoCodeGenerator</Generator>
