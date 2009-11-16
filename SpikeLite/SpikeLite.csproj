@@ -66,6 +66,8 @@
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AccessControl\IAuthenticationModule.cs" />
@@ -76,6 +78,7 @@
     <Compile Include="AccessControl\IrcUserToken.cs" />
     <Compile Include="AccessControl\UserToken.cs" />
     <Compile Include="AccessControl\UserTokenCache.cs" />
+    <Compile Include="BotStatus.cs" />
     <Compile Include="Communications\CommunicationManager.cs" />
     <Compile Include="Communications\IRC\Channel.cs" />
     <Compile Include="Communications\IRC\Network.cs" />

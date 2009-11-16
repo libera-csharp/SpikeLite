@@ -19,7 +19,7 @@ namespace FrontEnd_Console
     {
         private static void Main()
         {
-            // Create our application context for Spring.NET.
+            // Get our application context from Spring.NET.
             IApplicationContext ctx = ContextRegistry.GetContext();
 
             // Grab our bean and spin it up.

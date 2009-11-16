@@ -5,6 +5,7 @@
  * This source is licensed under the terms of the MIT license. Please see the 
  * distributed license.txt for details.
  */
+
 using System;
 using System.Threading;
 using log4net.Ext.Trace;
@@ -13,45 +14,12 @@ using SpikeLite.AccessControl;
 using SpikeLite.Communications;
 using SpikeLite.Modules;
 using SpikeLite.Communications.IRC;
+using Mono.Rocks;
 
 namespace SpikeLite
 {
-    #region Enumerations
-
     /// <summary>
-    /// Returns the current connection status of the bot.
-    /// </summary>
-    /// 
-    /// <remarks>
-    /// This needs to go, especially if we want multiple network support.
-    /// </remarks>
-    public enum BotStatus
-    {
-        /// <summary>
-        /// The bot has just started up, and is most likely initializing stuff.
-        /// </summary>
-        Starting,
-        
-        /// <summary>
-        /// The bot has finished initializing and is connected. 
-        /// </summary>
-        Started,
-        
-        /// <summary>
-        /// The bot is disconnecting. 
-        /// </summary>
-        Stopping,
-        
-        /// <summary>
-        /// The bot has finished stopping.
-        /// </summary>
-        Stopped
-    }
-
-    #endregion
-
-    /// <summary>
-    /// The heart of the channel bot. Wrap it in a UI and you're good to go.
+    /// The bot engine, just call "start" and you're off.
     /// </summary>
     public class SpikeLite
     {
@@ -102,28 +70,28 @@ namespace SpikeLite
         /// Gets or sets the authentication module that we're using. This is usually injected via our IoC container.
         /// This must not be null.
         /// </summary>
-        public IAuthenticationModule AuthenticationManager
-        {
-            get; set;
-        }
+        public IAuthenticationModule AuthenticationManager { get; set; }
 
         /// <summary>
         /// Gets or sets the communications manager we're using. This is usually injected via our IoC container. This
         /// must not be null.
         /// </summary>
-        public CommunicationManager CommunicationManager
-        {
-            get; set;
-        }
+        public CommunicationManager CommunicationManager { get; set; }
 
         /// <summary>
         /// Gets or sets our module manager we're using. This is usually injected via our IoC container. This
         /// must not be null.
         /// </summary>
-        public ModuleManager ModuleManager
-        {
-            get; set;
-        }
+        public ModuleManager ModuleManager { get; set; }
+
+        /// <summary>
+        /// Gets or sets whether the bot is set to identify itself with some sort of services agent or other infrastructure.
+        /// </summary>
+        /// 
+        /// <remarks>
+        /// Kog: 11/15/2009 - This needs to be refactored for multi-network support, we should fold it into our network-aware context when we build said functionality.
+        /// </remarks>
+        public bool SupportsIdentification { get; set; }
 
         #endregion
 
@@ -134,11 +102,15 @@ namespace SpikeLite
         /// </summary>
         public void Start()
         {
-            // TODO: Kog 12/26/2008 - Yeah, the network support is hacked in to only support a single
-            // TODO:                  network. We can't support multiples right now anyway, it's a TODO.
-            Network network = CommunicationManager.NetworkList[0];
+            // TODO: Kog 11/15/2009 - Refactor for multi-network support.
 
-            // TODO: Kog 12/26/2008 - We need to support the list of things outlined in the Server class docs.
+            // Make sure we're not trying to double start.
+            if (_botStatus != BotStatus.Stopped)
+            {
+                throw new Exception(string.Format("Current BotStatus is : '{0}'. To start the bot the BotStatus must be 'Stopped'.", _botStatus));
+            }
+
+            Network network = CommunicationManager.NetworkList[0];
             Server server = network.ServerList[0];
 
             _connectionArgs = new ConnectionArgs
@@ -149,12 +121,6 @@ namespace SpikeLite
                 RealName = network.BotRealname,
                 UserName = network.BotUsername
             };
-
-            // Make sure we're not trying to double start.
-            if (_botStatus != BotStatus.Stopped)
-            {
-                throw new Exception(string.Format("Current BotStatus is : '{0}'. To start the bot the BotStatus must be 'Stopped'.", _botStatus));
-            }
 
             _botStatus = BotStatus.Starting;
 
@@ -195,7 +161,7 @@ namespace SpikeLite
         }
 
         /// <summary>
-        /// Attempt to connect to our pre-configured network.
+        /// Attempt to connect to our pre-configured network. Does nothing if you're already connected.
         /// </summary>
         /// 
         /// <remarks>
@@ -254,7 +220,10 @@ namespace SpikeLite
         /// </remarks>
         private void OnRawMessageSent(string message)
         {
-            _logger.TraceFormat("Sent: {0}", message);
+            if (_logger.IsTraceEnabled)
+            {
+                _logger.TraceFormat("Sent: {0}", message);    
+            }
         }
 
         /// <summary>
@@ -268,8 +237,13 @@ namespace SpikeLite
         /// </remarks>
         private void OnRawMessageReceived(string message)
         {
-            _logger.TraceFormat("Received: {0}", message);
+            if (_logger.IsTraceEnabled)
+            {
+                _logger.TraceFormat("Received: {0}", message);
+            }
         }
+
+        // TODO: Kog 11/15/2009 - Refactor the following behavior to be network specific.
 
         /// <summary>
         /// The IRCD has notified us that "registration" is complete, and the MOTD has finished being sent.
@@ -278,13 +252,21 @@ namespace SpikeLite
         /// <remarks>
         /// This is a good place to send your services registration. Some networks provide cloaks for users that are best
         /// set up upon connect. Consider this an analog to mIRC's onConnect. The bot currently blocks on a response, see
-        /// Listener_OnPrivateNotice.
+        /// <see cref="OnPrivateNotice"/>.
         /// </remarks>
         private void OnRegister()
         {
-            // TODO: Kog 12/26/2008 - Yeah, the network support is hacked in to only support a single
-            // TODO:                  network. We can't support multiples right now anyway, it's a TODO.
-            _connection.Sender.PrivateMessage("nickserv", String.Format("identify {0}", CommunicationManager.NetworkList[0].AccountPassword));
+            if (SupportsIdentification)
+            {
+                // TODO: Kog 11/15/2009 - Refactor this into an action<string, string, string> and wire it into another module. Perhaps we should have the frontend-console
+                // TODO: Kog 11/15/2009 - do this.
+                _connection.Sender.PrivateMessage("nickserv", String.Format("identify {0}", CommunicationManager.NetworkList[0].AccountPassword));
+            }
+            else
+            {
+                // Don't bother blocking, we don't expect to identify.
+                JoinChannelsForNetwork();    
+            }
         }
 
         /// <summary>
@@ -300,33 +282,50 @@ namespace SpikeLite
         /// </remarks>
         private void OnPrivateNotice(UserInfo user, string notice)
         {
+            // Log the notice if we're set to the proper level.
+            if (_logger.IsTraceEnabled)
+            {
+                _logger.TraceFormat("{0} {1} sent a NOTICE: {2}", user.Nick, user.Hostname, notice);
+            }   
+
+            // If we support identification of some sort, we need to block until we receive confirmation of successful identification from services agents.
+            // This keeps us from joining a channel before we have a vanity host.
+            if (SupportsIdentification && NoticeIsExpectedServicesAgentMessage(user, notice))
+            {
+                JoinChannelsForNetwork();
+            }         
+        }
+
+        /// <summary>
+        /// A convenience method for checking if we've received the notice we're blocking on from a services agent.
+        /// </summary>
+        /// 
+        /// <param name="notice">The notice to digest.</param>
+        /// <param name="user">The user sending the notice.</param>
+        /// 
+        /// <returns>True if we've been responded to by a services agent, else false.</returns>
+        private bool NoticeIsExpectedServicesAgentMessage(UserInfo user, string notice)
+        {
             // Make sure the message is coming from NickServ
             if (user.Nick.Equals("nickserv", StringComparison.OrdinalIgnoreCase))
             {
-                // If the nick is not registered, or we're properly identified continue.
-                if (notice.StartsWith("You are now identified for", StringComparison.OrdinalIgnoreCase) ||
-                        (notice.StartsWith("The nickname", StringComparison.OrdinalIgnoreCase) &&
-                         notice.EndsWith("is not registered", StringComparison.OrdinalIgnoreCase))
-                    )
-                {
-                    _logger.Info("Handshake completed, joining channels.");
-
-                    // TODO: Kog 12/26/2008 - Yeah, the network support is hacked in to only support a single
-                    // TODO:                  network. We can't support multiples right now anyway, it's a TODO.
-                    foreach (Channel channel in CommunicationManager.NetworkList[0].ServerList[0].ChannelList)
-                    {
-                        // TODO: Kog 12/26/2008 - We need to support the API listed in the channel class docs.
-                        _connection.Sender.Join(channel.Name);
-                        _logger.InfoFormat("joining {0}...", channel.Name);
-                    }
-                }
-                // log auth failures
-                else
-                {
-                    // TODO: Kog JUN-05 2008 - do we want to quit here, or what?
-                    _logger.Info("AUTHENTICATION FAILURE");
-                }
+                return notice.StartsWith("You are now identified for", StringComparison.OrdinalIgnoreCase) ||
+                       (notice.StartsWith("The nickname", StringComparison.OrdinalIgnoreCase) && notice.EndsWith("is not registered", StringComparison.OrdinalIgnoreCase));
             }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Attempts to join all configured channels.
+        /// </summary>
+        private void JoinChannelsForNetwork()
+        {
+            CommunicationManager.NetworkList[0].ServerList[0].ChannelList.ForEach(channel =>
+            {
+                CommunicationManager.JoinChannel(channel.Name);
+                _logger.InfoFormat("joining {0}...", channel.Name);
+            });
         }
 
         /// <summary>

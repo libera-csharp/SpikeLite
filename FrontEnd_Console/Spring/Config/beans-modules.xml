@@ -267,6 +267,14 @@
     <property name="ModuleManagementContainer" ref="ModuleManager"/>
   </object>
 
+  <object id="ChannelActionsModule" type="SpikeLite.Modules.Admin.ChannelAction, SpikeLite.Modules.Admin">
+    <property name="Name" value="Channel"/>
+    <property name="Description" value="Allows the bot to take channel actions, such as joining or parting a channel."/>
+    <property name="Instructions" value="Usage Syntax: ~channel [JOIN | PART] #targetChannel"/>
+    <property name="ModuleManagementContainer" ref="ModuleManager"/>
+    <property name ="CommunicationsManagerContext" ref="CommunicationManager"/>
+  </object>
+
   <!-- This is our default list of modules to load (the entire set). Please override this in the beans-overrides if you wish a different set to be loaded. -->
   <object id="ModuleList" type="FrontEnd_Console.Spring.ModuleList, FrontEnd_Console">
     <constructor-arg index="0">
@@ -299,6 +307,7 @@
         <ref object="ShutdownModule"/>
         <ref object="UserManagementModule"/>
         <ref object="LoggingModule"/>
+        <ref object="ChannelActionsModule"/>
       </list>
     </constructor-arg>
   </object>

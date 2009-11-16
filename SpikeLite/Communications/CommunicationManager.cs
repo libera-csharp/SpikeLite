@@ -122,6 +122,47 @@ namespace SpikeLite.Communications
             }
         }
 
+        // TODO: Kog 11/15/2009 - We can probably refactor some of these methods to take advantage of optional params in .NET4.
+
+        /// <summary>
+        /// Attempts to join a channel by name.
+        /// </summary>
+        /// 
+        /// <param name="channelName">The channel target to attempt to join.</param>
+        /// 
+        /// <remarks>
+        /// This does not currently support sending a password.
+        /// </remarks>
+        public void JoinChannel(string channelName)
+        {
+            _connection.Sender.Join(channelName);
+        }
+
+        /// <summary>
+        /// Attempts to part a channel by name.
+        /// </summary>
+        /// 
+        /// <param name="channelName">The channel target to attempt to part.</param>
+        /// 
+        /// <remarks>
+        /// This does not currently support multiple targets or a reason for parting. The IRCD issue whatever its default part message is.
+        /// </remarks>
+        public void PartChannel(string channelName)
+        {
+            _connection.Sender.Part(channelName);
+        }
+
+        /// <summary>
+        /// Attempts to do a CTCP ACTION in a given target channel.
+        /// </summary>
+        /// 
+        /// <param name="channelName">The channel target to attempt to do an action within.</param>
+        /// <param name="emoteText">The text to combine with the action.</param>
+        public void DoAction(string channelName, string emoteText)
+        {
+            _connection.Sender.Action(channelName, emoteText);
+        }
+
         #endregion
 
         #region Incoming Messages

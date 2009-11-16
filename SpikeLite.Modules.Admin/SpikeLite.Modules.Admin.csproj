@@ -51,9 +51,11 @@
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
+    <Reference Include="System.Data" />
     <Reference Include="System.XML" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ChannelAction.cs" />
     <Compile Include="LoggingModule.cs" />
     <Compile Include="ShutdownModule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

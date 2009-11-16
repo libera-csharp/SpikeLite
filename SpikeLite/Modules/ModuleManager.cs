@@ -5,6 +5,7 @@
  * This source is licensed under the terms of the MIT license. Please see the 
  * distributed license.txt for details.
  */
+
 using System.Collections.Generic;
 using log4net.Ext.Trace;
 using SpikeLite.Communications;
@@ -33,7 +34,11 @@ namespace SpikeLite.Modules
         /// <summary>
         /// This stores our communications manager, which we intercept messages from.
         /// </summary>
-        protected CommunicationManager CommunicationManager { get; set; }
+        /// 
+        /// <remarks>
+        /// This method is internal instead of private for reasons of injection.
+        /// </remarks>
+        internal CommunicationManager CommunicationManager { get; set; }
 
         #endregion 
 
