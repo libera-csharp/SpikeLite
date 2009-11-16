@@ -9,8 +9,6 @@
 using System;
 using SpikeLite.Communications;
 using SpikeLite.Domain.Model.Authentication;
-using Spring.Context;
-using Spring.Context.Support;
 
 namespace SpikeLite.Modules.Admin
 {
@@ -20,6 +18,11 @@ namespace SpikeLite.Modules.Admin
     /// </summary>
     public class ShutdownModule : ModuleBase
     {
+        /// <summary>
+        /// Holds a reference to bot engine harness. We use this for sending termination events.
+        /// </summary>
+        public SpikeLite BotContext { get; set; }
+
         /// <summary>
         /// Checks to see if the user has called for a shutdown, and if so what their access level is. If they have the proper permissions we then attempt to parse an 
         /// optional quit message.
@@ -40,13 +43,8 @@ namespace SpikeLite.Modules.Admin
                     message = request.Message.Substring(offset).Trim();    
                 }
 
-                // This is nasty, but we're going to grab ourselves from the IoC container. This avoids the chicken and egg nature of the bot needing the modules to be
-                // initialized. Plus, we don't really want to inject the bot into modules if we can avoid it...
-                IApplicationContext ctx = ContextRegistry.GetContext();
-                SpikeLite botContext = ctx.GetObject("SpikeLite") as SpikeLite;
-
-                botContext.Shutdown();
-                botContext.Quit(message);
+                BotContext.Shutdown();
+                BotContext.Quit(message);
             }
         }
     }

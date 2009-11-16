@@ -250,6 +250,7 @@
     <property name="Description" value="Shuts down the bot with an optional quit message."/>
     <property name="Instructions" value="Usage Syntax: ~shutdown [message]"/>
     <property name="ModuleManagementContainer" ref="ModuleManager"/>
+    <property name="BotContext" ref="SpikeLite"/>
   </object>
 
   <object id="UserManagementModule" type="SpikeLite.Modules.Admin.UserManagementModule, SpikeLite.Modules.Admin">

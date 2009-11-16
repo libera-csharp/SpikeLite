@@ -29,7 +29,7 @@ namespace SpikeLite.Modules.Admin
         /// Holds a reference to our <see cref="CommunicationManager"/>, which is injected by our IoC container.
         /// </summary>
         // ReSharper disable UnusedAutoPropertyAccessor.Local
-        private CommunicationManager CommunicationsManagerContext { get; set; }
+        public CommunicationManager CommunicationsManagerContext { get; set; }
         // ReSharper restore UnusedAutoPropertyAccessor.Local
 
         #endregion 
