@@ -28,8 +28,8 @@
   </object>
   
   <object id="MicrosoftBingSearchModule" abstract="true" type="SpikeLite.Modules.Search.SearchModulePrototype, SpikeLite.Modules.Search" singleton="false">
-	<property name="SearchProvider" ref="MicrosoftBingSearchProvider"/>
-	<property name="ModuleManagementContainer" ref="ModuleManager"/>
+	  <property name="SearchProvider" ref="MicrosoftBingSearchProvider"/>
+	  <property name="ModuleManagementContainer" ref="ModuleManager"/>
   </object>
 
   <!-- Set up our search providers -->
@@ -46,7 +46,7 @@
   </object>
 
   <!-- Default search-based modules. -->
-  <object id="GoogleAjaxModule" parent="GoogleAjaxSearchModule" type="SpikeLite.Modules.Search.SearchModulePrototype, SpikeLite.Modules.Search">
+  <object id="GoogleModule" parent="GoogleAjaxSearchModule" type="SpikeLite.Modules.Search.SearchModulePrototype, SpikeLite.Modules.Search">
 	<property name="Name" value="Google"/>
 	<property name="Description" value="Search Google AJAX API"/>
 	<property name="Instructions" value="~google [search terms]"/>
@@ -280,9 +280,9 @@
   <object id="ModuleList" type="FrontEnd_Console.Spring.ModuleList, FrontEnd_Console">
     <constructor-arg index="0">
       <list element-type="SpikeLite.Modules.IModule, SpikeLite">
-		    <ref object="GoogleAjaxModule"/>
-        <ref object="LiveModule"/>
-		    <ref object="BingModule"/>
+	<ref object="GoogleModule"/>
+	<ref object="LiveModule"/>
+	<ref object="BingModule"/>
         <ref object="AboutModule"/> 
         <ref object="WikiLinkModule"/>
         <ref object="GeoipModule"/> 

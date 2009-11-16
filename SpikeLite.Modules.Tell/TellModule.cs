@@ -13,9 +13,8 @@ namespace SpikeLite.Modules.Tell
 {
     public class TellModule : ModuleBase
     {
-        #region Methods
-
         #region InternalHandleRequest
+
         public override void HandleRequest(Request request)
         {
             string[] messageArray = request.Message.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
@@ -56,7 +55,6 @@ namespace SpikeLite.Modules.Tell
                 ModuleManagementContainer.HandleRequest(request);
             }
         }
-        #endregion
 
         #endregion
     }

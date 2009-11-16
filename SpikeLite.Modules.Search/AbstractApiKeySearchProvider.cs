@@ -15,10 +15,7 @@ namespace SpikeLite.Modules.Search
     /// </summary>
     public abstract class AbstractApiKeySearchProvider : ISearchProvider
     {
-        public string ApiKey
-        {
-            get; set;
-        }
+        public string ApiKey { get; set; }
 
         public abstract void ExecuteSearch(string searchCriteria, string domain, Action<string[]> callbackHandler);
     }

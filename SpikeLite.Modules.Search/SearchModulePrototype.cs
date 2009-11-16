@@ -24,26 +24,17 @@ namespace SpikeLite.Modules.Search
         /// <summary>
         /// Gets or sets the literal trigger the implementing class will respond to (ie: ~DADS).
         /// </summary>
-        public string SearchTrigger
-        {
-            get; set;
-        }
+        public string SearchTrigger { get; set; }
 
         /// <summary>
         /// Gets or sets the domain we search our search providers against.
         /// </summary>
-        public string SearchUrl
-        {
-            get; set;
-        }
+        public string SearchUrl {  get; set; }
 
         /// <summary>
         /// Gets or sets the search provider backing this module.
         /// </summary>
-        public ISearchProvider SearchProvider
-        {
-            get; set;
-        }
+        public ISearchProvider SearchProvider { get; set; }
 
         #endregion
 
@@ -75,8 +66,7 @@ namespace SpikeLite.Modules.Search
                                     searchTerms += messageArray[i] + " ";
                                 }
 
-                                Logger.DebugFormat("{0} - HandleRequest called on for {1} by {2}", 
-                                                   Name, request.Message, request.Addressee ?? request.Nick);
+                                Logger.DebugFormat("{0} - HandleRequest called on for {1} by {2}", Name, request.Message, request.Addressee ?? request.Nick);
                                 SearchProvider.ExecuteSearch(searchTerms, SearchUrl, x => HandleResults(x, request, searchTerms));
                             }
                         }
@@ -98,8 +88,7 @@ namespace SpikeLite.Modules.Search
                                     searchTerms += messageArray[i] + " ";
                                 }
 
-                                Logger.DebugFormat("{0} - HandleRequest called on for {1} by {2}",
-                                                   Name, request.Message, request.Addressee ?? request.Nick);
+                                Logger.DebugFormat("{0} - HandleRequest called on for {1} by {2}", Name, request.Message, request.Addressee ?? request.Nick);
                                 SearchProvider.ExecuteSearch(searchTerms, SearchUrl, x => HandleResults(x, request, searchTerms));
                             }
                         }
