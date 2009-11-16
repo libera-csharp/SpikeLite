@@ -43,10 +43,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Dependencies\Mono.Rocks.dll</HintPath>
     </Reference>
-    <Reference Include="Spring.Core, Version=1.2.0.20313, Culture=neutral, PublicKeyToken=65e474d141e25e07, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Dependencies\Spring.Core.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>

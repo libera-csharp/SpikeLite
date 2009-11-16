@@ -2,7 +2,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.30729</ProductVersion>
+    <ProductVersion>9.0.21022</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{F239531E-3FBC-4DC0-B499-235E91740A5B}</ProjectGuid>
     <OutputType>Exe</OutputType>
@@ -50,15 +50,11 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Dependencies\Mono.Rocks.dll</HintPath>
     </Reference>
-    <Reference Include="NHibernate.ByteCode.LinFu, Version=2.1.0.4000, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
+    <Reference Include="NHibernate.ByteCode.LinFu, Version=2.1.1.4000, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Dependencies\NHibernate.ByteCode.LinFu.dll</HintPath>
     </Reference>
-    <Reference Include="Spring.Aop, Version=1.2.0.20313, Culture=neutral, PublicKeyToken=65e474d141e25e07, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Dependencies\Spring.Aop.dll</HintPath>
-    </Reference>
-    <Reference Include="Spring.Core, Version=1.2.0.20313, Culture=neutral, PublicKeyToken=65e474d141e25e07, processorArchitecture=MSIL">
+    <Reference Include="Spring.Core, Version=0.0.0.20313, Culture=neutral, PublicKeyToken=65e474d141e25e07, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Dependencies\Spring.Core.dll</HintPath>
     </Reference>

@@ -39,7 +39,7 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Dependencies\log4net.dll</HintPath>
     </Reference>
-    <Reference Include="NHibernate, Version=2.0.1.4000, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
+    <Reference Include="NHibernate, Version=2.1.1.4000, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Dependencies\NHibernate.dll</HintPath>
     </Reference>
@@ -51,15 +51,15 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>PostgreSQL\Npgsql.dll</HintPath>
     </Reference>
-    <Reference Include="Spring.Core, Version=1.2.0.20313, Culture=neutral, PublicKeyToken=65e474d141e25e07, processorArchitecture=MSIL">
+    <Reference Include="Spring.Core, Version=0.0.0.20313, Culture=neutral, PublicKeyToken=65e474d141e25e07, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Dependencies\Spring.Core.dll</HintPath>
     </Reference>
-    <Reference Include="Spring.Data, Version=1.2.0.20313, Culture=neutral, PublicKeyToken=65e474d141e25e07, processorArchitecture=MSIL">
+    <Reference Include="Spring.Data, Version=0.0.0.20313, Culture=neutral, PublicKeyToken=65e474d141e25e07, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Dependencies\Spring.Data.dll</HintPath>
     </Reference>
-    <Reference Include="Spring.Data.NHibernate21, Version=1.3.0.20214, Culture=neutral, PublicKeyToken=65e474d141e25e07, processorArchitecture=MSIL">
+    <Reference Include="Spring.Data.NHibernate21, Version=0.0.0.20313, Culture=neutral, PublicKeyToken=65e474d141e25e07, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Dependencies\Spring.Data.NHibernate21.dll</HintPath>
     </Reference>
