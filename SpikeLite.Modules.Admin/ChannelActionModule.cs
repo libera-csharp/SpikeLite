@@ -16,7 +16,7 @@ namespace SpikeLite.Modules.Admin
     /// <summary>
     /// This administrative command allows us to take actions with channels as a target. Such actions are things like parting and joinin.
     /// </summary>
-    public class ChannelAction : ModuleBase
+    public class ChannelActionModule : ModuleBase
     {
         #region Data Members and Properties
 
@@ -37,7 +37,7 @@ namespace SpikeLite.Modules.Admin
         /// <summary>
         /// Wires up our command object, configures the set of operations we'll respond to.
         /// </summary>
-        public ChannelAction()
+        public ChannelActionModule()
         {          
             // Wire up our supported operations.
             _supportedOperations = new Dictionary<string, Action<string>> {{"join", x => CommunicationsManagerContext.JoinChannel(x)}, 

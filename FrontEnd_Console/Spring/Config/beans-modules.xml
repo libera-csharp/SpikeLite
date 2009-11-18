@@ -178,14 +178,6 @@
     <property name="ModuleManagementContainer" ref="ModuleManager"/>
   </object>
   
-  <object id="PuppetModule" type="SpikeLite.Modules.Puppet.PuppetModule, SpikeLite.Modules.Puppet">
-    <property name="Name" value="Puppet"/>
-    <property name="Description" value="Not documented."/>
-    <property name="Instructions" value="Not documented."/>
-    <property name="RequiredAccessLevel" value="Root"/>
-    <property name="ModuleManagementContainer" ref="ModuleManager"/>
-  </object>
-  
   <object id="TellModule" type="SpikeLite.Modules.Tell.TellModule, SpikeLite.Modules.Tell">
     <property name="Name" value="Tell"/>
     <property name="Description" value="Tell allows you to direct a response from a speicifed command at a specified user."/>
@@ -268,12 +260,20 @@
     <property name="ModuleManagementContainer" ref="ModuleManager"/>
   </object>
 
-  <object id="ChannelActionsModule" type="SpikeLite.Modules.Admin.ChannelAction, SpikeLite.Modules.Admin">
+  <object id="ChannelActionsModule" type="SpikeLite.Modules.Admin.ChannelActionModule, SpikeLite.Modules.Admin">
     <property name="Name" value="Channel"/>
     <property name="Description" value="Allows the bot to take channel actions, such as joining or parting a channel."/>
     <property name="Instructions" value="Usage Syntax: ~channel [JOIN | PART] #targetChannel"/>
     <property name="ModuleManagementContainer" ref="ModuleManager"/>
     <property name ="CommunicationsManagerContext" ref="CommunicationManager"/>
+  </object>
+
+  <object id="PuppetModule" type="SpikeLite.Modules.Admin.PuppetModule, SpikeLite.Modules.Admin">
+    <property name="Name" value="Puppet"/>
+    <property name="Description" value="Not documented."/>
+    <property name="Instructions" value="Not documented."/>
+    <property name="RequiredAccessLevel" value="Root"/>
+    <property name="ModuleManagementContainer" ref="ModuleManager"/>
   </object>
 
   <!-- This is our default list of modules to load (the entire set). Please override this in the beans-overrides if you wish a different set to be loaded. -->

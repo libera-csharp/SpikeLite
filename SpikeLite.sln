@@ -17,8 +17,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpikeLite.Modules.Karma", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpikeLite.Modules.About", "SpikeLite.Modules.About\SpikeLite.Modules.About.csproj", "{9C085ABC-416F-491F-A8DC-20C93AFD3F66}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpikeLite.Modules.Puppet", "SpikeLite.Modules.Puppet\SpikeLite.Modules.Puppet.csproj", "{A3408383-073F-4BE4-BDB9-EB70E0150DFD}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpikeLite.Modules.GeoIP", "SpikeLite.Modules.GeoIP\SpikeLite.Modules.GeoIP.csproj", "{B0CFDCD1-69BD-4079-80A7-27F04E54EB8B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpikeLite.Modules.Say", "SpikeLite.Modules.Say\SpikeLite.Modules.Say.csproj", "{9763C45D-FE49-4ACD-99B2-E9FEC3E5F366}"
@@ -63,10 +61,6 @@ Global
 		{9C085ABC-416F-491F-A8DC-20C93AFD3F66}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9C085ABC-416F-491F-A8DC-20C93AFD3F66}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9C085ABC-416F-491F-A8DC-20C93AFD3F66}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A3408383-073F-4BE4-BDB9-EB70E0150DFD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A3408383-073F-4BE4-BDB9-EB70E0150DFD}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A3408383-073F-4BE4-BDB9-EB70E0150DFD}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A3408383-073F-4BE4-BDB9-EB70E0150DFD}.Release|Any CPU.Build.0 = Release|Any CPU
 		{B0CFDCD1-69BD-4079-80A7-27F04E54EB8B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{B0CFDCD1-69BD-4079-80A7-27F04E54EB8B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B0CFDCD1-69BD-4079-80A7-27F04E54EB8B}.Release|Any CPU.ActiveCfg = Release|Any CPU

@@ -5,11 +5,12 @@
  * This source is licensed under the terms of the MIT license. Please see the 
  * distributed license.txt for details.
  */
+
 using System;
 using SpikeLite.Communications;
 using SpikeLite.Domain.Model.Authentication;
 
-namespace SpikeLite.Modules.Puppet
+namespace SpikeLite.Modules.Admin
 {
     public class PuppetModule : ModuleBase
     {
