@@ -141,7 +141,7 @@ namespace SpikeLite.Modules.GeoIP
             }
             finally
             {
-                webclient.DownloadStringCompleted += SearchCompletionHandler;
+                webclient.DownloadStringCompleted -= SearchCompletionHandler;
                 webclient.Dispose();
             }
 
