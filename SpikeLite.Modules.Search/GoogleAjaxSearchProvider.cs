@@ -100,6 +100,7 @@ namespace SpikeLite.Modules.Search
             }
             finally
             {
+                state.WebClient.DownloadStringCompleted -= SearchCompletionHandler;
                 state.WebClient.Dispose();
             }
 
