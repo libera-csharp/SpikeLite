@@ -41,7 +41,7 @@
       <conversionPattern value="%date [%thread] %-5level %logger [%property{NDC}] - %message%newline" />
     </layout>
     <filter type="log4net.Filter.LevelRangeFilter">
-      <levelMin value="DEBUG" />
+      <levelMin value="TRACE" />
       <levelMax value="DEBUG" />
     </filter>
   </appender>

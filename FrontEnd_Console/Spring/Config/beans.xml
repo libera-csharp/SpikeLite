@@ -22,8 +22,6 @@
   <object id="SpikeLite" type="SpikeLite.SpikeLite, SpikeLite">
     <property name="ModuleManager" ref="ModuleManager"/>
     <property name="CommunicationManager" ref="CommunicationManager"/>
-    <property name="AuthenticationManager" ref="DefaultAuthenticationManager"/>
-    <property name="SupportsIdentification" value="${server.supports.identification}"/>
   </object>
 
   <!-- 
@@ -49,6 +47,8 @@
       </list>
     </property>
     <property name="MessageParser" ref="MessageParserAdvice"/>
+    <property name="SupportsIdentification" value="${server.supports.identification}"/>
+    <property name="BotContext" ref="SpikeLite"/>
   </object>
 
   <object id="Network" type="SpikeLite.Communications.IRC.Network, SpikeLite">
@@ -122,7 +122,7 @@
 		  <add key="bot.realname" value="##CSharp irc bot"/>
 		  <add key="bot.username" value="SpikeLite"/>
 		  <add key="bot.accountpass" value="password"/>
-      		  <add key="server.supports.identification" value="true"/>
+      <add key="server.supports.identification" value="true"/>
 
 		  <!-- Configure our server -->
 		  <add key="server.host" value="127.0.0.1"/>

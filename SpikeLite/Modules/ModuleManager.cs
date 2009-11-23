@@ -29,7 +29,7 @@ namespace SpikeLite.Modules
         /// <summary>
         /// This allows us to inject our list of modules via spring.
         /// </summary>
-        public IList<IModule> Modules { get; set; }
+        public IEnumerable<IModule> Modules { get; set; }
 
         /// <summary>
         /// This stores our communications manager, which we intercept messages from.
@@ -44,8 +44,8 @@ namespace SpikeLite.Modules
 
         #region Construction and Module Loading
 
-        // TODO: Kog 12/26/2008 - Yeah, the network support is hacked in to only support a single network. We can't support multiples right 
-        // TODO:                  now anyway, it's a TODO.
+        // TODO: Kog 11/23/2009 - Refactor to support multiple networks, as needed.
+        // TODO: Kog 11/23/2009 - Do we want to refactor this to load all our modules into a single (or even multiple) app domains? This would allow us to do more dynamic loading/unloading.
 
         /// <summary>
         /// Loads all our modules and sets up our message interception.
@@ -72,11 +72,11 @@ namespace SpikeLite.Modules
             CommunicationManager.SendResponse(response);
         }
 
-        // TODO: Kog 12/27/2008 - Can we refactor the Tell module not to need this?
+        // TODO: Kog 11/23/2009 - Do we want to keep the broadcast nature of our commands? Should we, instead, have a 1-1 mapping established at load time
+        // TODO: Kog 11/23/2009 - and cached in a dictionary somewhere?
 
-        // TODO AJ ??/??/???? :Add Chain of Responsability for command modules to allow for better message handling
-        // TODO AJ ??/??/???? :Once CoR has been added the include a dictionary of the first level of modules to make lookup faster
-        // TODO AJ ??/??/???? :and stop messages being passed to modules that aren't interested.
+        // TODO: Kog 11/23/2009 - If we need this for the tell module, can we swap to using some sort of advice? Or, can we have the tell module somehow digest
+        // TODO: Kog 11/23/2009 - the message, and then ask the module manager to re-handle? Or does that require mutability of the request?
 
         /// <summary>
         /// Routes an incoming message to all modules for consumption.

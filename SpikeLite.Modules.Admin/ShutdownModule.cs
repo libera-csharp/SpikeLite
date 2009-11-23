@@ -43,8 +43,7 @@ namespace SpikeLite.Modules.Admin
                     message = request.Message.Substring(offset).Trim();    
                 }
 
-                BotContext.Shutdown();
-                BotContext.Quit(message);
+                BotContext.Shutdown(message);
             }
         }
     }

@@ -7,6 +7,7 @@
  */
  
 using System;
+using log4net.Ext.Trace;
 using Spring.Context;
 using Spring.Context.Support;
 
@@ -17,21 +18,36 @@ namespace FrontEnd_Console
     /// </summary>
     internal class ConsoleRunner
     {
+        /// <summary>
+        /// Stores our log4net logger.
+        /// </summary>
+        private static readonly TraceLogImpl _logger = (TraceLogImpl)TraceLogManager.GetLogger(typeof(ConsoleRunner));
+
+        /// <summary>
+        /// Does all the magic of spinning up the bot.
+        /// </summary>
         private static void Main()
         {
-            // Get our application context from Spring.NET.
-            IApplicationContext ctx = ContextRegistry.GetContext();
+            try
+            {
+                 // Get our application context from Spring.NET.
+                IApplicationContext ctx = ContextRegistry.GetContext();
 
-            // Grab our bean and spin it up.
-            SpikeLite.SpikeLite bot = ctx.GetObject("SpikeLite") as SpikeLite.SpikeLite;
-            bot.Start();
+                // Grab our bean and spin it up.
+                SpikeLite.SpikeLite bot = ctx.GetObject("SpikeLite") as SpikeLite.SpikeLite;
+                bot.Start();
 
-            // We may actually not log to the console past this point, so let's go ahead and spam something
-            // here just in case.
-            Console.WriteLine(Environment.NewLine + "We've spun up the bot and are currently logging to our appenders. Hit CTL+C to quit.");
+                // We may actually not log to the console past this point, so let's go ahead and spam something
+                // here just in case.
+                Console.WriteLine(Environment.NewLine + "We've spun up the bot and are currently logging to our appenders. Hit CTL+C to quit.");
 
-            // Handle SIGTERM gracefully.
-            Console.CancelKeyPress += ((sender, args) => { bot.Shutdown(); bot.Quit("Caught SIGTERM, quitting"); });
+                // Handle SIGTERM gracefully.
+                Console.CancelKeyPress += ((sender, args) => bot.Shutdown("Caught SIGTERM, quitting"));
+            }
+            catch(Exception ex)
+            {
+                _logger.ErrorFormat("Fatal error attempting to start the bot: {0} - {1}", ex.Message, ex.StackTrace);      
+            }
         }
     }
 }
