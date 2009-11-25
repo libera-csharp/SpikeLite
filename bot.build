@@ -11,57 +11,70 @@
 <project name="SharpBot" default="build" basedir=".">
 	<description>FreeNode Csharp Bot</description>
 	
-	<target name="build" description="Build in debug mode" depends="clean">
+	<target name="build" description="Wraps the build process and builds either with XBuild, or MSBuild dependong on if the host is win32 or not." depends="build-windows, build-nonwindows, dist">
+		<echo message="Build completed via dependencies above."/>
+	</target>
 	
-		<!-- 
-			GregF 12/11/2008 -
-
-			NAnt itself only recognizes <= 2.0, and the MSBuild task seems
-			to take it's values from the framework version you give it. Further,
-			the other MSBuild task (solution tag) seems to be hardcoded to look
-			for a specific XML attribute...
-
-			Until I can patch the damn thing we're just going to have to exec. By default
-			we use C:\WINDOWS\Microsoft.NET\Framework\v3.5\MSBuild.exe, but you can override
-			it by passing in -D:msbuild.location=c:\newpath\to\msbuild.exe	
-		-->
-
-		<if test="${not property::exists('msbuild.location')}">
-			<property name="msbuild.location" value="C:\WINDOWS\Microsoft.NET\Framework\v3.5\MSBuild.exe" readonly="true" />
-		</if>
-
-		<!-- Build Release quality binary -->
-		<exec program="${msbuild.location}">
+	<target name="build-windows" description="Builds the bot on a standard Windows, MS-CLR environment via MSBuild" depends="clean" if="${platform::is-win32()}">
+		<echo message="Win32 environment detected... building via MSBuild."/>
+	
+		<!-- Build Debug artifacts -->
+		<msbuild project="SpikeLite.sln">
+              <arg value="/property:Configuration=debug" />                                  
+              <arg value="/t:Rebuild" />
+		</msbuild>	
+	
+		<!-- Build Release artifacts -->
+		<msbuild project="SpikeLite.sln">
+              <arg value="/property:Configuration=release" />                                  
+              <arg value="/t:Rebuild" />
+		</msbuild>
+	</target>
+	
+	<target name="build-nonwindows" description="Builds the bot on an environment that does not have MSBuild on it, namely *Nix" depends="clean" unless="${platform::is-win32()}">
+		<echo message="Non-Win32 environment detected... building via XBuild."/>
+		
+		<!-- Build Debug artifacts -->
+		<exec program="xbuild">
+			<arg value="SpikeLite.sln"/>
 			<arg value="/target:Rebuild"/>
-			<arg value="/p:Configuration=Release"/>
+			<arg value="/p:Configuration=release"/>
 		</exec>
-
-		<!-- Build Debug quality binary -->
-		<exec program="${msbuild.location}">
+		
+		<!-- Build Debug artifacts -->
+		<exec program="xbuild">
+			<arg value="SpikeLite.sln"/>
 			<arg value="/target:Rebuild"/>
-			<arg value="/p:Configuration=Debug"/>
+			<arg value="/p:Configuration=debug"/>
 		</exec>
-
+	</target>
+	
+	
+	<target name="dist" description="Creates a debug and release zip file for distribution.">
 		<!-- Zip the Release quality artifacts -->
-		<zip zipfile="SpikeLite-Release.zip">
-			<fileset basedir="FrontEnd_Console\bin\Release">
+		<zip zipfile="output\SpikeLite-Release.zip">
+			<fileset basedir="output\Release">
 				<include name="**/*"/>
 			</fileset>
 		</zip>
 
 		<!-- Zip the Debug quality artifacts -->
-		<zip zipfile="SpikeLite-Debug.zip">
-			<fileset basedir="FrontEnd_Console\bin\Debug">
+		<zip zipfile="output\SpikeLite-Debug.zip">
+			<fileset basedir="output\Debug">
 				<include name="**/*"/>
 			</fileset>
 		</zip>
-
 	</target>
 
 	<target name="clean" description="Clean previously built artifacts">
-		<delete dir="frontend_console/bin"/>
-		<delete dir="frontend_console/obj"/>
-		<delete dir="spikelite/bin"/>
-		<delete dir="spikelite/obj"/>
+		<echo message="Cleaning all \obj directories..."/>
+		<delete >
+			<fileset basedir=".">
+				<include name="**\obj\**"/>
+			</fileset>
+		</delete> 
+		
+		<echo message="cleaning the output directory."/>
+		<delete dir="output"/>
 	</target>
 </project>
