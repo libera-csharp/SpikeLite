@@ -38,14 +38,14 @@
 		<exec program="xbuild">
 			<arg value="SpikeLite.sln"/>
 			<arg value="/target:Rebuild"/>
-			<arg value="/p:Configuration=release"/>
+			<arg value="/p:Configuration=debug"/>
 		</exec>
 		
-		<!-- Build Debug artifacts -->
+		<!-- Build Release artifacts -->
 		<exec program="xbuild">
 			<arg value="SpikeLite.sln"/>
 			<arg value="/target:Rebuild"/>
-			<arg value="/p:Configuration=debug"/>
+			<arg value="/p:Configuration=release"/>
 		</exec>
 	</target>
 	
