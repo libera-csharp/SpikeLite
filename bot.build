@@ -52,22 +52,22 @@
 	
 	<target name="dist" description="Creates a debug and release zip file for distribution.">
 		<!-- Zip the Release quality artifacts -->
-		<zip zipfile="output\SpikeLite-Release.zip">
-			<fileset basedir="output\Release">
+		<zip zipfile="${path::combine('output', 'SpikeLite-Release.zip')}">
+			<fileset basedir="${path::combine('output', 'Release')}">
 				<include name="**/*"/>
 			</fileset>
 		</zip>
 
 		<!-- Zip the Debug quality artifacts -->
-		<zip zipfile="output\SpikeLite-Debug.zip">
-			<fileset basedir="output\Debug">
+		<zip zipfile="${path::combine('output', 'SpikeLite-Debug.zip')}">
+			<fileset basedir="${path::combine('output', 'Debug')}">
 				<include name="**/*"/>
 			</fileset>
 		</zip>
 	</target>
 
 	<target name="clean" description="Clean previously built artifacts">
-		<echo message="Cleaning all \obj directories..."/>
+		<echo message="Cleaning all obj directories..."/>
 		<delete >
 			<fileset basedir=".">
 				<include name="**\obj\**"/>
