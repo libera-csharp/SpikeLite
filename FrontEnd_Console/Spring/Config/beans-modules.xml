@@ -148,7 +148,7 @@
   </object>
   
   <object id="ConnectionStringsModule" parent="DefaultSearchModule" type="SpikeLite.Modules.Search.SearchModulePrototype, SpikeLite.Modules.Search">
-    <property name="Name" value="Connection Strings"/>
+    <property name="Name" value="ConnectionStrings"/>
     <property name="Description" value="Search ConnectionString.com"/>
     <property name="Instructions" value="~connectionstring [search terms]"/>
     <property name="SearchUrl" value="www.connectionstrings.com"/>
