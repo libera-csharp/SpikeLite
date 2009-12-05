@@ -31,6 +31,14 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="log4net, Version=1.2.10.0, Culture=neutral, PublicKeyToken=1b44e1d426115821, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Dependencies\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="log4net.Ext.Trace, Version=1.2.10.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Dependencies\log4net.Ext.Trace.dll</HintPath>
+    </Reference>
     <Reference Include="Mono.WebServer2, Version=0.2.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Dependencies\Mono.WebServer2.dll</HintPath>
@@ -53,6 +61,10 @@
     <Compile Include="XspHost.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\SpikeLite.Domain\SpikeLite.Domain.csproj">
+      <Project>{A9084592-C90E-4A8E-AFF9-00709EE6513C}</Project>
+      <Name>SpikeLite.Domain</Name>
+    </ProjectReference>
     <ProjectReference Include="..\SpikeLite\SpikeLite.csproj">
       <Project>{2DB890EF-6D6C-44FD-B607-244CAE1D55F7}</Project>
       <Name>SpikeLite</Name>

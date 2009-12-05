@@ -278,9 +278,9 @@
 
   <!-- IPC Modules -->
   <object id="WebIPCModule" type="SpikeLite.IPC.WebHost.XspHost, SpikeLite.IPC.WebHost">
-    <property name="Name" value="WebHost"/>
+    <property name="Name" value="xsp"/>
     <property name="Description" value="Enables the bot to host webapps and WS endpoints."/>
-    <property name="Instructions" value="N/A"/>
+    <property name="Instructions" value="~xsp [start | stop]"/>
     <property name="ModuleManagementContainer" ref="ModuleManager"/>
     <property name="Port" value="8080"/>
     <property name="Path" value="Web"/>
