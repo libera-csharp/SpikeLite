@@ -83,6 +83,11 @@ namespace SpikeLite.AccessControl
             return Authenticate(user as IrcUserToken);
         }
 
+        public KnownHost FindHostByCloak(string cloak)
+        {
+            return FindKnownHostForCloakHostmask(cloak);
+        }
+
         /// <summary>
         /// Attempts to authenticate an IRC-based user token.
         /// </summary>
@@ -94,7 +99,7 @@ namespace SpikeLite.AccessControl
         {
             if (user != null)
             {
-                AccessLevel accessLevel = ValidateCloak(user.HostMask);
+                AccessLevel accessLevel = FindKnownHostForCloakHostmask(user.HostMask).AccessLevel;
 
                 if (accessLevel != AccessLevel.None)
                 {
@@ -112,9 +117,10 @@ namespace SpikeLite.AccessControl
         /// <param name="hostMask">A hostmask to check to against our cache.</param>
         /// 
         /// <returns>An associated access level for the mask, which may be <code>NONE</code> if the mask is unknown.</returns>
-        private AccessLevel ValidateCloak(string hostMask)
+        private KnownHost FindKnownHostForCloakHostmask(string hostMask)
         {
             AccessLevel userLevel = AccessLevel.None;
+            KnownHost targetCloak = null;
 
             if (!string.IsNullOrEmpty(hostMask))
             {
@@ -123,11 +129,12 @@ namespace SpikeLite.AccessControl
                     if (userLevel < cloak.AccessLevel && cloak.Matches(hostMask))
                     {
                         userLevel = cloak.AccessLevel;
+                        targetCloak = cloak;
                     }
                 }
             }
 
-            return userLevel;
+            return targetCloak;
         }
 
         #endregion 
