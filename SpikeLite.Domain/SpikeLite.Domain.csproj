@@ -67,8 +67,11 @@
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Model\Authentication\KnownHostMetaDatum.cs" />
     <Compile Include="Persistence\Authentication\IKnownHostDao.cs" />
     <Compile Include="Model\Authentication\KnownHost.cs" />
     <Compile Include="Persistence\Authentication\KnownHostDao.cs" />
@@ -82,6 +85,9 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Model\Authentication\SpikeLite.Domain.Authentication.Cloak.hbm.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Model\Authentication\SpikeLite.Domain.Authentication.Cloak.MetaDatum.hbm.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

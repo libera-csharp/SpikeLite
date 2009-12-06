@@ -17,26 +17,17 @@ namespace SpikeLite.Domain.Model.Karma
         /// <summary>
         /// Gets or sets the PKEY used by the underlying data store
         /// </summary>
-        public virtual int Id
-        {
-            get; set;
-        }
+        public virtual long Id { get; set; }
 
         /// <summary>
         /// Gets or sets the user's name
         /// </summary>
-        public virtual string UserName
-        {
-            get; set;
-        }
+        public virtual string UserName { get; set; }
 
         /// <summary>
         /// Gets or sets the karmic level of a given user
         /// </summary>
-        public virtual int KarmaLevel
-        {
-            get; set;
-        }
+        public virtual int KarmaLevel { get; set; }
 
         #endregion
 

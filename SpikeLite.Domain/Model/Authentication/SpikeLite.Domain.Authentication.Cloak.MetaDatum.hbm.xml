@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+
+<!--
+  SpikeLite C# IRC Bot
+  Copyright (c) 2009 FreeNode ##Csharp Community
+
+  This source is licensed under the terms of the MIT license. Please see the 
+  distributed license.txt for details.
+-->
+
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2">
+  <class name="SpikeLite.Domain.Model.Authentication.KnownHostMetaDatum,  SpikeLite.Domain" table="CLOAK_METADATA">
+    <id name="Id" column="Id" type="int" length="20">
+      <generator class="increment"/>
+    </id>
+    
+    <property name="Tag" column="tag" type="string" length="255"/>
+    <property name="Value" column="value" type="string" length="255"/>
+    
+    <!-- Map back to our known host. -->
+    <many-to-one name="Host" column="cloak_id"/>
+  </class>
+</hibernate-mapping>
