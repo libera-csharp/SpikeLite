@@ -68,6 +68,9 @@
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
     <Reference Include="System.Data" />
+    <Reference Include="System.ServiceModel">
+      <RequiredTargetFramework>3.0</RequiredTargetFramework>
+    </Reference>
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
@@ -77,6 +80,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\SpikeLite.IPC.WebHost\SpikeLite.IPC.WebHost.csproj">
+      <Project>{09359037-F0F4-462C-9D61-F812C8C13806}</Project>
+      <Name>SpikeLite.IPC.WebHost</Name>
+    </ProjectReference>
     <ProjectReference Include="..\SpikeLite\SpikeLite.csproj">
       <Project>{2DB890EF-6D6C-44FD-B607-244CAE1D55F7}</Project>
       <Name>SpikeLite</Name>

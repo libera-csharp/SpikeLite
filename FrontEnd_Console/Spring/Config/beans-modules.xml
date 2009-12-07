@@ -277,13 +277,12 @@
   </object>
 
   <!-- IPC Modules -->
-  <object id="WebIPCModule" type="SpikeLite.IPC.WebHost.XspHost, SpikeLite.IPC.WebHost">
-    <property name="Name" value="xsp"/>
-    <property name="Description" value="Enables the bot to host webapps and WS endpoints."/>
-    <property name="Instructions" value="~xsp [start | stop]"/>
+  <object id="WCFPingServiceHost" type="SpikeLite.IPC.WebHost.Services.WCFPingServiceHostModule, SpikeLite.IPC.WebHost">
+    <property name="Name" value="WCFPingHost"/>
+    <property name="Description" value="Not documented."/>
+    <property name="Instructions" value="Not documented."/>
+    <property name="RequiredAccessLevel" value="Root"/>
     <property name="ModuleManagementContainer" ref="ModuleManager"/>
-    <property name="Port" value="8080"/>
-    <property name="Path" value="Web"/>
   </object>
 
   <!-- This is our default list of modules to load (the entire set). Please override this in the beans-overrides if you wish a different set to be loaded. -->
@@ -319,7 +318,7 @@
         <ref object="UserManagementModule"/>
         <ref object="LoggingModule"/>
         <ref object="ChannelActionsModule"/>
-        <ref object="WebIPCModule"/>
+        <ref object="WCFPingServiceHost"/>
       </list>
     </constructor-arg>
   </object>
