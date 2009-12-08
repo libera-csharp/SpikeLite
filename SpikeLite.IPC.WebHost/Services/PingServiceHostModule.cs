@@ -43,7 +43,7 @@ namespace SpikeLite.IPC.WebHost.Services
         /// <summary>
         /// Holds the binding address for this service.
         /// </summary>
-        private readonly Uri _baseAddress = new Uri("http://localhost:8080/SpikeLite/Ping");
+        private readonly Uri _baseAddress = new Uri("http://localhost:8081/SpikeLite/Ping");
 
         #endregion
 
@@ -56,7 +56,7 @@ namespace SpikeLite.IPC.WebHost.Services
         /// Users on Vista or greater might have to reserve the endpoint via Netsh.exe as follows:
         /// 
         /// <code>
-        /// netsh http add urlacl url=http://+:8080/SpikeLite/Ping user=DOMAIN\user 
+        /// netsh http add urlacl url=http://+:8081/SpikeLite/Ping user=DOMAIN\user 
         /// </code>  
         /// 
         /// Please make sure to run your cmd session with administrative rights.
