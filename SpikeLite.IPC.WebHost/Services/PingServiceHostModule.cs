@@ -86,7 +86,7 @@ namespace SpikeLite.IPC.WebHost.Services
                 message[0].Equals("~pinghost", StringComparison.OrdinalIgnoreCase) && 
                 message.Length == 2)
             {
-                string resultMessage = "Unknown pinghost operation. Please specify one of the two operations: start, stop, status.";
+                string resultMessage = "Unknown pinghost operation. Please specify one of the following operations: start, stop, status.";
 
                 // Someone is attempting to start our servicehost...
                 if (message[1].Equals("start", StringComparison.OrdinalIgnoreCase))

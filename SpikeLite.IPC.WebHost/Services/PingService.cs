@@ -16,6 +16,11 @@ namespace SpikeLite.IPC.WebHost.Services
     [ServiceContract(Namespace = "http://tempuri.org")]
     public interface IPingService
     {
+        /// <summary>
+        /// The simplest possible service: says PONG!.
+        /// </summary>
+        /// 
+        /// <returns>A PONG sequence.</returns>
         [OperationContract]
         string Ping();    
     }
