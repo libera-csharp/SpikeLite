@@ -7,8 +7,6 @@
  */
 
 using System.ServiceModel;
-using SpikeLite.Communications;
-using SpikeLite.Modules;
 
 namespace SpikeLite.IPC.WebHost.Services
 {
@@ -16,16 +14,16 @@ namespace SpikeLite.IPC.WebHost.Services
     /// Provides the service contract for our Ping service. We don't really have any namespace stuff setup, so use the gold ol' fashioned "tempuri."
     /// </summary>
     [ServiceContract(Namespace = "http://tempuri.org")]
-    public interface IWcfPingService
+    public interface IPingService
     {
         [OperationContract]
         string Ping();    
     }
 
     /// <summary>
-    /// Implements our <see cref="IWcfPingService"/> contract.
+    /// Implements our <see cref="IPingService"/> contract.
     /// </summary>
-    public class WcfPingService : IWcfPingService
+    public class PingService : IPingService
     {
         public string Ping()
         {

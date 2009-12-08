@@ -277,10 +277,10 @@
   </object>
 
   <!-- IPC Modules -->
-  <object id="WCFPingServiceHost" type="SpikeLite.IPC.WebHost.Services.WCFPingServiceHostModule, SpikeLite.IPC.WebHost">
-    <property name="Name" value="WCFPingHost"/>
-    <property name="Description" value="Not documented."/>
-    <property name="Instructions" value="Not documented."/>
+  <object id="PingServiceHost" type="SpikeLite.IPC.WebHost.Services.PingServiceHostModule, SpikeLite.IPC.WebHost">
+    <property name="Name" value="PingHost"/>
+    <property name="Description" value="Controls whether or not the WCF endpoint for the PingService is enabled."/>
+    <property name="Instructions" value="~pinghost [start | stop]"/>
     <property name="RequiredAccessLevel" value="Root"/>
     <property name="ModuleManagementContainer" ref="ModuleManager"/>
   </object>
@@ -318,7 +318,7 @@
         <ref object="UserManagementModule"/>
         <ref object="LoggingModule"/>
         <ref object="ChannelActionsModule"/>
-        <ref object="WCFPingServiceHost"/>
+        <ref object="PingServiceHost"/>
       </list>
     </constructor-arg>
   </object>
