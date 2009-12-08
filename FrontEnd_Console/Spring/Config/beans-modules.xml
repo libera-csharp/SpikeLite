@@ -280,7 +280,7 @@
   <object id="PingServiceHost" type="SpikeLite.IPC.WebHost.Services.PingServiceHostModule, SpikeLite.IPC.WebHost">
     <property name="Name" value="PingHost"/>
     <property name="Description" value="Controls whether or not the WCF endpoint for the PingService is enabled."/>
-    <property name="Instructions" value="~pinghost [start | stop]"/>
+    <property name="Instructions" value="~pinghost [start | stop | status]"/>
     <property name="RequiredAccessLevel" value="Root"/>
     <property name="ModuleManagementContainer" ref="ModuleManager"/>
   </object>

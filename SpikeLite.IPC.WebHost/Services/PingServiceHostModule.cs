@@ -86,7 +86,7 @@ namespace SpikeLite.IPC.WebHost.Services
                 message[0].Equals("~pinghost", StringComparison.OrdinalIgnoreCase) && 
                 message.Length == 2)
             {
-                string resultMessage = "Unknown pinghost operation. Please specify one of the two operations: start, stop.";
+                string resultMessage = "Unknown pinghost operation. Please specify one of the two operations: start, stop, status.";
 
                 // Someone is attempting to start our servicehost...
                 if (message[1].Equals("start", StringComparison.OrdinalIgnoreCase))
@@ -126,6 +126,12 @@ namespace SpikeLite.IPC.WebHost.Services
                         _logger.InfoFormat("{0} has stopped the PingService servicehost.", request.Nick);
                         resultMessage = "PingService stopped.";
                     }
+                }
+
+                // They're asking for the status of the service.
+                if (message[1].Equals("status", StringComparison.OrdinalIgnoreCase))
+                {
+                    resultMessage = String.Format("The PingHost service is currently {0}.", _serviceStarted ? "started" : "stopped");
                 }
 
                 ModuleManagementContainer.HandleResponse(request.CreateResponse(ResponseType.Public, resultMessage));
