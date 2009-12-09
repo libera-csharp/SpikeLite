@@ -63,10 +63,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ServiceHostModule.cs" />
     <Compile Include="Services\MessagingService.cs" />
-    <Compile Include="Services\MessagingServiceHostModule.cs" />
     <Compile Include="Services\PingService.cs" />
-    <Compile Include="Services\PingServiceHostModule.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SpikeLite.Domain\SpikeLite.Domain.csproj">
