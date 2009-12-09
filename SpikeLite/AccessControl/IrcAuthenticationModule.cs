@@ -99,7 +99,8 @@ namespace SpikeLite.AccessControl
         {
             if (user != null)
             {
-                AccessLevel accessLevel = FindKnownHostForCloakHostmask(user.HostMask).AccessLevel;
+                KnownHost knownHost = FindKnownHostForCloakHostmask(user.HostMask);
+                AccessLevel accessLevel = (knownHost == null) ? AccessLevel.None : knownHost.AccessLevel;
 
                 if (accessLevel != AccessLevel.None)
                 {
