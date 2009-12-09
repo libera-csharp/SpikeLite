@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ReferenceGroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="0e9828fb-55e0-48b0-bb6e-fca8aa1cc4fd" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
+  <ClientOptions>
+    <GenerateAsynchronousMethods>false</GenerateAsynchronousMethods>
+    <EnableDataBinding>true</EnableDataBinding>
+    <ExcludedTypes />
+    <ImportXmlTypes>false</ImportXmlTypes>
+    <GenerateInternalTypes>false</GenerateInternalTypes>
+    <GenerateMessageContracts>false</GenerateMessageContracts>
+    <NamespaceMappings />
+    <CollectionMappings />
+    <GenerateSerializableTypes>true</GenerateSerializableTypes>
+    <Serializer>Auto</Serializer>
+    <ReferenceAllAssemblies>true</ReferenceAllAssemblies>
+    <ReferencedAssemblies />
+    <ReferencedDataContractTypes />
+    <ServiceContractMappings />
+  </ClientOptions>
+  <MetadataSources>
+    <MetadataSource Address="http://192.168.1.94:8081/SpikeLite/Messaging?wsdl" Protocol="http" SourceId="1" />
+  </MetadataSources>
+  <Metadata>
+    <MetadataFile FileName="MessagingService.wsdl" MetadataType="Wsdl" ID="2a3f5f03-f9f1-4d47-9662-ea82db869df5" SourceId="1" SourceUrl="http://192.168.1.94:8081/SpikeLite/Messaging?wsdl" />
+    <MetadataFile FileName="Messaging.wsdl" MetadataType="Wsdl" ID="820c8587-5ca0-4fed-96cb-61bfe120bb56" SourceId="1" SourceUrl="http://localhost:8081/SpikeLite/Messaging?wsdl=wsdl0" />
+    <MetadataFile FileName="Messaging.xsd" MetadataType="Schema" ID="424ff059-badc-4da7-ac7b-16eb79df1d08" SourceId="1" SourceUrl="http://localhost:8081/SpikeLite/Messaging?xsd=xsd0" />
+    <MetadataFile FileName="Messaging1.xsd" MetadataType="Schema" ID="c8bca5c9-0486-4148-8cef-52fa522b4424" SourceId="1" SourceUrl="http://localhost:8081/SpikeLite/Messaging?xsd=xsd1" />
+  </Metadata>
+  <Extensions>
+    <ExtensionFile FileName="configuration.svcinfo" Name="configuration.svcinfo" />
+  </Extensions>
+</ReferenceGroup>
