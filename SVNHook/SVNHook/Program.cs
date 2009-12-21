@@ -6,6 +6,7 @@
  * distributed license.txt for details.
  */
 
+using System;
 using SVNHook.MessagingService;
 
 namespace SVNHook
@@ -35,11 +36,22 @@ namespace SVNHook
         {
             if (args != null && args.Length > 1)
             {
-                string target = args[0];
-                string message = args[1];
+                try
+                {
+                    string target = args[0];
+                    string message = args[1];
 
-                MessagingServiceClient proxy = new MessagingServiceClient();
-                proxy.SendMessage(target, message);
+                    using (MessagingServiceClient proxy = new MessagingServiceClient())
+                    {
+                        proxy.SendMessage(target, message);              
+                    }
+                }
+                catch (Exception ex)
+                {
+                    // Barf if we must. But make sure to fail.
+                    Console.WriteLine(ex);
+                    Environment.Exit(1);
+                }
             }
         }
     }
