@@ -43,7 +43,8 @@ namespace SVNHook
 
                     using (MessagingServiceClient proxy = new MessagingServiceClient())
                     {
-                        proxy.SendMessage(target, message);              
+                        proxy.SendMessage(target, message);  
+                        proxy.Close();
                     }
                 }
                 catch (Exception ex)
