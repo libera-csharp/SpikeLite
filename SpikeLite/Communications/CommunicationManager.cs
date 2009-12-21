@@ -8,7 +8,7 @@
 
 using System;
 using System.Threading;
-using Mono.Rocks;
+using Cadenza.Collections;
 using Sharkbite.Irc;
 using log4net.Ext.Trace;
 using SpikeLite.Communications.IRC;

@@ -11,7 +11,7 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Xml.Linq;
-using Mono.Rocks;
+using Cadenza;
 using SpikeLite.Communications;
 using System.Text.RegularExpressions;
 using System;
@@ -117,9 +117,9 @@ namespace SpikeLite.Modules.GeoIP
         {
             // Blargh this is nasty. Pull out our context and start casting crap.
             Tuple<Request, string, WebClient> userContext = (Tuple<Request, string, WebClient>)e.UserState;
-            Request requestContext = userContext._1;
-            string ip = userContext._2;
-            WebClient webclient = userContext._3;
+            Request requestContext = userContext.Item1;
+            string ip = userContext.Item2;
+            WebClient webclient = userContext.Item3;
 
             // Construct an XLinq document fragment and start anonymously pulling things out.
             XDocument xmlResponse = XDocument.Parse(e.Result);

@@ -7,9 +7,9 @@
  */
 
 using System.Collections.Generic;
+using Cadenza.Collections;
 using log4net.Ext.Trace;
 using SpikeLite.Communications;
-using Mono.Rocks;
 
 namespace SpikeLite.Modules
 {
