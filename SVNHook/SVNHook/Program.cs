@@ -44,14 +44,14 @@ namespace SVNHook
                     using (MessagingServiceClient proxy = new MessagingServiceClient())
                     {
                         proxy.SendMessage(target, message);  
-                        proxy.Close();
                     }
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     // Barf if we must. But make sure to fail.
-                    Console.WriteLine(ex);
                     Environment.Exit(1);
+
+                    // TODO: Kog 12/21/2009 - Perhaps logging would be a good thing.
                 }
             }
         }
