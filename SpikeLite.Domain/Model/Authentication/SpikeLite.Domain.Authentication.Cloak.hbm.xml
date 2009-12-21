@@ -17,8 +17,16 @@
     <id name="Id" column="Id" type="int" length="20">
       <generator class="increment"/>
     </id>
+    
     <property name="HostMask" column="host_mask" type="string" length="255"/>
     <property name="HostMatchType" column="host_match_type" type="int" length="10"/>
     <property name="AccessLevel" column="access_level" type="int" length="10"/>
+
+    <!-- Eagerly map to our metadata. We don't ever *not* want the data, so there's no reason to be lazy. Also, we don't really leave a session open,
+         so there's not really any better choice... -->
+    <set name="MetaData" lazy="false">
+      <key column="cloak_id"/>
+      <one-to-many class="SpikeLite.Domain.Model.Authentication.KnownHostMetaDatum, SpikeLite.Domain"/>
+    </set>
   </class>
 </hibernate-mapping>

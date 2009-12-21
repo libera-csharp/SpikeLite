@@ -15,7 +15,7 @@ using log4net.Ext.Trace;
 using log4net.Repository.Hierarchy;
 using SpikeLite.Communications;
 using SpikeLite.Domain.Model.Authentication;
-using Mono.Rocks;
+using Cadenza.Collections;
 
 namespace SpikeLite.Modules.Admin
 {

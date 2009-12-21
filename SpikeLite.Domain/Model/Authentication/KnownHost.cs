@@ -6,6 +6,7 @@
  * distributed license.txt for details.
  */
 using System;
+using System.Collections.Generic;
 
 namespace SpikeLite.Domain.Model.Authentication
 {
@@ -91,22 +92,27 @@ namespace SpikeLite.Domain.Model.Authentication
         /// <summary>
         /// This should be generated and set by our ORM. This is our PKey, non-naturalized for her pleasure.
         /// </summary>
-        public virtual int Id { get; set; }
+        public virtual long Id { get; set; }
 
         /// <summary>
-        /// This gets or sets the hostmask expression that represents a known user.
+        /// Gets or sets the hostmask expression that represents a known user.
         /// </summary>
         public virtual string HostMask { get; set; }
 
         /// <summary>
-        /// This gets or sets the type of match we're doing - partial, complete, starts/endswith or contains.
+        /// Gets or sets the type of match we're doing - partial, complete, starts/endswith or contains.
         /// </summary>
         public virtual HostMatchType HostMatchType { get; set; }
 
         /// <summary>
-        /// This gets or sets the access of the host. The default is unknown, or none (0).
+        /// Gets or sets the access of the host. The default is unknown, or none (0).
         /// </summary>
         public virtual AccessLevel AccessLevel { get; set; }
+
+        /// <summary>
+        /// Gets or sets the associated metadata. 
+        /// </summary>
+        public virtual IEnumerable<KnownHostMetaDatum> MetaData { get; set; }
 
         #endregion
 
