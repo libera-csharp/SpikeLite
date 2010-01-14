@@ -276,6 +276,26 @@
     <property name="ModuleManagementContainer" ref="ModuleManager"/>
   </object>
 
+  <!-- IPC Modules -->
+  <object id="AbstractServiceHost" abstract="true" type="SpikeLite.IPC.WebHost.ServiceHostModule, SpikeLite.IPC.WebHost" singleton="false" init-method="InitModule">
+    <property name="RequiredAccessLevel" value="Root"/>
+    <property name="ModuleManagementContainer" ref="ModuleManager"/>
+  </object>
+
+  <object id="PingServiceHost" parent="AbstractServiceHost" type="SpikeLite.IPC.WebHost.ServiceHostModule&lt;SpikeLite.IPC.WebHost.Services.IPingService, SpikeLite.IPC.WebHost.Services.PingService>, SpikeLite.IPC.WebHost">
+    <property name="Name" value="PingHost"/>
+    <property name="Description" value="Controls whether or not the WCF endpoint for the PingService is enabled."/>
+    <property name="Instructions" value="~pinghost [start | stop | status]"/>
+    <property name="ServiceAddress" value="http://localhost:8081/SpikeLite/Ping"/>
+  </object>
+
+  <object id="MessagingServiceHost" parent="AbstractServiceHost" type="SpikeLite.IPC.WebHost.ServiceHostModule&lt;SpikeLite.IPC.WebHost.Services.IMessagingService, SpikeLite.IPC.WebHost.Services.MessagingService >, SpikeLite.IPC.WebHost">
+    <property name="Name" value="MessagingHost"/>
+    <property name="Description" value="Controls whether or not the WCF endpoint for the MessagingService is enabled."/>
+    <property name="Instructions" value="~messaginghost [start | stop | status]"/>
+    <property name="ServiceAddress" value="http://localhost:8081/SpikeLite/Messaging"/>
+  </object>
+
   <!-- This is our default list of modules to load (the entire set). Please override this in the beans-overrides if you wish a different set to be loaded. -->
   <object id="ModuleList" type="FrontEnd_Console.Spring.ModuleList, FrontEnd_Console">
     <constructor-arg index="0">
@@ -309,6 +329,8 @@
         <ref object="UserManagementModule"/>
         <ref object="LoggingModule"/>
         <ref object="ChannelActionsModule"/>
+        <ref object="PingServiceHost"/>
+        <ref object="MessagingServiceHost"/>
       </list>
     </constructor-arg>
   </object>

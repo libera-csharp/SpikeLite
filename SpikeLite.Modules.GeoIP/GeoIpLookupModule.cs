@@ -40,7 +40,7 @@ namespace SpikeLite.Modules.GeoIP
         /// A regex grouped such that we only care about the IP.
         /// </summary>
         private const string GeoIpRegexPattern = @"~geoip\s(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})";
-        
+
         /// <summary>
         /// A regular expression object for match checking and grouping.
         /// </summary>
@@ -70,23 +70,23 @@ namespace SpikeLite.Modules.GeoIP
                 {
                     try
                     {
-                       ExecuteSearch(expressionMatch.Groups[1].Value, request);
+                        ExecuteSearch(expressionMatch.Groups[1].Value, request);
                     }
                     catch (Exception ex)
                     {
-                       
-                        ModuleManagementContainer.HandleResponse(request.CreateResponse(ResponseType.Public, 
+
+                        ModuleManagementContainer.HandleResponse(request.CreateResponse(ResponseType.Public,
                                                                  "{0}, The service is currently b00rked, please try again in a few minutes.", request.Nick));
-                        Logger.WarnFormat("Search threw an exception. Nick: {0}, terms: \"{1}\", stack message: {2}", 
+                        Logger.WarnFormat("Search threw an exception. Nick: {0}, terms: \"{1}\", stack message: {2}",
                                           request.Nick, expressionMatch.Groups[1].Value, ex.StackTrace);
                     }
-                    
+
                 }
                 else
                 {
                     // If the message format isn't correct, notify the user.
-                    ModuleManagementContainer.HandleResponse(request.CreateResponse(ResponseType.Public, 
-                                                                                    String.Format("{0}, invalid geoip syntax, please try again.", 
+                    ModuleManagementContainer.HandleResponse(request.CreateResponse(ResponseType.Public,
+                                                                                    String.Format("{0}, invalid geoip syntax, please try again.",
                                                                                     request.Nick)));
                 }
             }
@@ -104,7 +104,7 @@ namespace SpikeLite.Modules.GeoIP
 
             WebClient webClient = new WebClient();
             webClient.DownloadStringCompleted += SearchCompletionHandler;
-            webClient.DownloadStringAsync(searchUri, new Tuple<Request, string, WebClient>(request, ipAddress, webClient));               
+            webClient.DownloadStringAsync(searchUri, new Tuple<Request, string, WebClient>(request, ipAddress, webClient));
         }
 
         /// <summary>
@@ -121,21 +121,23 @@ namespace SpikeLite.Modules.GeoIP
             string ip = userContext.Item2;
             WebClient webclient = userContext.Item3;
 
-            // Construct an XLinq document fragment and start anonymously pulling things out.
-            XDocument xmlResponse = XDocument.Parse(e.Result);
             string response;
 
-            try  
+            try
             {
+                // Construct an XLinq document fragment and start anonymously pulling things out.
+                XDocument xmlResponse = XDocument.Parse(e.Result);
+
+
                 IEnumerable<XElement> root = xmlResponse.Descendants("Hostip");
                 response = String.Format(ResponseTemplate,
                                          requestContext.Addressee ?? requestContext.Nick,
                                          ip,
                                          root.Elements("countryName").FirstOrDefault().Value,
-                                         root.Elements("countryAbbrev").FirstOrDefault().Value); 
-            }  
-            catch (NullReferenceException ex)  
-            {  
+                                         root.Elements("countryAbbrev").FirstOrDefault().Value);
+            }
+            catch (NullReferenceException ex)
+            {
                 Logger.WarnFormat("GeoIPLookupModule search failure for IP {0} by {1}. Message: {2}", ip, requestContext.Nick, ex.Message);
                 response = "No such IP, or the service lookup has failed.";
             }
@@ -148,6 +150,6 @@ namespace SpikeLite.Modules.GeoIP
             ModuleManagementContainer.HandleResponse(requestContext.CreateResponse(ResponseType.Public, response));
         }
 
-        #endregion 
+        #endregion
     }
 }
