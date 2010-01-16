@@ -89,6 +89,13 @@ namespace SpikeLite.Domain.Model.Authentication
     {
         #region Properties
 
+        // TODO: Kog 01/15/2010 - We should probably swap to use the KnownHostDao and add a create method for this...
+
+        /// <summary>
+        /// Holds a backing collection for our <see cref="MetaData"/> property. This is to ensure that we never wind up with a null collection.
+        /// </summary>
+        private ICollection<KnownHostMetaDatum> _metaDataBacking = new List<KnownHostMetaDatum>();
+
         /// <summary>
         /// This should be generated and set by our ORM. This is our PKey, non-naturalized for her pleasure.
         /// </summary>
@@ -110,9 +117,13 @@ namespace SpikeLite.Domain.Model.Authentication
         public virtual AccessLevel AccessLevel { get; set; }
 
         /// <summary>
-        /// Gets or sets the associated metadata. 
+        /// Gets or sets the associated metadata. May be empty, but never null.
         /// </summary>
-        public virtual IEnumerable<KnownHostMetaDatum> MetaData { get; set; }
+        public virtual ICollection<KnownHostMetaDatum> MetaData
+        {
+            get { return _metaDataBacking; }
+            set { _metaDataBacking = value; }
+        }
 
         #endregion
 

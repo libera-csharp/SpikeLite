@@ -156,7 +156,17 @@ namespace SpikeLite.AccessControl
         public void RememberHost(KnownHost host)
         {
             _cloaks.Add(host);
-            _hostDao.Save(host);
+            _hostDao.SaveOrUpdate(host);
+        }
+
+        /// <summary>
+        /// Attempts to persist changes to a known host.
+        /// </summary>
+        /// 
+        /// <param name="host">The <see cref="KnownHost"/> to persist changes to.</param>
+        public void UpdateHost(KnownHost host)
+        {
+            _hostDao.SaveOrUpdate(host);    
         }
 
         /// <summary>

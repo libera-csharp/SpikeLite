@@ -415,15 +415,24 @@ namespace SpikeLite.Communications
         /// <param name="response">A response object to send.</param>
         public void SendResponse(Response response)
         {
-            if (response.ResponseType == ResponseType.Public)
+            try
             {
-                _connection.Sender.PublicMessage(response.Channel, response.Message);
+                if (response.ResponseType == ResponseType.Public)
+                {
+                    _connection.Sender.PublicMessage(response.Channel, response.Message);
+                }
+
+                else if (response.ResponseType == ResponseType.Private)
+                {
+                    _connection.Sender.PrivateMessage(response.Nick, response.Message);
+                }                
+            }
+            catch (Exception ex)
+            {
+                _logger.WarnFormat("Caught an exception trying to SendResponse on [channel: {0} by nick: {1} of message {2}]: {3}", 
+                                   response.Channel, response.Nick ?? "N/A", response.Message, ex);
             }
 
-            else if (response.ResponseType == ResponseType.Private)
-            {              
-                _connection.Sender.PrivateMessage(response.Nick, response.Message);
-            }
         }
 
         // TODO: Kog 11/15/2009 - We can probably refactor some of these methods to take advantage of optional params in .NET4.
@@ -478,10 +487,19 @@ namespace SpikeLite.Communications
         /// <param name="request">Our message to pass.</param>
         public void HandleRequestReceived(Request request)
         {
-            if (_requestReceived != null)
+            try
             {
-                _requestReceived(this, new RequestReceivedEventArgs(request));
+                if (_requestReceived != null)
+                {
+                    _requestReceived(this, new RequestReceivedEventArgs(request));
+                }              
             }
+            catch (Exception ex)
+            {
+                _logger.WarnFormat("Caught an exception trying to HandleRequestReceived on [channel {0} nick {1} request type {2} message {3}]: {4}",
+                                   request.Channel ?? "N/A", request.RequestFrom.User.DisplayName, request.RequestType, request.Message, ex);    
+            }
+
         }
         
         #endregion

@@ -52,6 +52,7 @@ namespace SpikeLite.Modules
         /// </summary>
         public void LoadModules()
         {
+            // TODO: Kog 1/13/2010 - Maybe we can just axe the event and swap to something like a iteration over funcs or actions.
             CommunicationManager.RequestReceived += (sender, args) => HandleRequest(args.Request);
 
             Modules.ForEach(module => { module.NetworkConnectionInformation = CommunicationManager.NetworkList[0]; 

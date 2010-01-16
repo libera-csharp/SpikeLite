@@ -70,9 +70,9 @@ namespace SpikeLite.Domain.Persistence.Authentication
                                    });
         }
 
-        public void Save(KnownHost host)
+        public void SaveOrUpdate(KnownHost host)
         {
-            HibernateTemplate.Save(host);
+            HibernateTemplate.SaveOrUpdate(host);
         }
 
         public void Delete(KnownHost host)

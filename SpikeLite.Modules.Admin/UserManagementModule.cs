@@ -7,6 +7,7 @@
  */
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using Cadenza.Collections;
 using SpikeLite.AccessControl;
@@ -39,7 +40,7 @@ namespace SpikeLite.Modules.Admin
             if (request.RequestFrom.AccessLevel >= AccessLevel.Root
                 && request.RequestType == RequestType.Private
                 && message[0].Equals("~users", StringComparison.OrdinalIgnoreCase)
-                && (message.Length >= 2 && message.Length <= 4))
+                && (message.Length >= 2 && message.Length <= 5))
             {
                 // users list
                 if (message[1].Equals("list", StringComparison.OrdinalIgnoreCase) && message.Length == 2)
@@ -56,7 +57,24 @@ namespace SpikeLite.Modules.Admin
                 // users del hostmask
                 if (message[1].Equals("del", StringComparison.OrdinalIgnoreCase) && message.Length == 3)
                 {
-                    DelUser(message[2], request);    
+                    DeleteUser(message[2], request);    
+                }
+
+                // TODO: Kog 1/13/2010 - We can probably replace this with something like a nested collection of funcs. Make it funky now.
+
+                // users metadata ..
+                if (message[1].Equals("metadata", StringComparison.OrdinalIgnoreCase) && message.Length == 5)
+                {
+                   // If they're trying to del the tag, do so.
+                   if (message[2].Equals("del", StringComparison.OrdinalIgnoreCase))
+                   {
+                       DeleteMetaDatumForUser(message[3], message[4], request);
+                   }
+                   else
+                   {
+                       // if they give a key and a value, create or update the tag accordingly.
+                       CreateOrUpdateMetaDatumForUser(message[2], message[3], message[4], request);
+                   }
                 }
             }
         }
@@ -103,8 +121,9 @@ namespace SpikeLite.Modules.Admin
                                  {
                                      AccessLevel = GetAccessLevelByName(level),
                                      HostMask = hostmask,
-                                     HostMatchType = HostMatchType.Start
+                                     HostMatchType = HostMatchType.Start,
                                  };
+ 
                 AuthenticationManager.RememberHost(host);
                 ModuleManagementContainer.HandleResponse(request.CreateResponse(ResponseType.Private, String.Format("Learned host {0}", TranslateHostToString(host))));
             }
@@ -116,7 +135,7 @@ namespace SpikeLite.Modules.Admin
         /// 
         /// <param name="hostmask">The hostmask to remove.</param>
         /// <param name="request">Our incoming <see cref="Request"/> object, which we use for creating our response.</param>
-        private void DelUser(string hostmask, Request request)
+        private void DeleteUser(string hostmask, Request request)
         {
             if (!AuthenticationManager.KnowsHost(hostmask))
             {
@@ -129,7 +148,101 @@ namespace SpikeLite.Modules.Admin
             }
         }
 
-        #endregion 
+        #region Metadata Handling
+
+        // TODO: Kog 1/13/2010 - The thought occurs to me that it would be really nice to have some sort of syntax allowing metadata to be added
+        // TODO: Kog 1/13/2010 - or tags to be added with spaces. For now, let's just go with the crude stuff here.
+
+        /// <summary>
+        /// Deletes a metadatum for a given "tag" on a known host.
+        /// </summary>
+        /// 
+        /// <param name="host">The literal string of a cloak to modify metadata for.</param>
+        /// <param name="tag">The metadatum's "tag" (think of this like a key in a key/value pair). Must have no spaces</param>
+        /// <param name="request">Our incoming <see cref="Request"/> object, which we use for creating our response.</param>
+        /// 
+        /// <remarks>
+        /// If the host is not found (via a literal search), or the tag does not exist on the host, the outbound request will notify the calling user. 
+        /// </remarks>
+        private void DeleteMetaDatumForUser(string host, string tag, Request request)
+        {
+            var knownHost = AuthenticationManager.FindHostByCloak(host);
+            var response = String.Format("Tag {0} successfully removed from {1}.", tag, host);
+
+            // Make sure we have the host...
+            if (null != knownHost)
+            {
+                var metaDatum = knownHost.MetaData.FirstOrDefault(x => x.Tag.Equals(tag, StringComparison.OrdinalIgnoreCase));
+
+                // Make sure we have that tag
+                if (null != metaDatum)
+                {
+                    // TODO: Kog 1/13/2010 - perhaps this should just become one operation on the auth manager. The whole known host bit needs to be refactored most likely anyway.
+
+                    // Tell our persistence layer to do the needful.
+                    knownHost.MetaData.Remove(metaDatum);
+                    AuthenticationManager.UpdateHost(knownHost);
+                }
+                else
+                {
+                    response = String.Format("Could not remove tag {0} from host {1}, no such tag known.", tag, host);    
+                }
+            }
+            else
+            {
+                response = String.Format("Host {0} doesn't exist, can't remove tag {1}", host, tag);
+            }
+            
+            SendResponse(response, request);
+        }
+
+        /// <summary>
+        /// Attempts to either create a new metadatum entry on a known host, or update the value of a currently existing tag. 
+        /// </summary>
+        /// 
+        /// <param name="host">The literal string of a cloak to modify metadata for.</param>
+        /// <param name="tag">The metadatum's "tag" (think of this like a key in a key/value pair). Must have no spaces.</param>
+        /// <param name="value">The metadatum's "value" (think of this like a value in a key/value pair). Must have no spaces.</param>
+        /// <param name="request">Our incoming <see cref="Request"/> object, which we use for creating our response.</param>
+        /// 
+        /// <remarks>
+        /// If the host is not found (via a literal search) the outbound request will notify the calling user.  
+        /// </remarks>
+        private void CreateOrUpdateMetaDatumForUser(string host, string tag, string value, Request request)
+        {
+            var knownHost = AuthenticationManager.FindHostByCloak(host);
+            var response = String.Format("Tag {0} successfully added to {1}.", tag, host);
+
+            // Make sure we have the host...
+            if (null != knownHost)
+            {
+                // Attempt to find or create our tag.
+                var metaDatum = knownHost.MetaData.FirstOrDefault(x => x.Tag.Equals(tag, StringComparison.OrdinalIgnoreCase));
+
+                if (null == metaDatum)
+                {
+                    // Create our new tag and add it to our mapped collection.
+                    metaDatum = new KnownHostMetaDatum {Host = knownHost, Tag = tag};
+                    knownHost.MetaData.Add(metaDatum);
+                }
+
+                // Slap in our new value.
+                metaDatum.Value = value;
+
+                // Tell our persistence layer to do the needful.
+                AuthenticationManager.UpdateHost(knownHost);
+            }
+            else
+            {
+                response = String.Format("Host {0} doesn't exist, can't remove tag {1}", host, tag);
+            }
+
+            SendResponse(response, request);
+        }
+
+        #endregion
+
+        #endregion
 
         #region Helper Methods
 
@@ -157,7 +270,9 @@ namespace SpikeLite.Modules.Admin
         /// </remarks>
         private static string TranslateHostToString(KnownHost host)
         {
-            return String.Format("[{0}: level {1}, type {2}]", host.HostMask, host.AccessLevel, host.HostMatchType);    
+            return String.Format("[{0}: level {1}, type {2}, [metadata: {3}]]", 
+                                 host.HostMask, host.AccessLevel, host.HostMatchType, host.MetaData.Implode(", ", 
+                                                                                                            x => String.Format("[{0} - {1}]", x.Tag, x.Value)));    
         }
 
         /// <summary>

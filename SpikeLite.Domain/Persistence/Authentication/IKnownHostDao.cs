@@ -33,7 +33,7 @@ namespace SpikeLite.Domain.Persistence.Authentication
         /// </summary>
         /// 
         /// <param name="host">An implementation of <see cref="KnownHost"/> to persist.</param>
-        void Save(KnownHost host);
+        void SaveOrUpdate(KnownHost host);
 
         /// <summary>
         /// Attempts to delete a given <see cref="KnownHost"/>.
