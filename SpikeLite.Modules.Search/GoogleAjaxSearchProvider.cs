@@ -84,10 +84,13 @@ namespace SpikeLite.Modules.Search
                 {
                     var result = json["responseData"]["results"].Children().First();
 
+                    // Grab the actual URL. We're going to need to strip off the quotes that Google hands back to us.
+                    var resultUrl = result["url"].ToString().Replace("\"", "");
+
                     results.Add(String.Format("'{0}': {1} | {2}",
                                               state.SearchCriteria,
                                               result["titleNoFormatting"],
-                                              result["url"]));
+                                              resultUrl));
                 }
                 else
                 {
