@@ -36,7 +36,7 @@ namespace SpikeLite.Modules.About
             ModuleManagementContainer.HandleResponse(response);
             response.Message = "IRC: To get help with the bot type '~Help' in private message with the bot.";
             ModuleManagementContainer.HandleResponse(response);
-            response.Message = "Wiki: http://www.freenode-csharp.net/wiki/SharpBot.ashx";
+            response.Message = "Wiki: http://wiki.freenode-csharp.net/wiki/";
             ModuleManagementContainer.HandleResponse(response);
             response.Message = "====================================";
             ModuleManagementContainer.HandleResponse(response);
