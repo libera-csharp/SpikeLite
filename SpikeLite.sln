@@ -1,6 +1,6 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 10.00
-# Visual Studio 2008
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpikeLite", "SpikeLite\SpikeLite.csproj", "{2DB890EF-6D6C-44FD-B607-244CAE1D55F7}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FrontEnd_Console", "FrontEnd_Console\FrontEnd_Console.csproj", "{F239531E-3FBC-4DC0-B499-235E91740A5B}"
