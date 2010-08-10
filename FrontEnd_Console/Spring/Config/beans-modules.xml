@@ -163,6 +163,14 @@
     <property name="SearchTrigger" value="~wikipedia"/>
   </object>
 
+  <object id="PhpManualModule" parent="DefaultSearchModule" type="SpikeLite.Modules.Search.SearchModulePrototype, SpikeLite.Modules.Search">
+    <property name="Name" value="PHP"/>
+    <property name="Description" value="Searches the PHP manual/"/>
+    <property name="Instructions" value="~php [search terms]"/>
+    <property name="SearchUrl" value="http://php.net/"/>
+    <property name="SearchTrigger" value="~php"/>
+  </object>
+
   <!-- Infrastructure modules. -->
   <object id="AboutModule" type="SpikeLite.Modules.About.AboutModule, SpikeLite.Modules.About">
     <property name="Name" value="About"/>
@@ -331,6 +339,7 @@
         <ref object="ChannelActionsModule"/>
         <ref object="PingServiceHost"/>
         <ref object="MessagingServiceHost"/>
+        <ref object="PhpManualModule"/>
       </list>
     </constructor-arg>
   </object>
