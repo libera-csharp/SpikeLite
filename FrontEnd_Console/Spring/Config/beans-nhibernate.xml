@@ -26,7 +26,7 @@
                connectionString="${db.connectionstring}"/>
 
   <!-- Create a bean for our session factory, which gets injected into all our DAOs. -->
-  <object id="HibernateSessionFactory" type="Spring.Data.NHibernate.LocalSessionFactoryObject, Spring.Data.NHibernate21">
+  <object id="HibernateSessionFactory" type="Spring.Data.NHibernate.LocalSessionFactoryObject, Spring.Data.NHibernate30">
     <property name="DbProvider" ref="DbProvider"/>
     <property name="MappingAssemblies">
       <list>
@@ -76,7 +76,7 @@
   </object>
 
   <!-- Provide a transaction manager. Each DAO should probably have its own session per convention. -->
-  <object id="HibernateTransactionManager" type="Spring.Data.NHibernate.HibernateTransactionManager, Spring.Data.NHibernate21">
+  <object id="HibernateTransactionManager" type="Spring.Data.NHibernate.HibernateTransactionManager, Spring.Data.NHibernate30">
     <property name="DbProvider" ref="DbProvider"/>
     <property name="SessionFactory" ref="HibernateSessionFactory"/>
   </object>

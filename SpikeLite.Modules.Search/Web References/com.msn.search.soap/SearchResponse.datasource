@@ -6,5 +6,5 @@
     cause the file to be unrecognizable by the program.
 -->
 <GenericObjectDataSource DisplayName="SearchResponse" Version="1.0" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
-   <TypeInfo>SpikeLite.Modules.Search.com.msn.search.soap.SearchResponse, Web References.com.msn.search.soap.Reference.cs, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null</TypeInfo>
+   <TypeInfo>SpikeLite.Modules.Search.com.msn.search.soap.SearchResponse</TypeInfo>
 </GenericObjectDataSource>
