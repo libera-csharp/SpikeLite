@@ -39,11 +39,6 @@ namespace SpikeLite.Modules.Admin
                     response.Channel = target;
                     ModuleManagementContainer.HandleResponse(response);
                 }
-                else if (messageArray[1].Equals("do", StringComparison.OrdinalIgnoreCase))
-                {
-                    Response response = request.CreateResponse(ResponseType.Private, "Do is currently unimplimented :(");
-                    ModuleManagementContainer.HandleResponse(response);
-                }
             }
         }
     }
