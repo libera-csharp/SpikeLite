@@ -67,7 +67,7 @@
     <Compile Include="AccessControl\BasicUserToken.cs" />
     <Compile Include="AccessControl\IrcAuthenticationModule.cs" />
     <Compile Include="AccessControl\IrcUserToken.cs" />
-    <Compile Include="AccessControl\UserToken.cs" />
+    <Compile Include="AccessControl\IUserToken.cs" />
     <Compile Include="AccessControl\UserTokenCache.cs" />
     <Compile Include="BotStatus.cs" />
     <Compile Include="Communications\CommunicationManager.cs" />

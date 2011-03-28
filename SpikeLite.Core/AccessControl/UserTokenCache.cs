@@ -1,6 +1,6 @@
 ﻿/**
  * SpikeLite C# IRC Bot
- * Copyright (c) 2008 FreeNode ##Csharp Community
+ * Copyright (c) 2008-2011 FreeNode ##Csharp Community
  * 
  * This source is licensed under the terms of the MIT license. Please see the 
  * distributed license.txt for details.
@@ -17,20 +17,20 @@ namespace SpikeLite.AccessControl
     /// </summary>
     public class UserTokenCache
     {
-        private readonly Dictionary<string, UserToken> _tokens;
+        private readonly Dictionary<string, IUserToken> _tokens;
         private readonly ReadWriteLock _mutex;
 
         public UserTokenCache()
         {
-            _tokens = new Dictionary<string,UserToken>();
+            _tokens = new Dictionary<string,IUserToken>();
             _mutex = new ReadWriteLock();
         }
 
         #region Token Handling
 
-        public UserToken RetrieveToken(UserInfo user)
+        public IUserToken RetrieveToken(UserInfo user)
         {
-            UserToken token;
+            IUserToken token;
 
             using (_mutex.AquireReadLock())
             {
@@ -40,7 +40,7 @@ namespace SpikeLite.AccessControl
             return token;
         }
 
-        public void CacheToken(string nick, UserToken token)
+        public void CacheToken(string nick, IUserToken token)
         {
             using ( _mutex.AquireWriteLock() )
             {
@@ -61,7 +61,7 @@ namespace SpikeLite.AccessControl
             }
         }
 
-        private static UserToken CreateUserToken(UserInfo user)
+        private static IUserToken CreateUserToken(UserInfo user)
         {
             return new IrcUserToken(user.Nick, user.Hostname);
         }

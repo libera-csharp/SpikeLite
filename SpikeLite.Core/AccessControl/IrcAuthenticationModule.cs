@@ -1,6 +1,6 @@
 ﻿/**
  * SpikeLite C# IRC Bot
- * Copyright (c) 2008 FreeNode ##Csharp Community
+ * Copyright (c) 2008-2011 FreeNode ##Csharp Community
  * 
  * This source is licensed under the terms of the MIT license. Please see the 
  * distributed license.txt for details.
@@ -78,7 +78,7 @@ namespace SpikeLite.AccessControl
         /// <param name="user">A User token passed into us to inspect.</param>
         /// 
         /// <returns>An internal representation of any rights and privileges said user token might possess.</returns>
-        public AuthToken Authenticate(UserToken user)
+        public AuthToken Authenticate(IUserToken user)
         {
             return Authenticate(user as IrcUserToken);
         }

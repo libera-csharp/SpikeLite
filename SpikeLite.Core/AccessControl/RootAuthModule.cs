@@ -1,11 +1,10 @@
 ﻿/**
  * SpikeLite C# IRC Bot
- * Copyright (c) 2008 FreeNode ##Csharp Community
+ * Copyright (c) 2008-2011 FreeNode ##Csharp Community
  * 
  * This source is licensed under the terms of the MIT license. Please see the 
  * distributed license.txt for details.
  */
-using System;
 using SpikeLite.Domain.Model.Authentication;
 
 namespace SpikeLite.AccessControl
@@ -27,7 +26,7 @@ namespace SpikeLite.AccessControl
     {
         public IAuthenticationModule AuthModule { get; set; }
 
-        public AuthToken Authenticate( UserToken user )
+        public AuthToken Authenticate( IUserToken user )
         {
             return AuthModule.Authenticate(user) ?? new AuthToken(this, user, AccessLevel.None);
         }

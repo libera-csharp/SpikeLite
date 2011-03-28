@@ -1,6 +1,6 @@
 ﻿/**
  * SpikeLite C# IRC Bot
- * Copyright (c) 2008 FreeNode ##Csharp Community
+ * Copyright (c) 2008-2011 FreeNode ##Csharp Community
  * 
  * This source is licensed under the terms of the MIT license. Please see the 
  * distributed license.txt for details.
@@ -10,9 +10,9 @@ using System.Reflection;
 [assembly: AssemblyTitle("SpikeLite Console Runner")]
 [assembly: AssemblyDescription("A console runner for SpikeLite IRC bot")]
 [assembly: AssemblyConfiguration("Standard")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("FreeNode ##CSharp Community")]
 [assembly: AssemblyProduct("SpikeLite")]
-[assembly: AssemblyCopyright("2009 FreeNode ##CSharp Community")]
+[assembly: AssemblyCopyright("2009-2011 FreeNode ##CSharp Community")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
