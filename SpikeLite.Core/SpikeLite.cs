@@ -11,8 +11,6 @@ using log4net.Ext.Trace;
 using SpikeLite.Communications;
 using SpikeLite.Modules;
 
-// TODO: Kog 11/23/2009 - Refactor SpikeLite into SpikeLite.Core - seems like a better namespace set, and assembly. More descriptive.
-
 namespace SpikeLite
 {
     /// <summary>

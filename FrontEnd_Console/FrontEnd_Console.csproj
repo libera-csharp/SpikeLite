@@ -73,9 +73,9 @@
       <Project>{09359037-F0F4-462C-9D61-F812C8C13806}</Project>
       <Name>SpikeLite.IPC.WebHost</Name>
     </ProjectReference>
-    <ProjectReference Include="..\SpikeLite\SpikeLite.csproj">
+    <ProjectReference Include="..\SpikeLite.Core\SpikeLite.Core.csproj">
       <Project>{2DB890EF-6D6C-44FD-B607-244CAE1D55F7}</Project>
-      <Name>SpikeLite</Name>
+      <Name>SpikeLite.Core</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
