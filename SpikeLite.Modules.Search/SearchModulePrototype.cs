@@ -29,7 +29,7 @@ namespace SpikeLite.Modules.Search
         /// <summary>
         /// Gets or sets the domain we search our search providers against.
         /// </summary>
-        public string SearchUrl {  get; set; }
+        public string SearchUrl { get; set; }
 
         /// <summary>
         /// Gets or sets the search provider backing this module.
@@ -51,53 +51,48 @@ namespace SpikeLite.Modules.Search
             {
                 string[] messageArray = request.Message.Split(' ');
 
-                if (request.Message.StartsWith("~"))
+                if (request.Message.StartsWith("~")
+                    && request.RequestFrom.AccessLevel >= AccessLevel.Public
+                    && messageArray.Length >= 2
+                    && messageArray[0].ToLower() == SearchTrigger)
                 {
-                    if (request.RequestFrom.AccessLevel >= AccessLevel.Public)
+                    string searchTerms = string.Empty;
+
+                    for (int i = 1; i < messageArray.Length; i++)
                     {
-                        if (messageArray.Length >= 2)
-                        {
-                            if (messageArray[0].ToLower() == SearchTrigger)
-                            {
-                                string searchTerms = string.Empty;
-
-                                for (int i = 1; i < messageArray.Length; i++)
-                                {
-                                    searchTerms += messageArray[i] + " ";
-                                }
-
-                                Logger.DebugFormat("{0} - HandleRequest called on for {1} by {2}", Name, request.Message, request.Addressee ?? request.Nick);
-                                SearchProvider.ExecuteSearch(searchTerms, SearchUrl, x => HandleResults(x, request, searchTerms));
-                            }
-                        }
+                        searchTerms += messageArray[i] + " ";
                     }
+
+                    Logger.DebugFormat("{0} - HandleRequest called on for {1} by {2}", Name, request.Message,
+                                       request.Addressee ?? request.Nick);
+
+                    SearchProvider.ExecuteSearch(searchTerms, SearchUrl, x => HandleResults(x, request, searchTerms));
                 }
 
                 else if (messageArray[0].StartsWith(NetworkConnectionInformation.BotNickname))
                 {
-                    if (request.RequestFrom.AccessLevel >= AccessLevel.Public)
+                    if (request.RequestFrom.AccessLevel >= AccessLevel.Public
+                        && messageArray.Length >= 3
+                        && messageArray[1].ToLower() == SearchTrigger.Substring(1))
                     {
-                        if (messageArray.Length >= 3)
+                        string searchTerms = string.Empty;
+
+                        for (int i = 2; i < messageArray.Length; i++)
                         {
-                            if (messageArray[1].ToLower() == SearchTrigger.Substring(1))
-                            {
-                                string searchTerms = string.Empty;
-
-                                for (int i = 2; i < messageArray.Length; i++)
-                                {
-                                    searchTerms += messageArray[i] + " ";
-                                }
-
-                                Logger.DebugFormat("{0} - HandleRequest called on for {1} by {2}", Name, request.Message, request.Addressee ?? request.Nick);
-                                SearchProvider.ExecuteSearch(searchTerms, SearchUrl, x => HandleResults(x, request, searchTerms));
-                            }
+                            searchTerms += messageArray[i] + " ";
                         }
+
+                        Logger.DebugFormat("{0} - HandleRequest called on for {1} by {2}", Name, request.Message,
+                                           request.Addressee ?? request.Nick);
+
+                        SearchProvider.ExecuteSearch(searchTerms, SearchUrl,
+                                                     x => HandleResults(x, request, searchTerms));
                     }
                 }
             }
         }
 
-        #endregion 
+        #endregion
 
         #region Message Filtering
 
@@ -107,11 +102,13 @@ namespace SpikeLite.Modules.Search
             foreach (string result in results)
             {
                 string resultWithQuery = result.Replace("%query%", searchTerms.Trim());
+
                 ModuleManagementContainer.HandleResponse(
-                    request.CreateResponse(ResponseType.Public, "{0}, {1} {2}", request.Addressee ?? request.Nick, Name, resultWithQuery));
+                    request.CreateResponse(ResponseType.Public, "{0}, {1} {2}", request.Addressee ?? request.Nick, Name,
+                                           resultWithQuery));
             }
         }
 
-        #endregion 
+        #endregion
     }
 }

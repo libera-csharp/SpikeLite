@@ -39,13 +39,13 @@ namespace SpikeLite.Modules.Search
                                                   AppID = ApiKey,
                                                   CultureInfo = "en-US",
                                                   Requests = new[]
-                                                                 {
-                                                                     new SourceRequest
-                                                                         {
-                                                                             Source = SourceType.Web,
-                                                                             ResultFields = ResultFieldMask.Url | ResultFieldMask.Description
-                                                                         }
-                                                                 }
+                                                  {
+                                                    new SourceRequest
+                                                        {
+                                                            Source = SourceType.Web,
+                                                            ResultFields = ResultFieldMask.Url | ResultFieldMask.Description
+                                                        }
+                                                  }
                                               };
 
             // Not everything needs a domain qualifier - BING and Google being the primary cases. Only add the domain if required, this will

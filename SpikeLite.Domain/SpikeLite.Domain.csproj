@@ -68,12 +68,9 @@
     <Reference Include="Spring.Data.NHibernate30">
       <HintPath>..\Dependencies\Spring.Data.NHibernate30.dll</HintPath>
     </Reference>
-    <Reference Include="System" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Model\Authentication\KnownHostMetaDatum.cs" />

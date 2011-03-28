@@ -7,7 +7,6 @@
  */
 
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using Cadenza.Collections;
 using SpikeLite.AccessControl;

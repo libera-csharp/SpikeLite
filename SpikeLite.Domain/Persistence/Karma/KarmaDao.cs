@@ -6,7 +6,6 @@
  * distributed license.txt for details.
  */
 
-using System.Collections.Generic;
 using SpikeLite.Domain.Model.Karma;
 using Spring.Data.NHibernate.Generic.Support;
 using System.Linq;
