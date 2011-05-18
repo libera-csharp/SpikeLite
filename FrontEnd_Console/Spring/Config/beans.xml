@@ -130,7 +130,6 @@
 
 		  <!-- Configure our API keys -->
 		  <add key="apikeys.google" value="NOT CONFIGURED"/>
-		  <add key="apikeys.live" value="NOT CONFIGURED"/>
 		  <add key="apikeys.bing" value="NOT CONFIGURED"/>
 
 		  <!-- Configure our referrers -->

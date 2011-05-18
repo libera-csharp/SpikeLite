@@ -18,7 +18,7 @@
   
   <!-- Set up some modules that can be prototyped for domain-specific searching. -->
   <object id="DefaultSearchModule" abstract="true" type="SpikeLite.Modules.Search.SearchModulePrototype, SpikeLite.Modules.Search" singleton="false">
-    <property name="SearchProvider" ref="LiveSearchProvider"/>
+    <property name="SearchProvider" ref="MicrosoftBingSearchProvider"/>
     <property name="ModuleManagementContainer" ref="ModuleManager"/>
   </object>
 	
@@ -36,10 +36,6 @@
   <object id="GoogleAjaxSearchProvider" type="SpikeLite.Modules.Search.GoogleAjaxSearchProvider, SpikeLite.Modules.Search">
     <property name="Referrer" ref="GoogleAjaxReferrer"/>
   </object>
-
-  <object id="LiveSearchProvider" type="SpikeLite.Modules.Search.MicrosoftLiveSearchProvider, SpikeLite.Modules.Search">
-    <property name="ApiKey" ref="LiveApiKey"/>
-  </object>
 	
   <object id="MicrosoftBingSearchProvider" type="SpikeLite.Modules.Search.MicrosoftBingSearchProvider, SpikeLite.Modules.Search">
     <property name="ApiKey" ref="BingApiKey"/>
@@ -53,13 +49,6 @@
 	<property name="SearchTrigger" value="~google"/>
   </object>
 
-  <object id="LiveModule" parent="DefaultSearchModule" type="SpikeLite.Modules.Search.SearchModulePrototype, SpikeLite.Modules.Search">
-    <property name="Name" value="Live"/>
-    <property name="Description" value="Search Microsoft Live"/>
-    <property name="Instructions" value="~live [search terms]"/>
-    <property name="SearchTrigger" value="~live"/>
-  </object>
-	
   <object id="BingModule" parent="MicrosoftBingSearchModule" type="SpikeLite.Modules.Search.SearchModulePrototype, SpikeLite.Modules.Search">
     <property name="Name" value="BING"/>
     <property name="Description" value="Search Microsoft BING"/>
@@ -308,9 +297,8 @@
   <object id="ModuleList" type="FrontEnd_Console.Spring.ModuleList, FrontEnd_Console">
     <constructor-arg index="0">
       <list element-type="SpikeLite.Modules.IModule, SpikeLite">
-	<ref object="GoogleModule"/>
-	<ref object="LiveModule"/>
-	<ref object="BingModule"/>
+        <ref object="GoogleModule"/>
+        <ref object="BingModule"/>
         <ref object="AboutModule"/> 
         <ref object="WikiLinkModule"/>
         <ref object="GeoipModule"/> 
@@ -347,10 +335,6 @@
   <!-- Our Google and MS Live API keys. Please define these in the beans-overrides.xml. -->
   <object name="GoogleAjaxReferrer" type="System.Uri">
 	<constructor-arg index="0" value="${referrers.googleajax}"/>
-  </object>
-
-  <object name="LiveApiKey" type="String">
-    <constructor-arg index="0" value="${apikeys.live}"/>
   </object>
 	
   <object name="BingApiKey" type="String">
