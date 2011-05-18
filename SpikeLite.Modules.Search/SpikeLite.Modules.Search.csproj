@@ -62,7 +62,6 @@
     <Compile Include="GoogleAjaxSearchProvider.cs" />
     <Compile Include="MicrosoftBingSearchProvider.cs" />
     <Compile Include="ISearchProvider.cs" />
-    <Compile Include="MicrosoftLiveSearchProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -70,11 +69,6 @@
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
     <Compile Include="SearchModulePrototype.cs" />
-    <Compile Include="Web References\com.msn.search.soap\Reference.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Reference.map</DependentUpon>
-    </Compile>
     <Compile Include="Web References\net.bing.api\Reference.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -96,17 +90,6 @@
       <CachedAppSettingsObjectName>Settings</CachedAppSettingsObjectName>
       <CachedSettingsPropName>SpikeLite_Modules_Search_net_bing_api_BingService</CachedSettingsPropName>
     </WebReferenceUrl>
-    <WebReferenceUrl Include="http://soap.search.msn.com/webservices.asmx%3fwsdl">
-      <UrlBehavior>Dynamic</UrlBehavior>
-      <RelPath>Web References\com.msn.search.soap\</RelPath>
-      <UpdateFromURL>http://soap.search.msn.com/webservices.asmx%3fwsdl</UpdateFromURL>
-      <ServiceLocationURL>
-      </ServiceLocationURL>
-      <CachedDynamicPropName>
-      </CachedDynamicPropName>
-      <CachedAppSettingsObjectName>Settings</CachedAppSettingsObjectName>
-      <CachedSettingsPropName>SpikeLite_Modules_Search_com_msn_search_soap_MSNSearchService</CachedSettingsPropName>
-    </WebReferenceUrl>
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
@@ -114,14 +97,6 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
-    <None Include="Web References\com.msn.search.soap\Reference.map">
-      <Generator>MSDiscoCodeGenerator</Generator>
-      <LastGenOutput>Reference.cs</LastGenOutput>
-    </None>
-    <None Include="Web References\com.msn.search.soap\SearchResponse.datasource">
-      <DependentUpon>Reference.map</DependentUpon>
-    </None>
-    <None Include="Web References\com.msn.search.soap\webservices.wsdl" />
     <None Include="Web References\net.bing.api\Reference.map">
       <Generator>MSDiscoCodeGenerator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>
