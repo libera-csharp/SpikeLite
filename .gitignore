@@ -3,3 +3,4 @@ _ReSharper.SpikeLite/*
 output/*
 *.suo
 *.ReSharper.user
+*/bin/*
