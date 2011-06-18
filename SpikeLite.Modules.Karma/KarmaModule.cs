@@ -36,7 +36,7 @@ namespace SpikeLite.Modules.Karma
         /// <summary>
         /// Holds the valid patterns for our karma regex, with some groupings for easy parsing.
         /// </summary>
-        private const string _regexPattern = @"~karma\s([A-Za-z0-9]+)((\-\-)|(\+\+))?";
+        private const string _regexPattern = @"~karma\s([^\-\+]+)((\-\-)|(\+\+))?";
 
         /// <summary>
         /// Precompile our matcher.
@@ -53,21 +53,6 @@ namespace SpikeLite.Modules.Karma
         /// </summary>
         /// 
         /// <param name="request">A message</param>
-        /// 
-        /// <remarks>
-        /// <para>
-        /// We do rather inelegant, or perhaps more accurately inprecise, handling of our mapping here.
-        /// We assume that the format is ~karma (nick)++/--. We assume that -+ or other things that are not
-        /// alphanumeric after the nickname (as defined by an alphanumeric string) are invalid input, and do
-        /// a karma lookup.
-        /// </para>
-        /// 
-        /// <para>
-        /// The alternative to doing this is a lot of funky corner logic which really doesn't need to happen.
-        /// This module is currently not open to the public since we have no throttling on public messages, and
-        /// we don't want users to spam us offline.
-        /// </para>
-        /// </remarks>
         public override void HandleRequest(Request request)
         {
             if (request.RequestFrom.AccessLevel >= AccessLevel.Public)
