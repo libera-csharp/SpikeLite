@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 
 <!--
   SpikeLite C# IRC Bot
@@ -21,31 +21,30 @@
   <object name="botPropertyConfigurer" type="Spring.Objects.Factory.Config.PropertyPlaceholderConfigurer, Spring.Core">
     <property name="Properties">
       <name-values>
+        <!-- Set values for our bot's setup. -->
+        <add key="network.name" value="Localhost" />
+        <add key="bot.nick" value="SpikeLite" />
+        <add key="bot.realname" value="##CSharp irc bot" />
+        <add key="bot.username" value="SpikeLite" />
+        <add key="bot.accountpass" value="password" />
+        <add key="server.supports.identification" value="true" />
 
-		  <!-- Set values for our bot's setup. -->
-		  <add key="network.name" value="Localhost"/>
-		  <add key="bot.nick" value="SpikeLite"/>
-		  <add key="bot.realname" value="##CSharp irc bot"/>
-		  <add key="bot.username" value="SpikeLite"/>
-		  <add key="bot.accountpass" value="password"/>
-      		  <add key="server.supports.identification" value="true"/>
+        <!-- Configure our server -->
+        <add key="server.host" value="127.0.0.1" />
+        <add key="server.port" value="6667" />
 
-		  <!-- Configure our server -->
-		  <add key="server.host" value="127.0.0.1"/>
-		  <add key="server.port" value="6667"/>
+        <!-- Configure our API keys -->
+        <add key="apikeys.bing" value="NOT CONFIGURED" />
 
-		  <!-- Configure our API keys -->
-		  <add key="apikeys.live" value="NOT CONFIGURED"/>
-		  <add key="apikeys.bing" value="NOT CONFIGURED"/>
+        <!-- Configure our referrers -->
+        <add key="referrers.googleajax" value="NOT CONFIGURED" />
 
-		  <!-- Configure our referrers -->
-		  <add key="referrers.googleajax" value="NOT CONFIGURED"/>
-
-		  <!-- Database setup -->
-		  <add key="db.provider" value="Npgsql-2.0"/>
-		  <add key="db.connectionstring" value="User ID=user;Password=pass;Host=127.0.0.1;Port=5432;Database=db;"/>
-		  <add key="db.dialect" value="NHibernate.Dialect.PostgreSQLDialect"/>
-		  <add key="db.driver" value="NHibernate.Driver.NpgsqlDriver"/>
+        <!-- Database setup - this will build an SQLite3 database if none exists. 
+             This should work out of the box on Windows, but on Linux you'll need SQLite3 already installed.-->
+        <add key="db.provider" value="SQLite-1.0.65" />
+        <add key="db.connectionstring" value="Data Source=spikelite.db;Version=3;New=True" />
+        <add key="db.dialect" value="NHibernate.Dialect.SQLiteDialect" />
+        <add key="db.driver" value="NHibernate.Driver.SQLite20Driver" />
       </name-values>
     </property>
   </object>
@@ -57,9 +56,9 @@
         
         <!-- You probably want to alter this... -->
         <object id="Test" type="SpikeLite.Communications.IRC.Channel, SpikeLite">
-          <property name="Name" value="##csharp-spiketest"/>
+          <property name="Name" value="#spikelite" />
         </object>
-        
+
       </list>
     </constructor-arg>
   </object>
