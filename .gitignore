@@ -4,3 +4,4 @@ output/*
 *.suo
 *.ReSharper.user
 */bin/*
+SpikeLite.sln.cache
