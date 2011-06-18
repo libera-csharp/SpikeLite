@@ -41,8 +41,9 @@ namespace FrontEnd_Console
                 // here just in case.
                 Console.WriteLine(Environment.NewLine + "We've spun up the bot and are currently logging to our appenders. Hit CTL+C to quit.");
 
-                // Handle SIGTERM gracefully.
-                Console.CancelKeyPress += ((sender, args) => bot.Shutdown("Caught SIGTERM, quitting"));
+                // Handle SIGTERM gracefully. Tell the bot to shutdown, dispose the context.
+                Console.CancelKeyPress += ((sender, args) => { bot.Shutdown("Caught SIGTERM, quitting"); 
+                                                               ctx.Dispose(); });
             }
             catch(Exception ex)
             {
