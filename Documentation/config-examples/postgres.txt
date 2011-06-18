@@ -1,0 +1,10 @@
+To use Postgres you'll need:
+ * a compatible Mono.Security.dll (Windows only - Mono users should already have this).
+ * Npgsql.dll 2.0.0.0 - This needs to be a specific version for Spring.NET/NH compatability.
+
+The following database setup in your beans-overrides.xml should work:
+
+        <add key="db.provider" value="Npgsql-2.0"/>
+        <add key="db.connectionstring" value="User ID=user;Password=password;Host=127.0.0.1;Port=5432;Database=database;"/>
+        <add key="db.dialect" value="NHibernate.Dialect.PostgreSQLDialect"/>
+        <add key="db.driver" value="NHibernate.Driver.NpgsqlDriver"/>
