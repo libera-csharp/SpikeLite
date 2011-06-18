@@ -22,12 +22,14 @@
 		<msbuild project="SpikeLite.sln">
               <arg value="/property:Configuration=debug" />                                  
               <arg value="/t:Rebuild" />
+			  <arg value="/p:PlatformTarget=x86"/>
 		</msbuild>	
 	
 		<!-- Build Release artifacts -->
 		<msbuild project="SpikeLite.sln">
               <arg value="/property:Configuration=release" />                                  
               <arg value="/t:Rebuild" />
+			  <arg value="/p:PlatformTarget=x86"/>
 		</msbuild>
 	</target>
 	
@@ -39,6 +41,7 @@
 			<arg value="SpikeLite.sln"/>
 			<arg value="/target:Rebuild"/>
 			<arg value="/p:Configuration=debug"/>
+			<arg value="/p:PlatformTarget=x86"/>
 		</exec>
 		
 		<!-- Build Release artifacts -->
@@ -46,6 +49,7 @@
 			<arg value="SpikeLite.sln"/>
 			<arg value="/target:Rebuild"/>
 			<arg value="/p:Configuration=release"/>
+			<arg value="/p:PlatformTarget=x86"/>
 		</exec>
 	</target>
 	
