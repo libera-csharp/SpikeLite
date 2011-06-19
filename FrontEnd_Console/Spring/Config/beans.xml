@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 
 <!--
   SpikeLite C# IRC Bot
@@ -20,8 +20,8 @@
        You probably don't want to change the injected beans either, unless you have a good reason.
   -->
   <object id="SpikeLite" type="SpikeLite.SpikeLite, SpikeLite">
-    <property name="ModuleManager" ref="ModuleManager"/>
-    <property name="CommunicationManager" ref="CommunicationManager"/>
+    <property name="ModuleManager" ref="ModuleManager" />
+    <property name="CommunicationManager" ref="CommunicationManager" />
   </object>
 
   <!-- 
@@ -30,10 +30,10 @@
   -->
   <object id="ModuleManager" type="SpikeLite.Modules.ModuleManager, SpikeLite">
     <!-- Inject our messaging bean. -->
-    <property name ="CommunicationManager" ref="CommunicationManager"/>
+    <property name="CommunicationManager" ref="CommunicationManager" />
     
     <!-- This property is actually set in beans-modules, but overridden in beans-overrides. -->
-    <property name="Modules" ref="ModuleList"/>
+    <property name="Modules" ref="ModuleList" />
   </object>
   
   <!-- 
@@ -43,54 +43,54 @@
   <object id="CommunicationManager" type="SpikeLite.Communications.CommunicationManager, SpikeLite">
     <property name="NetworkList">
       <list element-type="SpikeLite.Communications.IRC.Network, SpikeLite">
-        <ref object="Network"/>
+        <ref object="Network" />
       </list>
     </property>
-    <property name="MessageParser" ref="MessageParserAdvice"/>
-    <property name="SupportsIdentification" value="${server.supports.identification}"/>
-    <property name="BotContext" ref="SpikeLite"/>
+    <property name="MessageParser" ref="MessageParserAdvice" />
+    <property name="SupportsIdentification" value="${server.supports.identification}" />
+    <property name="BotContext" ref="SpikeLite" />
   </object>
 
   <object id="Network" type="SpikeLite.Communications.IRC.Network, SpikeLite">
-    <property name="NetworkName" value="${network.name}"/>
-    <property name="BotNickname" value="${bot.nick}"/>
-    <property name="BotRealname" value="${bot.realname}"/>
-    <property name="BotUsername" value="${bot.username}"/>
-    <property name="AccountPassword" value="${bot.accountpass}"/>
+    <property name="NetworkName" value="${network.name}" />
+    <property name="BotNickname" value="${bot.nick}" />
+    <property name="BotRealname" value="${bot.realname}" />
+    <property name="BotUsername" value="${bot.username}" />
+    <property name="AccountPassword" value="${bot.accountpass}" />
     <property name="ServerList">
       <list element-type="SpikeLite.Communications.IRC.Server, SpikeLite">
-        <ref object="Server"/>
+        <ref object="Server" />
       </list>
     </property>
   </object>
 
   <object id="Server" type="SpikeLite.Communications.IRC.Server, SpikeLite">
-    <property name="Host" value="${server.host}"/>
-    <property name="Port" value="${server.port}"/>
-    <property name="ChannelList" ref="ChannelList"/>
+    <property name="Host" value="${server.host}" />
+    <property name="Port" value="${server.port}" />
+    <property name="ChannelList" ref="ChannelList" />
   </object>
 
   <object id="ChannelList" type="FrontEnd_Console.ChannelList, FrontEnd_Console">
     <constructor-arg index="0">
       <list element-type="SpikeLite.Communications.IRC.Channel, SpikeLite">
         <object id="TestingChannel" type="SpikeLite.Communications.IRC.Channel, SpikeLite">
-          <property name="Name" value="#kog"/>
+          <property name="Name" value="#kog" />
         </object>
       </list>
     </constructor-arg>
   </object>
 
   <object id="MessageParser" type="SpikeLite.Communications.Messaging.PrivmsgParser, SpikeLite">
-    <property name="AuthHandler" ref="DefaultAuthenticationManager"/>
-    <property name="CommunicationManager" ref="CommunicationManager"/>
-    <property name="UserTokenCache" ref="UserTokenCache"/>
+    <property name="AuthHandler" ref="DefaultAuthenticationManager" />
+    <property name="CommunicationManager" ref="CommunicationManager" />
+    <property name="UserTokenCache" ref="UserTokenCache" />
   </object>
 
-  <object id="MessageParserProxy" type="SpikeLite.Communications.Messaging.PrivmsgParserAdvice, SpikeLite"/>
+  <object id="MessageParserProxy" type="SpikeLite.Communications.Messaging.PrivmsgParserAdvice, SpikeLite" />
 
   <object id="MessageParserAdvice" type="Spring.Aop.Framework.ProxyFactoryObject, Spring.Aop">
-    <property name="proxyInterfaces" value="SpikeLite.Communications.Messaging.IPrivmsgParser"/>
-    <property name="targetName" value="MessageParser"/>
+    <property name="proxyInterfaces" value="SpikeLite.Communications.Messaging.IPrivmsgParser" />
+    <property name="targetName" value="MessageParser" />
     <property name="InterceptorNames">
       <list>
         <value>MessageParserProxy</value>
@@ -100,14 +100,14 @@
 
   <!-- This is our default access manager. -->
   <object id="DefaultAuthenticationManager" type="SpikeLite.AccessControl.RootAuthModule, SpikeLite">
-    <property name="AuthModule" ref="IrcAuthenticationModule"/>
+    <property name="AuthModule" ref="IrcAuthenticationModule" />
   </object>
 
   <object id="IrcAuthenticationModule" type="SpikeLite.AccessControl.IrcAuthenticationModule, SpikeLite">
-    <constructor-arg index="0" ref="KnownHostDao"/>
+    <constructor-arg index="0" ref="KnownHostDao" />
   </object>
 
-  <object id="UserTokenCache" type="SpikeLite.AccessControl.UserTokenCache, SpikeLite"/>
+  <object id="UserTokenCache" type="SpikeLite.AccessControl.UserTokenCache, SpikeLite" />
 
   <!-- We provide default values for all the placheolder values in the bot, so that if a user does not include
        this in the beans-overrides.xml we don't wind up throwing a random, unhelpful exception. You really should
@@ -116,30 +116,30 @@
     <property name="Properties">
       <name-values>
 
-		  <!-- Set values for our bot's setup. -->
-		  <add key="network.name" value="Localhost"/>
-		  <add key="bot.nick" value="SpikeLite"/>
-		  <add key="bot.realname" value="##CSharp irc bot"/>
-		  <add key="bot.username" value="SpikeLite"/>
-		  <add key="bot.accountpass" value="password"/>
-      <add key="server.supports.identification" value="true"/>
+        <!-- Set values for our bot's setup. -->
+        <add key="network.name" value="Localhost" />
+        <add key="bot.nick" value="SpikeLite" />
+        <add key="bot.realname" value="##CSharp irc bot" />
+        <add key="bot.username" value="SpikeLite" />
+        <add key="bot.accountpass" value="password" />
+        <add key="server.supports.identification" value="true" />
 
-		  <!-- Configure our server -->
-		  <add key="server.host" value="127.0.0.1"/>
-		  <add key="server.port" value="6667"/>
+        <!-- Configure our server -->
+        <add key="server.host" value="127.0.0.1" />
+        <add key="server.port" value="6667" />
 
-		  <!-- Configure our API keys -->
-		  <add key="apikeys.google" value="NOT CONFIGURED"/>
-		  <add key="apikeys.bing" value="NOT CONFIGURED"/>
+        <!-- Configure our API keys -->
+        <add key="apikeys.google" value="NOT CONFIGURED" />
+        <add key="apikeys.bing" value="NOT CONFIGURED" />
 
-		  <!-- Configure our referrers -->
-		  <add key="referrers.googleajax" value="NOT CONFIGURED"/>
+        <!-- Configure our referrers -->
+        <add key="referrers.googleajax" value="NOT CONFIGURED" />
 
-		  <!-- Database setup -->
-		  <add key="db.provider" value="Npgsql-2.0"/>
-		  <add key="db.connectionstring" value="User ID=user;Password=pass;Host=127.0.0.1;Port=5432;Database=db;"/>
-		  <add key="db.dialect" value="NHibernate.Dialect.PostgreSQLDialect"/>
-		  <add key="db.driver" value="NHibernate.Driver.NpgsqlDriver"/>
+        <!-- Database setup -->
+        <add key="db.provider" value="SQLite-1.0.65" />
+        <add key="db.connectionstring" value="Data Source=spikelite.db;Version=3;New=True" />
+        <add key="db.dialect" value="NHibernate.Dialect.SQLiteDialect" />
+        <add key="db.driver" value="NHibernate.Driver.SQLite20Driver" />
       </name-values>
     </property>
   </object>
