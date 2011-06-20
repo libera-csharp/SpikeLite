@@ -58,10 +58,10 @@ There are a couple of moving pieces here:
 
 * AccessLevel will either be Root or Public. The difference being (at the moment) that Root can do admin things like shutting down the bot, and managing users (see below).
 * HostMatchType can be one of: Full, Start, End or Contains. These can be found in KnownHost.cs, but the gist is as follows:
-** Full does a literal string match.
-** Start checks to see String.StartsWith.
-** End checks to see String.EndsWith.
-** Contains checks to see if String.Contains.
+    * Full does a literal string match.
+    * Start checks to see String.StartsWith.
+    * End checks to see String.EndsWith.
+    * Contains checks to see if String.Contains.
 * The hostmask bit should be self-explanitory: it'll be the hostmask that the bot sees for the user, however your network represents them.
 
 Once you're listed as level Root, and the bot is running, you can use the Users module, which comes as part of SpikeLite.Modules.Admin.
