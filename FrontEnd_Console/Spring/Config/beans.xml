@@ -105,6 +105,42 @@
 
   <object id="IrcAuthenticationModule" type="SpikeLite.AccessControl.IrcAuthenticationModule, SpikeLite">
     <constructor-arg index="0" ref="KnownHostDao" />
+    <constructor-arg index="1" ref="seedCloaks" />
+  </object>
+
+  <!-- Holds a list of cloaks to use when running the bot for the first time. -->
+  <object id="seedCloaks" type="FrontEnd_Console.Spring.CloakList, FrontEnd_Console">
+    <constructor-arg index="0">
+      <list element-type="SpikeLite.Domain.Model.Authentication.KnownHost, SpikeLite.Domain">        
+        <!-- Create a user for Kog. -->
+        <object id ="kog" type="SpikeLite.Domain.Model.Authentication.KnownHost, SpikeLite.Domain">
+          <property name="AccessLevel" value="Root"/>
+          <property name="HostMatchType" value="Start"/>
+          <property name="HostMask" value="about/csharp/regular/Kog"/>
+        </object>
+
+        <!-- Create a user for Andy. -->
+        <object id ="smippy" type="SpikeLite.Domain.Model.Authentication.KnownHost, SpikeLite.Domain">
+          <property name="AccessLevel" value="Root"/>
+          <property name="HostMatchType" value="Start"/>
+          <property name="HostMask" value="about/csharp/regular/smellyhippy"/>
+        </object>
+        
+        <!-- Create a user for KotS. -->
+        <object id ="KeeperOfTheSoul" type="SpikeLite.Domain.Model.Authentication.KnownHost, SpikeLite.Domain">
+          <property name="AccessLevel" value="Root"/>
+          <property name="HostMatchType" value="Start"/>
+          <property name="HostMask" value="about/csharp/regular/KeeperOfTheSoul"/>
+        </object>
+        
+        <!-- And now everyone else, the regulars. They all have the same access type... -->
+        <object id ="Regulars" type="SpikeLite.Domain.Model.Authentication.KnownHost, SpikeLite.Domain">
+          <property name="AccessLevel" value="Public"/>
+          <property name="HostMatchType" value="Start"/>
+          <property name="HostMask" value="about/csharp/"/>
+        </object>
+      </list>
+    </constructor-arg>
   </object>
 
   <object id="UserTokenCache" type="SpikeLite.AccessControl.UserTokenCache, SpikeLite" />

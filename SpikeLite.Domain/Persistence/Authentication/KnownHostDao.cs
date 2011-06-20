@@ -27,49 +27,6 @@ namespace SpikeLite.Domain.Persistence.Authentication
             return HibernateTemplate.ExecuteFind(x => x.CreateCriteria(typeof(KnownHost)).List<KnownHost>());
         }
 
-        public virtual void SeedAcLs()
-        {
-            // Get most of the regulars
-            HibernateTemplate.Save(new KnownHost
-                                   {
-                                       AccessLevel = AccessLevel.Public,
-                                       HostMatchType = HostMatchType.Start,
-                                       HostMask = "about/csharp/"
-                                   });
-
-            // Take care of smippy
-            HibernateTemplate.Save(new KnownHost
-                                   {
-                                       AccessLevel = AccessLevel.Root,
-                                       HostMatchType = HostMatchType.Start,
-                                       HostMask = "about/csharp/regular/smellyhippy"
-                                   });
-
-            // Take care of KoTS
-            HibernateTemplate.Save(new KnownHost
-                                   {
-                                       AccessLevel = AccessLevel.Root,
-                                       HostMatchType = HostMatchType.Start,
-                                       HostMask = "about/csharp/regular/KeeperOfTheSoul"
-                                   });
-
-            // Take care of Kog
-            HibernateTemplate.Save(new KnownHost
-                                   {
-                                       AccessLevel = AccessLevel.Root,
-                                       HostMatchType = HostMatchType.Start,
-                                       HostMask = "about/csharp/regular/Kog"
-                                   });
-
-            // Take care of a test user
-            HibernateTemplate.Save(new KnownHost
-                                   {
-                                       AccessLevel = AccessLevel.Root,
-                                       HostMatchType = HostMatchType.Start,
-                                       HostMask = "doot.doot"
-                                   });
-        }
-
         public void SaveOrUpdate(KnownHost host)
         {
             HibernateTemplate.SaveOrUpdate(host);

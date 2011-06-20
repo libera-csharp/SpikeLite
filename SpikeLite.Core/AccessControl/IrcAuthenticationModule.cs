@@ -8,9 +8,11 @@
 
 using System;
 using System.Collections.Generic;
+using log4net.Ext.Trace;
 using SpikeLite.Domain.Model.Authentication;
 using SpikeLite.Domain.Persistence.Authentication;
 using System.Linq;
+using Cadenza.Collections;
 
 namespace SpikeLite.AccessControl
 {
@@ -34,6 +36,11 @@ namespace SpikeLite.AccessControl
         /// </summary>
         private readonly IKnownHostDao _hostDao;
 
+        /// <summary>
+        /// Stores our log4net logger.
+        /// </summary>
+        private static readonly TraceLogImpl _logger = (TraceLogImpl)TraceLogManager.GetLogger(typeof(IrcAuthenticationModule));
+
         #endregion 
 
         #region Construction and Associated Helpers
@@ -43,24 +50,29 @@ namespace SpikeLite.AccessControl
         /// </summary>
         /// 
         /// <param name="hostDao">An implementation of our host dao, injected into our constructor.</param>
-        public IrcAuthenticationModule(IKnownHostDao hostDao)
+        /// <param name="cloaks">A set of hosts to seed, if none are already known.</param>
+        public IrcAuthenticationModule(IKnownHostDao hostDao, IEnumerable<KnownHost> cloaks)
         {
             _hostDao = hostDao;
-            _cloaks = FindOrSeedAcls();
+            _cloaks = FindOrSeedAcls(cloaks);
         }
 
         /// <summary>
         /// A hacktastical convenience method to ensure that we at least have the default set of ACLs. This should be in some sort of installer.
         /// </summary>
         /// 
-        /// <returns>The set of all ACLs within the system, or the default set from <see cref="KnownHostDao.SeedAcLs"/> if the cloaks table is empty.</returns>
-        private IList<KnownHost> FindOrSeedAcls()
+        /// <returns>The set of all ACLs within the system, or the default set injected set of hosts if the cloaks table is empty.</returns>
+        private IList<KnownHost> FindOrSeedAcls(IEnumerable<KnownHost> seedCloaks)
         {
             IList<KnownHost> cloaks = _hostDao.FindAll();
 
             if (cloaks.Count < 1)
-            {
-                _hostDao.SeedAcLs();
+            {                
+                _logger.Info("No known hosts found, seeding...");
+
+                seedCloaks.ForEach(cloak => { _hostDao.SaveOrUpdate(cloak); 
+                                              _logger.Info(String.Format("Creating host {0}, level {1}, match type {2}", 
+                                                                         cloak.HostMask, cloak.AccessLevel, cloak.HostMatchType)); });
                 cloaks = _hostDao.FindAll();
             }
 

@@ -81,14 +81,20 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Dependencies\Spring.Core.dll</HintPath>
     </Reference>
+    <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ConsoleRunner.cs" />
     <Compile Include="Spring\ChannelList.cs" />
+    <Compile Include="Spring\CloakList.cs" />
     <Compile Include="Spring\ModuleList.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\SpikeLite.Domain\SpikeLite.Domain.csproj">
+      <Project>{A9084592-C90E-4A8E-AFF9-00709EE6513C}</Project>
+      <Name>SpikeLite.Domain</Name>
+    </ProjectReference>
     <ProjectReference Include="..\SpikeLite.IPC.WebHost\SpikeLite.IPC.WebHost.csproj">
       <Project>{09359037-F0F4-462C-9D61-F812C8C13806}</Project>
       <Name>SpikeLite.IPC.WebHost</Name>

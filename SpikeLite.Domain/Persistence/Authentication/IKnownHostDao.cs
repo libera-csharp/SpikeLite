@@ -24,11 +24,6 @@ namespace SpikeLite.Domain.Persistence.Authentication
         IList<KnownHost> FindAll();
 
         /// <summary>
-        /// Attempts to stock a base set of ACLs.
-        /// </summary>
-        void SeedAcLs();
-
-        /// <summary>
         /// Attempts to persist a given <see cref="KnownHost"/>.
         /// </summary>
         /// 
