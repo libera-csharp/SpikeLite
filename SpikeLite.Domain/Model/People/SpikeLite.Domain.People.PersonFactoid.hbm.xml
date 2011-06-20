@@ -19,6 +19,7 @@
     <property name="Type" column="type" type="string" length="255"/>
     <property name="Description" column="description" type="string" length="4000"/>
     <property name="CreationDate" column="creation_date" type="UtcDateTime"/>
+    <property name="CreatedBy" column="created_by" type="string" length="255"/>
 
     <!-- Map back to our known host. -->
     <many-to-one name="Person" column="person_id"/>

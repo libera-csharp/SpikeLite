@@ -75,7 +75,8 @@ namespace SpikeLite.Modules.People
                             Description = description,
                             CreationDate = DateTime.Now,
                             Person = target,
-                            Type = command
+                            Type = command,  
+                            CreatedBy = request.Nick
                         });
 
                         response = request.CreateResponse(ResponseType.Public, "Factoid saved.");
@@ -95,7 +96,7 @@ namespace SpikeLite.Modules.People
                                                                                                  (factCount > maxFactCount) ? String.Format(" (showing the first {0})", Math.Min(factCount, maxFactCount)) : string.Empty, 
                                                                                                  matchingFacts.Reverse()
                                                                                                               .Take(maxFactCount)
-                                                                                                              .Select(x => String.Format("[{0} - {1}]", x.Description, x.CreationDate))
+                                                                                                              .Select(x => String.Format("[{0} at {1} by {2}]", x.Description, x.CreationDate.ToString("MM/dd/yyyy H:mm:ss UTC"), x.CreatedBy))
                                                                                                               .Implode(", ")));
                         }                        
                     }

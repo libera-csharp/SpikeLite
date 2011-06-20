@@ -39,5 +39,10 @@ namespace SpikeLite.Domain.Model.People
         /// Holds when the factoid was created. Can be handy for ordering, or filtering.
         /// </summary>
         public virtual DateTime CreationDate { get; set; }
+
+        /// <summary>
+        /// Holds the nick of the user that created the factoid.
+        /// </summary>
+        public virtual string CreatedBy { get; set; }
     }
 }
