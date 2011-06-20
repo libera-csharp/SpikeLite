@@ -5,3 +5,4 @@ output/*
 *.ReSharper.user
 */bin/*
 SpikeLite.sln.cache
+*/beans-overrides.xml
