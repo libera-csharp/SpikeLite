@@ -63,6 +63,14 @@
     <property name="Target" ref="KarmaDaoImpl"/>
   </object>
 
+  <object id="PersonDaoImpl" type="SpikeLite.Domain.Persistence.People.PeopleDao, SpikeLite.Domain">
+    <property name="sessionFactory" ref="HibernateSessionFactory"/>
+  </object>
+
+  <object id="PersonDao" parent="TxProxyConfigurationTemplate">
+    <property name="Target" ref="PersonDaoImpl"/>
+  </object>
+
   <!-- Create a proxying template we can use to slap transactions on via AOP. -->
   <object id="TxProxyConfigurationTemplate" abstract="true" type="Spring.Transaction.Interceptor.TransactionProxyFactoryObject, Spring.Data">
     <property name="PlatformTransactionManager" ref="HibernateTransactionManager"/>
@@ -70,6 +78,7 @@
       <name-values>
         <add key="Find*" value="PROPAGATION_REQUIRED,readOnly"/>
         <add key="Save*" value="PROPAGATION_REQUIRED"/>
+        <add key="Create*" value="PROPAGATION_REQUIRED"/>
         <add key="SeedAcLs*" value="PROPAGATION_REQUIRED"/>
       </name-values>
     </property>

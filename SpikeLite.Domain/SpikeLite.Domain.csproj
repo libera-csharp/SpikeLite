@@ -84,6 +84,7 @@
     <Reference Include="Spring.Data.NHibernate30">
       <HintPath>..\Dependencies\Spring.Data.NHibernate30.dll</HintPath>
     </Reference>
+    <Reference Include="System" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
@@ -94,12 +95,16 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Model\Authentication\KnownHostMetaDatum.cs" />
+    <Compile Include="Model\People\Person.cs" />
+    <Compile Include="Model\People\PersonFactoid.cs" />
     <Compile Include="Persistence\Authentication\IKnownHostDao.cs" />
     <Compile Include="Model\Authentication\KnownHost.cs" />
     <Compile Include="Persistence\Authentication\KnownHostDao.cs" />
     <Compile Include="Persistence\Karma\IKarmaDao.cs" />
     <Compile Include="Persistence\Karma\KarmaDao.cs" />
     <Compile Include="Model\Karma\KarmaItem.cs" />
+    <Compile Include="Persistence\People\IPeopleDao.cs" />
+    <Compile Include="Persistence\People\PeopleDao.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -110,6 +115,10 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Model\Authentication\SpikeLite.Domain.Authentication.Cloak.MetaDatum.hbm.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Model\People\SpikeLite.Domain.People.Person.hbm.xml" />
+    <EmbeddedResource Include="Model\People\SpikeLite.Domain.People.PersonFactoid.hbm.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

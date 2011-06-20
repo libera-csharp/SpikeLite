@@ -292,6 +292,33 @@
     <property name="Instructions" value="~messaginghost [start | stop | status]"/>
     <property name="ServiceAddress" value="http://localhost:8081/SpikeLite/Messaging"/>
   </object>
+  
+  <!-- Wire up modules about people factoids -->
+  <object id="DefaultPersonModule" abstract="true" type="SpikeLite.Modules.People.PeopleModule, SpikeLite.Modules.People">
+    <property name="PersonDao" ref="PersonDao"/>
+    <property name="ModuleManagementContainer" ref="ModuleManager"/>
+  </object>
+  
+  <object id="PersonWarningModule" parent="DefaultPersonModule" type="SpikeLite.Modules.People.PeopleModule, SpikeLite.Modules.People">    
+    <property name="Name" value="Warning"/>
+    <property name="Description" value="Tracks warnings."/>
+    <property name="Instructions" value="~warn [user] [optional description if you'd like to add a warning]"/>    
+    <property name="Trigger" value="~warn"/>
+  </object>
+
+  <object id="PersonBanModule" parent="DefaultPersonModule" type="SpikeLite.Modules.People.PeopleModule, SpikeLite.Modules.People">
+    <property name="Name" value="Ban"/>
+    <property name="Description" value="Tracks ban information."/>
+    <property name="Instructions" value="~ban [user] [optional description if you'd like to add a ban]. Please note that this won't actually ban someone, and is for your records only."/>
+    <property name="Trigger" value="~ban"/>
+  </object>
+
+  <object id="PersonIdiotModule" parent="DefaultPersonModule" type="SpikeLite.Modules.People.PeopleModule, SpikeLite.Modules.People">
+    <property name="Name" value="Idiot"/>
+    <property name="Description" value="Tracks idiocy."/>
+    <property name="Instructions" value="~idiot [user] [optional description if you'd like to add an idiot]"/>
+    <property name="Trigger" value="~idiot"/>
+  </object>
 
   <!-- This is our default list of modules to load (the entire set). Please override this in the beans-overrides if you wish a different set to be loaded. -->
   <object id="ModuleList" type="FrontEnd_Console.Spring.ModuleList, FrontEnd_Console">
@@ -328,6 +355,9 @@
         <ref object="PingServiceHost"/>
         <ref object="MessagingServiceHost"/>
         <ref object="PhpManualModule"/>
+        <ref object="PersonWarningModule"/>
+        <ref object="PersonBanModule"/>
+        <ref object="PersonIdiotModule"/>
       </list>
     </constructor-arg>
   </object>

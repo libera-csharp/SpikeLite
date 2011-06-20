@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+
+<!--
+  SpikeLite C# IRC Bot
+  Copyright (c) 2011 FreeNode ##Csharp Community
+
+  This source is licensed under the terms of the MIT license. Please see the 
+  distributed license.txt for details.
+-->
+
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2">
+  <class name="SpikeLite.Domain.Model.People.PersonFactoid, SpikeLite.Domain" table="PEOPLE_FACTOIDS">
+    <id name="Id" column="Id">
+      <generator class="native">
+        <param name="sequence">person_factoid_id_seq</param>
+      </generator>
+    </id>
+
+    <property name="Type" column="type" type="string" length="255"/>
+    <property name="Description" column="description" type="string" length="4000"/>
+    <property name="CreationDate" column="creation_date" type="UtcDateTime"/>
+
+    <!-- Map back to our known host. -->
+    <many-to-one name="Person" column="person_id"/>
+  </class>
+</hibernate-mapping>
