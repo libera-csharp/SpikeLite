@@ -73,7 +73,7 @@ namespace SpikeLite.Modules.People
                         PersonDao.SaveFactoid(new PersonFactoid
                         {
                             Description = description,
-                            CreationDate = DateTime.Now,
+                            CreationDate = DateTime.UtcNow,
                             Person = target,
                             Type = command,  
                             CreatedBy = request.Nick
