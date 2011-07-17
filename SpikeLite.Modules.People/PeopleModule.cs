@@ -9,7 +9,6 @@
 using System.Globalization;
 using Cadenza.Collections;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using SpikeLite.Communications;
@@ -18,7 +17,7 @@ using SpikeLite.Domain.Model.People;
 using SpikeLite.Domain.Persistence.People;
 
 // TODO [Kog 06/19/2011] : This is just a preliminary prototype, come back and smoothe this over.
-// TODO [Kog 06/19/2011] : Also probably want to add which user saved the factoid.
+// TODO [Kog 07/17/2011] : Need some sort of filterable UI for this. Perhaps we should actually embed XSP after all, and do some quick UI.
 
 namespace SpikeLite.Modules.People
 {
@@ -61,13 +60,14 @@ namespace SpikeLite.Modules.People
                 {
                     var command = expressionMatch.Groups[1].Value.Substring(1);
                     var name = expressionMatch.Groups[2].Value;
+                    var normalizedName = name.ToUpperInvariant();
                     var description = expressionMatch.Groups[3].Value;
 
                     // OK, so we know we've at least got a person. Let's look them up. 
-                    var target = PersonDao.CreateOrFindPerson(name);
-                    Response response = request.CreateResponse(ResponseType.Public, String.Format("No factoids of type {0} found for {1}.", command, name));
+                    var target = PersonDao.CreateOrFindPerson(normalizedName);
+                    var response = request.CreateResponse(ResponseType.Public, String.Format("No factoids of type {0} found for {1}.", command, name));
 
-                    // If we've got a description, they're add to said person.
+                    // If we've got a description, they're added to said person.
                     if (description.Length > 0)
                     {
                         PersonDao.SaveFactoid(new PersonFactoid
@@ -84,7 +84,7 @@ namespace SpikeLite.Modules.People
                     else
                     {
                         const int maxFactCount = 5;
-                        IEnumerable<PersonFactoid> matchingFacts = target.Factoids.Where(x => x.Type.Equals(command, StringComparison.InvariantCultureIgnoreCase));
+                        var matchingFacts = target.Factoids.Where(x => x.Type.Equals(command, StringComparison.InvariantCultureIgnoreCase));
                         var factCount = matchingFacts.Count();
 
                         if (factCount > 0)
