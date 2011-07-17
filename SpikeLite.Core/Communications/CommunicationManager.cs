@@ -210,24 +210,19 @@ namespace SpikeLite.Communications
             if (BotContext.BotStatus == BotStatus.Started)
             {
                 // Try and reconnect.
-                while (!IsConnected && reconnectCount <= 5)
+                while (!IsConnected)
                 {
                     Connect();
 
                     if (!IsConnected)
                     {
+                        // TODO [Kog 07/17/2011] : We should add this to the UI at some point as well. Maybe when the Curses stuff is written (if ever...)
                         _logger.WarnFormat("Failed whilst attempting reconnection attempt #{0}", reconnectCount);
 
                         // TODO: Kog 11/23/2009 - Can we replace this with a timer of some sort?
-                        Thread.Sleep(60000);
+                        Thread.Sleep(30000);
                         reconnectCount++;
                     }
-                }
-
-                // If we went through all the reconnect attempts, and we're still not getting anywhere kill the bot
-                if (!IsConnected)
-                {
-                    BotContext.Shutdown("Cannot connect to any configured networks, shutting down.");
                 }
             }
         }
