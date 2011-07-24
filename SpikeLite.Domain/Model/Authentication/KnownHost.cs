@@ -125,6 +125,31 @@ namespace SpikeLite.Domain.Model.Authentication
             set { _metaDataBacking = value; }
         }
 
+        // TODO [Kog 07/23/2011] : We went with 24 hour living GUIDs as tokens, which users may ask the bot for, then copy/paste.
+        // TODO [Kog 07/23/2011] : In the future we may need to store these to ensure uniqueness, so we may want to change the
+        // TODO [Kog 07/23/2011] : data model accordingly.
+
+        /// <summary>
+        /// Gets or sets an "access token" that the user may ask to be requested for them. This is an opaque token used for
+        /// authentication/access checking purposes: when presented it may be redeemed for a set of allowed permissions. The bot
+        /// modules individually may still choose to veto operations, but should respect the flags as presented. 
+        /// </summary>
+        public virtual string AccessToken { get; set; }
+
+        /// <summary>
+        /// Gets or sets the <see cref="DateTime"/> at which the <see cref="AccessToken"/> was issued.
+        /// </summary>
+        /// 
+        /// <remarks>
+        /// This time should be UTC and will be used to expire the token, if tokens are not immortal.
+        /// </remarks>
+        public virtual DateTime? AccessTokenIssueTime { get; set; }
+
+        /// <summary>
+        /// Contains an email address to use for the purposes of remote credentials, such as delegated auth.
+        /// </summary>
+        public virtual String EmailAddress { get; set; }
+
         #endregion
 
         // TODO: Kog 10/19/2008 - replace this with an expression instead of a hard-coded match type.

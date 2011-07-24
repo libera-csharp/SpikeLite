@@ -32,5 +32,17 @@ namespace SpikeLite.AccessControl
         /// 
         /// <returns>The <see cref="KnownHost"/> for the cloak in question, or null if no such host exists.</returns>
         KnownHost FindHostByCloak(string cloak);
+
+        // TODO [Kog 07/23/2011] : This sucks, fix it ASAP. Better than casting in place I suppose...
+
+        /// <summary>
+        /// Attempts to exchange the token for a concrete token type.
+        /// </summary>
+        /// 
+        /// <typeparam name="T">The expected type of token to receive.</typeparam>
+        /// <param name="token">The token to redeem.</param>
+        /// 
+        /// <returns>A given token, in a specific, concrete type.</returns>
+        T ExchangeTokenForConcreteType<T>(IUserToken token) where T : class, IUserToken;
     }
 }

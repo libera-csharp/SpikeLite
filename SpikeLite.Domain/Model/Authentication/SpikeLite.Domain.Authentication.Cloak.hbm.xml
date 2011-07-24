@@ -19,6 +19,12 @@
     <property name="HostMask" column="host_mask" type="string" length="255"/>
     <property name="HostMatchType" column="host_match_type" type="int" length="10"/>
     <property name="AccessLevel" column="access_level" type="int" length="10"/>
+    <property name="AccessToken" column="access_token" type="string" length="255"/>
+    <property name="AccessTokenIssueTime" column="access_token_issue_time" type="UtcDateTime"/>
+    
+    <property name="EmailAddress" type="string" length="255">
+      <column name="email_address" unique-key="email_address"/>
+    </property>
 
     <!-- Eagerly map to our metadata. We don't ever *not* want the data, so there's no reason to be lazy. Also, we don't really leave a session open,
          so there's not really any better choice... -->

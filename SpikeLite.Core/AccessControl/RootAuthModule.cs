@@ -5,6 +5,7 @@
  * This source is licensed under the terms of the MIT license. Please see the 
  * distributed license.txt for details.
  */
+using System;
 using SpikeLite.Domain.Model.Authentication;
 
 namespace SpikeLite.AccessControl
@@ -34,6 +35,13 @@ namespace SpikeLite.AccessControl
         public KnownHost FindHostByCloak(string cloak)
         {
             return AuthModule.FindHostByCloak(cloak);
+        }
+
+        // TODO [Kog 07/23/2011] : Remove me.
+
+        public T ExchangeTokenForConcreteType<T>(IUserToken token) where T : class, IUserToken
+        {
+            throw new NotImplementedException();
         }
     }
 }

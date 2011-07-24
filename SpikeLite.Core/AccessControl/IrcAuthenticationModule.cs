@@ -219,6 +219,13 @@ namespace SpikeLite.AccessControl
             return _cloaks.Any(x => x.HostMask.Equals(hostmask, StringComparison.OrdinalIgnoreCase));
         }
 
+
+        public T ExchangeTokenForConcreteType<T>(IUserToken token) where T : class, IUserToken
+        {
+            // TODO [Kog 07/23/2011] : Yes, this implementation is absolutely awful. Need to swap around some of the auth APIs.
+            return token as T;
+        }
+
         #endregion 
     }
 }

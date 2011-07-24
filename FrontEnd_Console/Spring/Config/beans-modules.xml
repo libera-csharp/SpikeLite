@@ -232,8 +232,7 @@
     <property name="Phrase" value="KHAAAAAAAN"/>
   </object>
   
-  <!-- Administrative modules -->
-  
+  <!-- Administrative modules -->  
   <object id="ShutdownModule" type="SpikeLite.Modules.Admin.ShutdownModule, SpikeLite.Modules.Admin">
     <property name="Name" value="Shutdown"/>
     <property name="Description" value="Shuts down the bot with an optional quit message."/>
@@ -262,7 +261,7 @@
     <property name="Description" value="Allows the bot to take channel actions, such as joining or parting a channel."/>
     <property name="Instructions" value="Usage Syntax: ~channel [JOIN | PART] #targetChannel"/>
     <property name="ModuleManagementContainer" ref="ModuleManager"/>
-    <property name ="CommunicationsManagerContext" ref="CommunicationManager"/>
+    <property name="CommunicationsManagerContext" ref="CommunicationManager"/>
   </object>
 
   <object id="PuppetModule" type="SpikeLite.Modules.Admin.PuppetModule, SpikeLite.Modules.Admin">
@@ -271,6 +270,22 @@
     <property name="Instructions" value="Not documented."/>
     <property name="RequiredAccessLevel" value="Root"/>
     <property name="ModuleManagementContainer" ref="ModuleManager"/>
+  </object>
+
+  <object id="AccessTokenRequestModule" type="SpikeLite.Modules.Admin.AccessTokenRequestModule, SpikeLite.Modules.Admin">
+    <property name="Name" value="AccessToken"/>
+    <property name="Description" value="Allows a user to request an access token for delegated authentication."/>
+    <property name="Instructions" value="~accesstoken [request | display]"/>
+    <property name="ModuleManagementContainer" ref="ModuleManager"/>
+    <property name="AuthenticationManager" ref="IrcAuthenticationModule"/>
+  </object>
+
+  <object id="EmailManagementModule" type="SpikeLite.Modules.Admin.UserEmailManagementModule, SpikeLite.Modules.Admin">
+    <property name="Name" value="EmailManagement"/>
+    <property name="Description" value="Allows a user to set the email associated with their account."/>
+    <property name="Instructions" value="~email [set | display] [email address]"/>
+    <property name="ModuleManagementContainer" ref="ModuleManager"/>
+    <property name="AuthenticationManager" ref="IrcAuthenticationModule"/>    
   </object>
 
   <!-- IPC Modules -->
@@ -366,6 +381,8 @@
         <ref object="PersonBanModule"/>
         <ref object="PersonUnbanModule"/>
         <ref object="PersonIdiotModule"/>
+        <ref object="AccessTokenRequestModule"/>
+        <ref object="EmailManagementModule"/>
       </list>
     </constructor-arg>
   </object>

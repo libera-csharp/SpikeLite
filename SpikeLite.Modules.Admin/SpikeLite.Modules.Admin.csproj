@@ -76,11 +76,13 @@
     <Reference Include="System.XML" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AccessTokenRequestModule.cs" />
     <Compile Include="ChannelActionModule.cs" />
     <Compile Include="LoggingModule.cs" />
     <Compile Include="PuppetModule.cs" />
     <Compile Include="ShutdownModule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="UserEmailManagementModule.cs" />
     <Compile Include="UserManagementModule.cs" />
   </ItemGroup>
   <ItemGroup>
