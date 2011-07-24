@@ -97,6 +97,11 @@ namespace SpikeLite.Domain.Model.Authentication
         private ICollection<KnownHostMetaDatum> _metaDataBacking = new List<KnownHostMetaDatum>();
 
         /// <summary>
+        /// Holds a backing collection for our <see cref="AccessFlags"/> property. This is to ensure we never wind up with a null collection.
+        /// </summary>
+        private ICollection<AccessFlag> _accessFlags = new List<AccessFlag>();
+
+        /// <summary>
         /// This should be generated and set by our ORM. This is our PKey, non-naturalized for her pleasure.
         /// </summary>
         public virtual long Id { get; set; }
@@ -149,6 +154,15 @@ namespace SpikeLite.Domain.Model.Authentication
         /// Contains an email address to use for the purposes of remote credentials, such as delegated auth.
         /// </summary>
         public virtual String EmailAddress { get; set; }
+
+        /// <summary>
+        /// Gets or sets the associated access flags for this user. May be empty, but never null.
+        /// </summary>
+        public virtual ICollection<AccessFlag> AccessFlags
+        {
+            get { return _accessFlags; }
+            set { _accessFlags = value; }
+        }
 
         #endregion
 

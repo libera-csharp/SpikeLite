@@ -32,5 +32,11 @@
       <key column="cloak_id"/>
       <one-to-many class="SpikeLite.Domain.Model.Authentication.KnownHostMetaDatum, SpikeLite.Domain"/>
     </set>
+
+    <!-- Map all of our access flags. -->
+    <bag name="AccessFlags" table="CLOAK_ACCESS_FLAGS" lazy="false">
+      <key column="Id" />
+      <many-to-many class="SpikeLite.Domain.Model.Authentication.AccessFlag,  SpikeLite.Domain" column="access_flag_id" />
+    </bag>
   </class>
 </hibernate-mapping>

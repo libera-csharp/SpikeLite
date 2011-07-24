@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+
+<!--
+  SpikeLite C# IRC Bot
+  Copyright (c) 2011 FreeNode ##Csharp Community
+
+  This source is licensed under the terms of the MIT license. Please see the 
+  distributed license.txt for details.
+-->
+
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2">
+  <class name="SpikeLite.Domain.Model.Authentication.AccessFlag,  SpikeLite.Domain" table="ACCESS_FLAGS">    
+    <id name="Id" column="access_flag_id">
+      <generator class="native">
+        <param name="sequence">access_flags_id_seq</param>
+      </generator>
+    </id>
+
+    <property name="Flag" type="string" length="255">
+      <column name="flag" unique-key="flag"/>
+    </property>
+    
+    <property name="Description" column="description" type="string" length="2000"/>
+  </class>
+</hibernate-mapping>

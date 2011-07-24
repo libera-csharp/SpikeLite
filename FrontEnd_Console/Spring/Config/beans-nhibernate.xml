@@ -71,6 +71,14 @@
     <property name="Target" ref="PersonDaoImpl"/>
   </object>
 
+  <object id="AccessFlagDaoImpl" type="SpikeLite.Domain.Persistence.Authentication.AccessFlagDao, SpikeLite.Domain">
+    <property name="sessionFactory" ref="HibernateSessionFactory"/>
+  </object>
+
+  <object id="AccessFlagDao" parent="TxProxyConfigurationTemplate">
+    <property name="Target" ref="AccessFlagDaoImpl"/>
+  </object>
+
   <!-- Create a proxying template we can use to slap transactions on via AOP. -->
   <object id="TxProxyConfigurationTemplate" abstract="true" type="Spring.Transaction.Interceptor.TransactionProxyFactoryObject, Spring.Data">
     <property name="PlatformTransactionManager" ref="HibernateTransactionManager"/>

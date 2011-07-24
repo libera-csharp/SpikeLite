@@ -65,6 +65,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Dependencies\log4net.dll</HintPath>
     </Reference>
+    <Reference Include="log4net.Ext.Trace, Version=1.2.10.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Dependencies\log4net.Ext.Trace.dll</HintPath>
+    </Reference>
     <Reference Include="NHibernate, Version=2.1.1.4000, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Dependencies\NHibernate.dll</HintPath>
@@ -94,9 +98,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Model\Authentication\AccessFlag.cs" />
     <Compile Include="Model\Authentication\KnownHostMetaDatum.cs" />
     <Compile Include="Model\People\Person.cs" />
     <Compile Include="Model\People\PersonFactoid.cs" />
+    <Compile Include="Persistence\Authentication\AccessFlagDao.cs" />
+    <Compile Include="Persistence\Authentication\IAccessFlagDao.cs" />
     <Compile Include="Persistence\Authentication\IKnownHostDao.cs" />
     <Compile Include="Model\Authentication\KnownHost.cs" />
     <Compile Include="Persistence\Authentication\KnownHostDao.cs" />
@@ -119,6 +126,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Model\People\SpikeLite.Domain.People.Person.hbm.xml" />
     <EmbeddedResource Include="Model\People\SpikeLite.Domain.People.PersonFactoid.hbm.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Model\Authentication\SpikeLite.Domain.Authentication.AccessFlag.hbm.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
