@@ -51,24 +51,20 @@ namespace SpikeLite.Modules.Admin
                                 user.EmailAddress = email;
                                 AuthenticationManager.UpdateHost(user);
 
-                                ModuleManagementContainer.HandleResponse(request.CreateResponse(ResponseType.Private,
-                                                                                                String.Format("Your email has been set to {0}", email)));                                
+                                Reply(request, ResponseType.Private, "Your email has been set to {0}", email);                             
                             }
                             catch (Exception ex)
                             {
                                 // Ruh roh, they've violated our unique constraint.
                                 Logger.Warn("Caught an exception trying to set someone's email.", ex);
-
-                                ModuleManagementContainer.HandleResponse(request.CreateResponse(ResponseType.Private,
-                                                                         String.Format("Email {0} is already in use.", email)));   
+                                Reply(request, ResponseType.Private, "Email {0} is already in use.", email);
                             }
 
                         }
                         else
                         {
                             // User hasn't given us an email, barf.
-                            ModuleManagementContainer.HandleResponse(request.CreateResponse(ResponseType.Private,
-                                                                                            "No email specified, cannot set email address."));
+                            Reply(request, ResponseType.Private, "No email specified, cannot set email address.");
                         }
                     }
 
@@ -83,8 +79,7 @@ namespace SpikeLite.Modules.Admin
                 else
                 {
                     // User has given us an invalid request, barf.
-                    ModuleManagementContainer.HandleResponse(request.CreateResponse(ResponseType.Private,
-                                                                                    "Invalid request, please read the help for email."));
+                    Reply(request, ResponseType.Private, "Invalid request, please read the help for email.");
                 }
             }
         }

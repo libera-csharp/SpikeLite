@@ -5,6 +5,7 @@
  * This source is licensed under the terms of the MIT license. Please see the 
  * distributed license.txt for details.
  */
+using System;
 using SpikeLite.Communications;
 using SpikeLite.Communications.IRC;
 using log4net.Ext.Trace;
@@ -36,15 +37,7 @@ namespace SpikeLite.Modules
         /// </summary>
         protected virtual TraceLogImpl Logger
         {
-            get
-            {
-                if (_logger == null)
-                {
-                    _logger = (TraceLogImpl) TraceLogManager.GetLogger(GetType());
-                }
-
-                return _logger;
-            }
+            get { return _logger ?? (_logger = (TraceLogImpl) TraceLogManager.GetLogger(GetType())); }
         }
 
         #endregion 
@@ -107,6 +100,21 @@ namespace SpikeLite.Modules
         /// may come when we hook up AOP (then we'll expect a 1:1 between message and consumer, sans advice points).
         /// </remarks>
         public abstract void HandleRequest(Request request);
+
+        /// <summary>
+        /// Provides a utility method for responding to users, cutting down on copy/paste.
+        /// </summary>
+        /// 
+        /// <param name="request">The request that triggered the message.</param>
+        /// <param name="responseType">The type of response to return: whether the message is public or private.<see cref="ResponseType"/></param>
+        /// <param name="responseMessage">The literal text of the response message.</param>
+        /// <param name="formatObjects">An optional set of format objects. Will be passed along to String.format.</param>
+        /// 
+        /// <returns></returns>
+        protected void Reply(Request request, ResponseType responseType, string responseMessage, params object[] formatObjects)
+        {
+            ModuleManagementContainer.HandleResponse(request.CreateResponse(responseType, String.Format(responseMessage, formatObjects)));
+        }
 
         #endregion
     }
