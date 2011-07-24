@@ -15,21 +15,23 @@
 -->
 
 <objects xmlns="http://www.springframework.net">
+  <!-- Slap together a module with just the management container. This can save us a lot of typing. -->
+  <object id="ParentModule" abstract="true" type="SpikeLite.Modules.ModuleBase, SpikeLite">
+    <property name="ModuleManagementContainer" ref="ModuleManager"/>  
+  </object>  
   
   <!-- Set up some modules that can be prototyped for domain-specific searching. -->
-  <object id="DefaultSearchModule" abstract="true" type="SpikeLite.Modules.Search.SearchModulePrototype, SpikeLite.Modules.Search" singleton="false">
+  <object id="DefaultSearchModule" abstract="true" type="SpikeLite.Modules.Search.SearchModulePrototype, SpikeLite.Modules.Search" singleton="false" parent="ParentModule">
     <property name="SearchProvider" ref="MicrosoftBingSearchProvider"/>
-    <property name="ModuleManagementContainer" ref="ModuleManager"/>
+    
   </object>
 	
-  <object id="GoogleAjaxSearchModule" abstract="true" type="SpikeLite.Modules.Search.SearchModulePrototype, SpikeLite.Modules.Search" singleton="false">
+  <object id="GoogleAjaxSearchModule" abstract="true" type="SpikeLite.Modules.Search.SearchModulePrototype, SpikeLite.Modules.Search" singleton="false" parent="ParentModule">
     <property name="SearchProvider" ref="GoogleAjaxSearchProvider"/>
-    <property name="ModuleManagementContainer" ref="ModuleManager"/>
   </object>
   
-  <object id="MicrosoftBingSearchModule" abstract="true" type="SpikeLite.Modules.Search.SearchModulePrototype, SpikeLite.Modules.Search" singleton="false">
+  <object id="MicrosoftBingSearchModule" abstract="true" type="SpikeLite.Modules.Search.SearchModulePrototype, SpikeLite.Modules.Search" singleton="false" parent="ParentModule">
 	  <property name="SearchProvider" ref="MicrosoftBingSearchProvider"/>
-	  <property name="ModuleManagementContainer" ref="ModuleManager"/>
   </object>
 
   <!-- Set up our search providers -->
@@ -161,71 +163,63 @@
   </object>
 
   <!-- Infrastructure modules. -->
-  <object id="AboutModule" type="SpikeLite.Modules.About.AboutModule, SpikeLite.Modules.About">
+  <object id="AboutModule" type="SpikeLite.Modules.About.AboutModule, SpikeLite.Modules.About" parent="ParentModule">
     <property name="Name" value="About"/>
     <property name="Description" value="Provides information about the bot."/>
     <property name="Instructions" value="Usage Syntax: ~about"/>
-    <property name="ModuleManagementContainer" ref="ModuleManager"/>
   </object>
   
-  <object id="HelpModule" type="SpikeLite.Modules.Help.HelpModule, SpikeLite.Modules.Help">
+  <object id="HelpModule" type="SpikeLite.Modules.Help.HelpModule, SpikeLite.Modules.Help" parent="ParentModule">
     <property name="Name" value="Help"/>
     <property name="Description" value="Provides help for the set of modules currently loaded."/>
     <property name="Instructions" value="Usage Syntax: ~help [module name]"/>
-    <property name="ModuleManagementContainer" ref="ModuleManager"/>
   </object>
   
-  <object id="TellModule" type="SpikeLite.Modules.Tell.TellModule, SpikeLite.Modules.Tell">
+  <object id="TellModule" type="SpikeLite.Modules.Tell.TellModule, SpikeLite.Modules.Tell" parent="ParentModule">
     <property name="Name" value="Tell"/>
     <property name="Description" value="Tell allows you to direct a response from a speicifed command at a specified user."/>
     <property name="Instructions" value="Usage Syntax: '~tell [NickName] [Command] [CommandArgs]' i.e. '~tell SomeUser google stuff'"/>
-    <property name="ModuleManagementContainer" ref="ModuleManager"/>
   </object>
 
   <!-- Modules that wrap thinly veiled webservice calls. -->
-  <object id="GeoipModule" type="SpikeLite.Modules.GeoIP.GeoIpLookupModule, SpikeLite.Modules.GeoIP">
+  <object id="GeoipModule" type="SpikeLite.Modules.GeoIP.GeoIpLookupModule, SpikeLite.Modules.GeoIP" parent="ParentModule">
     <property name="Name" value="Geoip"/>
     <property name="Description" value="Resolve the country of a given IP."/>
     <property name="Instructions" value="Usage Syntax: ~geoip [quad dotted IP]"/>
-    <property name="ModuleManagementContainer" ref="ModuleManager"/>
   </object>
 
   <!-- Database-backed modules.  -->
-  <object id="KarmaModule" type="SpikeLite.Modules.Karma.KarmaModule, SpikeLite.Modules.Karma">
+  <object id="KarmaModule" type="SpikeLite.Modules.Karma.KarmaModule, SpikeLite.Modules.Karma" parent="ParentModule">
     <property name="Name" value="Karma"/>
     <property name="Description" value="Stores users' Karma"/>
     <property name="Instructions" value="~karma [NickName]++ to increment a users karma. ~karma [NickName]-- to decrement a users karma. ~karma [NickName] to query a user's karma."/>
     <property name="KarmaDao" ref="KarmaDao"/>
-    <property name="ModuleManagementContainer" ref="ModuleManager"/>
   </object>
 
   <!-- Static fact modules. -->
-  <object id="SayModulePrototype" type="SpikeLite.Modules.Say.SayModule, SpikeLite.Modules.Say" abstract="true" singleton="false">
-    <property name="ModuleManagementContainer" ref="ModuleManager"/>
-  </object>
-  
-  <object id="WikiLinkModule" type="SpikeLite.Modules.Say.SayModule, SpikeLite.Modules.Say" parent="SayModulePrototype">
+ 
+  <object id="WikiLinkModule" type="SpikeLite.Modules.Say.SayModule, SpikeLite.Modules.Say"  parent="ParentModule">
     <property name="Name" value="wiki"/>
     <property name="Description" value="Returns the link to the community wiki."/>
     <property name="Instructions" value="~wiki"/>
     <property name="Phrase" value="http://www.freenode-csharp.net/wiki/"/>
   </object>
   
-  <object id="ConnectLinkModule" type="SpikeLite.Modules.Say.SayModule, SpikeLite.Modules.Say" parent="SayModulePrototype">
+  <object id="ConnectLinkModule" type="SpikeLite.Modules.Say.SayModule, SpikeLite.Modules.Say"  parent="ParentModule">
     <property name="Name" value="connect"/>
     <property name="Description" value="Returns the link to microsoft connect."/>
     <property name="Instructions" value="~connect"/>
     <property name="Phrase" value="http://connect.microsoft.com/"/>
   </object>
 
-  <object id="ForumLinkModule" type="SpikeLite.Modules.Say.SayModule, SpikeLite.Modules.Say" parent="SayModulePrototype">
+  <object id="ForumLinkModule" type="SpikeLite.Modules.Say.SayModule, SpikeLite.Modules.Say"  parent="ParentModule">
     <property name="Name" value="forum"/>
     <property name="Description" value="Returns the link to the microsoft forums."/>
     <property name="Instructions" value="~forum"/>
     <property name="Phrase" value="http://forums.microsoft.com/"/>
   </object>
 
-  <object id="KhaanModule" type="SpikeLite.Modules.Say.SayModule, SpikeLite.Modules.Say" parent="SayModulePrototype">
+  <object id="KhaanModule" type="SpikeLite.Modules.Say.SayModule, SpikeLite.Modules.Say"  parent="ParentModule">
     <property name="Name" value="khan"/>
     <property name="Description" value="Does the Shatner."/>
     <property name="Instructions" value="~khan"/>
@@ -233,65 +227,57 @@
   </object>
   
   <!-- Administrative modules -->  
-  <object id="ShutdownModule" type="SpikeLite.Modules.Admin.ShutdownModule, SpikeLite.Modules.Admin">
+  <object id="ShutdownModule" type="SpikeLite.Modules.Admin.ShutdownModule, SpikeLite.Modules.Admin" parent="ParentModule">
     <property name="Name" value="Shutdown"/>
     <property name="Description" value="Shuts down the bot with an optional quit message."/>
     <property name="Instructions" value="Usage Syntax: ~shutdown [message]"/>
-    <property name="ModuleManagementContainer" ref="ModuleManager"/>
     <property name="BotContext" ref="SpikeLite"/>
   </object>
 
-  <object id="UserManagementModule" type="SpikeLite.Modules.Admin.UserManagementModule, SpikeLite.Modules.Admin">
+  <object id="UserManagementModule" type="SpikeLite.Modules.Admin.UserManagementModule, SpikeLite.Modules.Admin" parent="ParentModule">
     <property name="Name" value="Users"/>
     <property name="Description" value="Provides rudimentary user management."/>
     <property name="Instructions" value="Usage Syntax: ~users (add [hostmask] ['admin' | 'user']) (del [hostmask]) ([list])"/>
-    <property name="ModuleManagementContainer" ref="ModuleManager"/>
     <property name="AuthenticationManager" ref="IrcAuthenticationModule"/>
   </object>
 
-  <object id="LoggingModule" type="SpikeLite.Modules.Admin.LoggingModule, SpikeLite.Modules.Admin">
+  <object id="LoggingModule" type="SpikeLite.Modules.Admin.LoggingModule, SpikeLite.Modules.Admin" parent="ParentModule">
     <property name="Name" value="Logging"/>
     <property name="Description" value="Toggles the Log4Net logging level."/>
     <property name="Instructions" value="Usage Syntax: ~logging [TRACE | DEBUG | INFO | WARN]"/>
-    <property name="ModuleManagementContainer" ref="ModuleManager"/>
   </object>
 
-  <object id="ChannelActionsModule" type="SpikeLite.Modules.Admin.ChannelActionModule, SpikeLite.Modules.Admin">
+  <object id="ChannelActionsModule" type="SpikeLite.Modules.Admin.ChannelActionModule, SpikeLite.Modules.Admin" parent="ParentModule">
     <property name="Name" value="Channel"/>
     <property name="Description" value="Allows the bot to take channel actions, such as joining or parting a channel."/>
     <property name="Instructions" value="Usage Syntax: ~channel [JOIN | PART] #targetChannel"/>
-    <property name="ModuleManagementContainer" ref="ModuleManager"/>
     <property name="CommunicationsManagerContext" ref="CommunicationManager"/>
   </object>
 
-  <object id="PuppetModule" type="SpikeLite.Modules.Admin.PuppetModule, SpikeLite.Modules.Admin">
+  <object id="PuppetModule" type="SpikeLite.Modules.Admin.PuppetModule, SpikeLite.Modules.Admin" parent="ParentModule">
     <property name="Name" value="Puppet"/>
     <property name="Description" value="Not documented."/>
     <property name="Instructions" value="Not documented."/>
     <property name="RequiredAccessLevel" value="Root"/>
-    <property name="ModuleManagementContainer" ref="ModuleManager"/>
   </object>
 
-  <object id="AccessTokenRequestModule" type="SpikeLite.Modules.Admin.AccessTokenRequestModule, SpikeLite.Modules.Admin">
+  <object id="AccessTokenRequestModule" type="SpikeLite.Modules.Admin.AccessTokenRequestModule, SpikeLite.Modules.Admin" parent="ParentModule">
     <property name="Name" value="AccessToken"/>
     <property name="Description" value="Allows a user to request an access token for delegated authentication."/>
     <property name="Instructions" value="~accesstoken [request | display]"/>
-    <property name="ModuleManagementContainer" ref="ModuleManager"/>
     <property name="AuthenticationManager" ref="IrcAuthenticationModule"/>
   </object>
 
-  <object id="EmailManagementModule" type="SpikeLite.Modules.Admin.UserEmailManagementModule, SpikeLite.Modules.Admin">
+  <object id="EmailManagementModule" type="SpikeLite.Modules.Admin.UserEmailManagementModule, SpikeLite.Modules.Admin" parent="ParentModule">
     <property name="Name" value="EmailManagement"/>
     <property name="Description" value="Allows a user to set the email associated with their account."/>
     <property name="Instructions" value="~email [set | display] [email address]"/>
-    <property name="ModuleManagementContainer" ref="ModuleManager"/>
     <property name="AuthenticationManager" ref="IrcAuthenticationModule"/>    
   </object>
 
   <!-- IPC Modules -->
-  <object id="AbstractServiceHost" abstract="true" type="SpikeLite.IPC.WebHost.ServiceHostModule, SpikeLite.IPC.WebHost" singleton="false" init-method="InitModule">
+  <object id="AbstractServiceHost" abstract="true" type="SpikeLite.IPC.WebHost.ServiceHostModule, SpikeLite.IPC.WebHost" singleton="false" init-method="InitModule" parent="ParentModule">
     <property name="RequiredAccessLevel" value="Root"/>
-    <property name="ModuleManagementContainer" ref="ModuleManager"/>
   </object>
 
   <object id="PingServiceHost" parent="AbstractServiceHost" type="SpikeLite.IPC.WebHost.ServiceHostModule&lt;SpikeLite.IPC.WebHost.Services.IPingService, SpikeLite.IPC.WebHost.Services.PingService>, SpikeLite.IPC.WebHost">
@@ -309,9 +295,8 @@
   </object>
   
   <!-- Wire up modules about people factoids -->
-  <object id="DefaultPersonModule" abstract="true" type="SpikeLite.Modules.People.PeopleModule, SpikeLite.Modules.People">
+  <object id="DefaultPersonModule" abstract="true" type="SpikeLite.Modules.People.PeopleModule, SpikeLite.Modules.People" parent="ParentModule">
     <property name="PersonDao" ref="PersonDao"/>
-    <property name="ModuleManagementContainer" ref="ModuleManager"/>
   </object>
   
   <object id="PersonWarningModule" parent="DefaultPersonModule" type="SpikeLite.Modules.People.PeopleModule, SpikeLite.Modules.People">    
