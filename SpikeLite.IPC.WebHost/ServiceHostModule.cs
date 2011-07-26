@@ -156,7 +156,7 @@ namespace SpikeLite.IPC.WebHost
         private ServiceHost CreateServiceHost()
         {
             ServiceHost serviceHost = new ServiceHost(typeof(C), new Uri(ServiceAddress));
-            serviceHost.AddServiceEndpoint(typeof(I), new BasicHttpBinding(), Name);
+            serviceHost.AddServiceEndpoint(typeof(I), new BasicHttpContextBinding(), Name);
             serviceHost.Description.Behaviors.Add(new ServiceMetadataBehavior { HttpGetEnabled = true });
 
             return serviceHost;

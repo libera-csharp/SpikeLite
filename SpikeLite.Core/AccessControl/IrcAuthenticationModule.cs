@@ -226,6 +226,16 @@ namespace SpikeLite.AccessControl
             return token as T;
         }
 
+        // TODO [Kog 07/25/2011] : This is a stub for now too. This totally doesn't belong on the auth module.
+
+        public KnownHost FindHostByEmailAddress(string emailAddress, string accessToken, Func<DateTime?, bool> longevityFilter)
+        {
+            return _cloaks.FirstOrDefault(x => !string.IsNullOrEmpty(x.EmailAddress) 
+                                               && x.EmailAddress.Equals(emailAddress, StringComparison.OrdinalIgnoreCase)
+                                               && x.AccessToken.Equals(accessToken, StringComparison.InvariantCultureIgnoreCase)
+                                               && longevityFilter(x.AccessTokenIssueTime));
+        }
+
         #endregion 
     }
 }

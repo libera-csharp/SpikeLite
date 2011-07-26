@@ -293,7 +293,14 @@
     <property name="Instructions" value="~messaginghost [start | stop | status]"/>
     <property name="ServiceAddress" value="http://localhost:8081/SpikeLite/Messaging"/>
   </object>
-  
+
+  <object id="FlagCheckService" parent="AbstractServiceHost" type="SpikeLite.IPC.WebHost.ServiceHostModule&lt;SpikeLite.IPC.WebHost.Services.IFlagCheckService, SpikeLite.IPC.WebHost.Services.FlagCheckService >, SpikeLite.IPC.WebHost">
+    <property name="Name" value="FlagCheckService"/>
+    <property name="Description" value="Controls whether or not the WCF endpoint for the MessagingService is enabled."/>
+    <property name="Instructions" value="~flagcheckservice [start | stop | status]"/>
+    <property name="ServiceAddress" value="http://localhost:8081/SpikeLite/Flags"/>
+  </object>
+
   <!-- Wire up modules about people factoids -->
   <object id="DefaultPersonModule" abstract="true" type="SpikeLite.Modules.People.PeopleModule, SpikeLite.Modules.People" parent="ParentModule">
     <property name="PersonDao" ref="PersonDao"/>
@@ -368,6 +375,7 @@
         <ref object="PersonIdiotModule"/>
         <ref object="AccessTokenRequestModule"/>
         <ref object="EmailManagementModule"/>
+        <ref object="FlagCheckService"/>
       </list>
     </constructor-arg>
   </object>

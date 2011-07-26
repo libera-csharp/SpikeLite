@@ -22,6 +22,7 @@ namespace SpikeLite.IPC.WebHost.Services
         /// 
         /// <returns>A PONG sequence.</returns>
         [OperationContract]
+        [SecuredOperation]
         string Ping();    
     }
 

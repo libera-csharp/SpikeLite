@@ -8,7 +8,6 @@
 
 using System.ServiceModel;
 using SpikeLite.Communications;
-using Spring.Context;
 using Spring.Context.Support;
 
 namespace SpikeLite.IPC.WebHost.Services
@@ -26,6 +25,7 @@ namespace SpikeLite.IPC.WebHost.Services
         /// <param name="channelTarget">The channel to target. If the bot is not in the channel then the message will not be sent.</param>
         /// <param name="messageText">The text of the message to send.</param>
         [OperationContract]
+        [SecuredOperation]
         void SendMessage(string channelTarget, string messageText);    
     }
 
@@ -37,10 +37,10 @@ namespace SpikeLite.IPC.WebHost.Services
         public void SendMessage(string channelTarget, string messageText)
         {
             // Get our application context from Spring.NET.
-            IApplicationContext ctx = ContextRegistry.GetContext();
+            var ctx = ContextRegistry.GetContext();
 
             // Grab our bean and spin it up.
-            CommunicationManager mgr = (ctx.GetObject("CommunicationManager") as CommunicationManager);
+            var mgr = (ctx.GetObject("CommunicationManager") as CommunicationManager);
             mgr.SendResponse(new Response { Channel = channelTarget, Message = messageText, ResponseType = ResponseType.Public });
         }
     }
