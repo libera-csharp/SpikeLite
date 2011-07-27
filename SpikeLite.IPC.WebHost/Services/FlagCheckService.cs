@@ -9,6 +9,7 @@
 using System.Collections.Generic;
 using System.ServiceModel;
 using SpikeLite.Domain.Model.Authentication;
+using System.Linq;
 
 namespace SpikeLite.IPC.WebHost.Services
 {
@@ -37,7 +38,7 @@ namespace SpikeLite.IPC.WebHost.Services
         {
             var principal = GetPrincipal();
 
-            return null == principal ? new List<AccessFlag>() : principal.AccessFlags;
+            return null == principal ? new List<AccessFlag>() : principal.AccessFlags.ToList();
         }
     }
 }
