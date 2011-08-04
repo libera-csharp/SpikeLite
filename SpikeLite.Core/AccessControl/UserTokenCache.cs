@@ -7,8 +7,8 @@
  */
 using System;
 using System.Collections.Generic;
-using Sharkbite.Irc;
 using System.Threading;
+using SpikeLite.Communications.IRC;
 
 namespace SpikeLite.AccessControl
 {
@@ -22,13 +22,13 @@ namespace SpikeLite.AccessControl
 
         public UserTokenCache()
         {
-            _tokens = new Dictionary<string,IUserToken>();
+            _tokens = new Dictionary<string, IUserToken>();
             _mutex = new ReadWriteLock();
         }
 
         #region Token Handling
 
-        public IUserToken RetrieveToken(UserInfo user)
+        public IUserToken RetrieveToken(User user)
         {
             IUserToken token;
 
@@ -42,31 +42,31 @@ namespace SpikeLite.AccessControl
 
         public void CacheToken(string nick, IUserToken token)
         {
-            using ( _mutex.AquireWriteLock() )
+            using (_mutex.AquireWriteLock())
             {
                 _tokens[nick] = token;
             }
         }
 
-        public void InvalidateToken(UserInfo user)
+        public void InvalidateToken(User user)
         {
-            InvalidateToken(user.Nick);
+            InvalidateToken(user.NickName);
         }
 
         public void InvalidateToken(string nick)
         {
-            using ( _mutex.AquireWriteLock() )
+            using (_mutex.AquireWriteLock())
             {
                 _tokens.Remove(nick);
             }
         }
 
-        private static IUserToken CreateUserToken(UserInfo user)
+        private static IUserToken CreateUserToken(User user)
         {
-            return new IrcUserToken(user.Nick, user.Hostname);
+            return new IrcUserToken(user.NickName, user.HostName);
         }
 
-        #endregion 
+        #endregion
 
         #region Write Locking
 
@@ -99,7 +99,7 @@ namespace SpikeLite.AccessControl
             {
                 private readonly ReaderWriterLock _mutex;
 
-                public ReadLockCookie( ReaderWriterLock lck, int timeout )
+                public ReadLockCookie(ReaderWriterLock lck, int timeout)
                 {
                     _mutex = lck;
                     _mutex.AcquireReaderLock(timeout);
@@ -137,7 +137,7 @@ namespace SpikeLite.AccessControl
 
                 public void Dispose()
                 {
-                    if ( _upgraded )
+                    if (_upgraded)
                     {
                         _mutex.DowngradeFromWriterLock(ref _cookie);
                     }
@@ -148,9 +148,9 @@ namespace SpikeLite.AccessControl
                 }
             }
 
-            #endregion 
+            #endregion
         }
 
-        #endregion 
+        #endregion
     }
 }

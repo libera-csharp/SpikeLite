@@ -13,11 +13,32 @@ using SpikeLite.Modules;
 
 namespace SpikeLite
 {
+    public class BotStatusChangedEventArgs : EventArgs
+    {
+        public BotStatus OldStatus { get; private set; }
+        public BotStatus NewStatus { get; private set; }
+
+        public BotStatusChangedEventArgs(BotStatus oldStatus, BotStatus newStatus)
+        {
+            OldStatus = oldStatus;
+            NewStatus = newStatus;
+        }
+
+        public override string ToString()
+        {
+            return string.Format("OldStatus: {0}, NewStatus: {1}", OldStatus, NewStatus);
+        }
+    }
+
     /// <summary>
     /// The bot engine, just call "start" and you're off.
     /// </summary>
     public class SpikeLite
     {
+        #region Events
+        public event EventHandler<BotStatusChangedEventArgs> BotStatusChanged;
+        #endregion
+
         #region Data Members
 
         /// <summary>
@@ -51,7 +72,15 @@ namespace SpikeLite
         /// </summary>
         public BotStatus BotStatus
         {
-            get { return _botStatus; }
+            get 
+            { 
+                return _botStatus; 
+            }
+            protected set
+            {
+                OnBotStatusChanged(_botStatus, value);
+                _botStatus = value;
+            }
         }
 
         #endregion
@@ -66,12 +95,12 @@ namespace SpikeLite
             _logger.Trace("Start called...");
 
             // Make sure we're not trying to double start.
-            if (_botStatus != BotStatus.Stopped)
+            if (BotStatus != BotStatus.Stopped)
             {
                 throw new Exception(string.Format("Current BotStatus is : '{0}'. To start the bot the BotStatus must be 'Stopped'.", _botStatus));
             }
 
-            _botStatus = BotStatus.Starting;
+            BotStatus = BotStatus.Starting;
 
             // Spin up our subsystems.
             _logger.Trace("Attempting to load all modules...");
@@ -81,7 +110,7 @@ namespace SpikeLite
             CommunicationManager.Connect();
 
             // Alright, we're cooking now.
-            _botStatus = BotStatus.Started;
+            BotStatus = BotStatus.Started;
             _logger.Trace("Start completed.");
         }
 
@@ -94,13 +123,24 @@ namespace SpikeLite
         public void Shutdown(string shutdownMessage)
         {
             _logger.InfoFormat("Shutdown: {0}.", shutdownMessage);
-            
-            _botStatus = BotStatus.Stopped;
+
+            BotStatus = BotStatus.Stopping;
+
             CommunicationManager.Quit(shutdownMessage);
+
+            BotStatus = BotStatus.Stopped;
 
             _logger.Info("Shutdown completed.");
         }
  
         #endregion 
+
+        #region OnEvent Methods
+        protected virtual void OnBotStatusChanged(BotStatus oldStatus, BotStatus newStatus)
+        {
+            if (BotStatusChanged != null)
+                BotStatusChanged(this, new BotStatusChangedEventArgs(oldStatus, newStatus));
+        }
+        #endregion
     }
 }

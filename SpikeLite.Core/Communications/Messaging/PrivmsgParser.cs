@@ -6,8 +6,8 @@
  * distributed license.txt for details.
  */
 
-using Sharkbite.Irc;
 using SpikeLite.AccessControl;
+using SpikeLite.Communications.IRC;
 
 namespace SpikeLite.Communications.Messaging
 {
@@ -32,7 +32,7 @@ namespace SpikeLite.Communications.Messaging
         /// </summary>
         private UserTokenCache UserTokenCache { get; set; }
 
-        public void HandleMultiTargetMessage(UserInfo user, string channel, string message)
+        public void HandleMultiTargetMessage(User user, string channel, string message)
         {
             IUserToken userToken = UserTokenCache.RetrieveToken(user);
             AuthToken authToken = AuthHandler.Authenticate(userToken);
@@ -41,16 +41,16 @@ namespace SpikeLite.Communications.Messaging
             {
                 RequestFrom = authToken,
                 Channel = channel,
-                Nick = user.Nick,
+                Nick = user.NickName,
                 RequestType = RequestType.Public,
-                Addressee = user.Nick,
+                Addressee = user.NickName,
                 Message = message
             };
 
             CommunicationManager.HandleRequestReceived(request);
         }
 
-        public void HandleSingleTargetMessage(UserInfo user, string message)
+        public void HandleSingleTargetMessage(User user, string message)
         {
             IUserToken userToken = UserTokenCache.RetrieveToken(user);
             AuthToken authToken = AuthHandler.Authenticate(userToken);
@@ -59,7 +59,7 @@ namespace SpikeLite.Communications.Messaging
             {
                 RequestFrom = authToken,
                 Channel = null,
-                Nick = user.Nick,
+                Nick = user.NickName,
                 RequestType = RequestType.Private,
                 Message = message
             };

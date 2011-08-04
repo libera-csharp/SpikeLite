@@ -7,9 +7,11 @@
  */
 
 using System;
+using System.Threading;
 using log4net.Ext.Trace;
 using Spring.Context;
 using Spring.Context.Support;
+using SpikeLite;
 
 namespace FrontEnd_Console
 {
@@ -28,26 +30,82 @@ namespace FrontEnd_Console
         /// </summary>
         private static void Main()
         {
+            _logger.Trace("Starting console runner");
+
             try
             {
-                 // Get our application context from Spring.NET.
-                IApplicationContext ctx = ContextRegistry.GetContext();
-
-                // Grab our bean and spin it up.
-                SpikeLite.SpikeLite bot = ctx.GetObject("SpikeLite") as SpikeLite.SpikeLite;
-                bot.Start();
-
                 // We may actually not log to the console past this point, so let's go ahead and spam something
                 // here just in case.
-                Console.WriteLine(Environment.NewLine + "We've spun up the bot and are currently logging to our appenders. Hit CTL+C to quit.");
+                Console.WriteLine("We've spun up the bot and are currently logging to our appenders. Hit CTL+C to quit.");
 
-                // Handle SIGTERM gracefully. Tell the bot to shutdown, dispose the context.
-                Console.CancelKeyPress += ((sender, args) => { bot.Shutdown("Caught SIGTERM, quitting"); 
-                                                               ctx.Dispose(); });
+                // We want to know when it's ok to shutdown the bot.
+                using (ManualResetEventSlim shutdownManualResetEvent = new ManualResetEventSlim(false))
+                {
+                    // This won't actually work while we're debugging:
+                    // http://connect.microsoft.com/VisualStudio/feedback/details/524889/debugging-c-console-application-that-handles-console-cancelkeypress-is-broken-in-net-4-0
+                    // Handle SIGTERM gracefully.
+                    Console.CancelKeyPress += ((sender, args) =>
+                    {
+                        // Let us handle the shutdown of the bot
+                        args.Cancel = true;
+
+                        // Signal that we're ready to shutdown the bot.
+                        shutdownManualResetEvent.Set();
+
+                        _logger.Trace("Cancel key pressed. Shutting down bot.");
+                    });
+
+                    // We want to know when it's ok to exit the application.
+                    using (ManualResetEventSlim exitManualResetEvent = new ManualResetEventSlim())
+                    {
+                        // The bot is in a seperate thread so we can block this one until we're ready to exit
+                        Thread botThread = new Thread(() =>
+                        {
+                            _logger.Trace("Bot thread started.");
+
+                            // Get our application context from Spring.NET.
+                            IApplicationContext applicationContext = ContextRegistry.GetContext();
+
+                            // Grab our bean and spin it up.
+                            SpikeLite.SpikeLite bot = applicationContext.GetObject("SpikeLite") as SpikeLite.SpikeLite;
+
+                            // Listen for status changes so we know when to exit
+                            bot.BotStatusChanged += (sender, eventArgs) => 
+                            {
+                                if(eventArgs.NewStatus == BotStatus.Stopped)
+                                    // Signal that we're ready to shutdown the bot.
+                                    shutdownManualResetEvent.Set();
+                            };
+
+                            bot.Start();
+
+                            // Wait untill we're ready to shutdown the bot.
+                            shutdownManualResetEvent.Wait();
+
+                            // Clean up.
+                            bot.Shutdown("Caught SIGTERM, quitting");
+
+                            applicationContext.Dispose();
+
+                            _logger.Trace("Bot thread shutdown.");
+
+                            // Signal that we're ready to exit the application.
+                            exitManualResetEvent.Set();
+                        });
+
+                        botThread.IsBackground = true;
+                        botThread.Start();
+
+                        // Wait untill we're ready to exit the application.
+                        exitManualResetEvent.Wait();
+
+                        _logger.Trace("Application shutdown.");
+                    }
+                }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-                _logger.ErrorFormat("Fatal error attempting to start the bot: {0} - {1}", ex.Message, ex.StackTrace);      
+                _logger.ErrorFormat("Fatal error attempting to start the bot: {0} - {1}", ex.Message, ex.StackTrace);
             }
         }
     }

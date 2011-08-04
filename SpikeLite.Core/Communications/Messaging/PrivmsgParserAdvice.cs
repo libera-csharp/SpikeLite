@@ -8,7 +8,7 @@
 
 using System.Reflection;
 using log4net.Ext.Trace;
-using Sharkbite.Irc;
+using SpikeLite.Communications.IRC;
 using Spring.Aop;
 
 namespace SpikeLite.Communications.Messaging
@@ -24,7 +24,7 @@ namespace SpikeLite.Communications.Messaging
         /// <summary>
         /// Holds a logger that we can use for spamming schtuff.
         /// </summary>
-        private readonly TraceLogImpl _logger = (TraceLogImpl) TraceLogManager.GetLogger(typeof (PrivmsgParserAdvice));
+        private readonly TraceLogImpl _logger = (TraceLogImpl)TraceLogManager.GetLogger(typeof(PrivmsgParserAdvice));
 
         /// <summary>
         /// Intercepts a message being relayed to the bot. Can do all kinds of magical tricks!
@@ -35,7 +35,7 @@ namespace SpikeLite.Communications.Messaging
         /// <param name="target">The execution target.</param>
         public void Before(MethodInfo method, object[] args, object target)
         {
-            UserInfo user = (UserInfo) args[0];
+            User user = (User)args[0];
             string channelTarget = "<privmsg>";
             string message;
 
@@ -46,11 +46,11 @@ namespace SpikeLite.Communications.Messaging
             }
             else
             {
-                channelTarget = (string) args[1];
-                message = (string) args[2];
+                channelTarget = (string)args[1];
+                message = (string)args[2];
             }
 
-            _logger.TraceFormat("RawMessage received: [User: {0} ({1})] [Target: {2}] [Message: {3}]", user.Nick, user.Hostname, channelTarget, message);
+            _logger.TraceFormat("RawMessage received: [User: {0} ({1})] [Target: {2}] [Message: {3}]", user.NickName, user.HostName, channelTarget, message);
         }
     }
 }

@@ -7,12 +7,12 @@
  */
 
 using System;
+using System.Collections.Generic;
 using System.Threading;
 using Cadenza.Collections;
-using Sharkbite.Irc;
+using IrcDotNet;
 using log4net.Ext.Trace;
 using SpikeLite.Communications.IRC;
-using System.Collections.Generic;
 using SpikeLite.Communications.Messaging;
 
 namespace SpikeLite.Communications
@@ -71,19 +71,19 @@ namespace SpikeLite.Communications
 
         #endregion
 
-        #region Data members 
+        #region Data members
 
         /// <summary>
         /// Holds the connection object handed to us from SpikeLite, which handles reconnections etc.
         /// </summary>
-        private Connection _connection;
+        private IrcClient _ircClient;
 
         /// <summary>
         /// Stores our log4net logger.
         /// </summary>
         private readonly TraceLogImpl _logger = (TraceLogImpl)TraceLogManager.GetLogger(typeof(CommunicationManager));
 
-        #endregion 
+        #endregion
 
         #region Properties
 
@@ -96,7 +96,7 @@ namespace SpikeLite.Communications
         /// </remarks>
         public bool IsConnected
         {
-            get { return _connection != null && _connection.Connected; }
+            get { return _ircClient != null && _ircClient.IsConnected; }
         }
 
         /// <summary>
@@ -159,34 +159,26 @@ namespace SpikeLite.Communications
         {
             if (!IsConnected)
             {
+                // Just grab the first entry until we have proper multi server support
                 Network network = NetworkList[0];
                 Server server = network.ServerList[0];
 
-                ConnectionArgs connectionArgs = new ConnectionArgs
-                {
-                    Hostname = server.Host,
-                    Nick = network.BotNickname,
-                    Port = server.Port ?? 6667,
-                    RealName = network.BotRealname,
-                    UserName = network.BotUsername
-                };
-
-                _connection = new Connection(connectionArgs, true, true);
-
-                // Make sure we can handle privmsg events.
-                _connection.Listener.OnPublic += MessageParser.HandleMultiTargetMessage;
-                _connection.Listener.OnPrivate += MessageParser.HandleSingleTargetMessage;
+                _ircClient = new IrcClient();
 
                 // Subscribe our events
-                _connection.Listener.OnRegistered += OnRegister;
-                _connection.Listener.OnPrivateNotice += OnPrivateNotice;
-                _connection.OnRawMessageReceived += OnRawMessageReceived;
-                _connection.OnRawMessageSent += OnRawMessageSent;
+                _ircClient.Registered += Registered;
+                _ircClient.RawMessageReceived += RawMessageReceived;
+                _ircClient.RawMessageSent += RawMessageSent;
 
-                _connection.Connect();
+                _ircClient.Connect(server.Host, server.Port ?? 6667, false, new IrcUserRegistrationInfo()
+                {
+                    NickName = network.BotNickname,
+                    UserName = network.BotUsername,
+                    RealName = network.BotRealname
+                });
 
                 // Make sure we don't get any random disconnected events before we're connected
-                _connection.Listener.OnDisconnected += OnDisconnect;
+                _ircClient.Disconnected += Disconnected;
             }
         }
 
@@ -199,7 +191,7 @@ namespace SpikeLite.Communications
         /// <remarks>
         /// We currently attempt to reconnect 5 times, given a 60 second stagger between connection attempts.
         /// </remarks>
-        private void OnDisconnect()
+        void Disconnected(object sender, EventArgs e)
         {
             int reconnectCount = 1;
 
@@ -243,7 +235,7 @@ namespace SpikeLite.Communications
             if (IsConnected)
             {
                 _logger.TraceFormat("Sending quit message {0}.", quitMessage);
-                _connection.Disconnect(quitMessage);
+                _ircClient.Quit(quitMessage);
             }
         }
 
@@ -254,16 +246,15 @@ namespace SpikeLite.Communications
         /// </summary>
         private void UnwireEvents()
         {
-            // Unsubscribe our communications manager.
-            _connection.Listener.OnRegistered -= OnRegister;
-            _connection.Listener.OnPrivateNotice -= OnPrivateNotice;
-            _connection.OnRawMessageReceived -= OnRawMessageReceived;
-            _connection.OnRawMessageSent -= OnRawMessageSent;
-            _connection.Listener.OnDisconnected -= OnDisconnect;
+            _ircClient.LocalUser.JoinedChannel -= JoinedChannel;
+            _ircClient.LocalUser.LeftChannel -= LeftChannel;
+            _ircClient.LocalUser.MessageReceived -= PrivateMessageReceived;
+            _ircClient.Registered -= Registered;
+            _ircClient.LocalUser.NoticeReceived -= NoticeReceived;
+            _ircClient.RawMessageReceived -= RawMessageReceived;
+            _ircClient.RawMessageSent -= RawMessageSent;
+            _ircClient.Disconnected -= Disconnected;
 
-            // Unsubscribe our AOP advice for catching PRIVMSGes.
-            _connection.Listener.OnPublic -= MessageParser.HandleMultiTargetMessage;
-            _connection.Listener.OnPrivate -= MessageParser.HandleSingleTargetMessage;
         }
 
         // TODO: Kog 11/23/2009 - Make network specific.
@@ -280,6 +271,28 @@ namespace SpikeLite.Communications
             });
         }
 
+        // TODO: Kog 11/23/2009 - Refactor this into some sort of multi-network arrangement.
+
+        /// <summary>
+        /// A convenience method for checking if we've received the notice we're blocking on from a services agent.
+        /// </summary>
+        /// 
+        /// <param name="notice">The notice to digest.</param>
+        /// <param name="user">The user sending the notice.</param>
+        /// 
+        /// <returns>True if we've been responded to by a services agent, else false.</returns>
+        private bool NoticeIsExpectedServicesAgentMessage(IrcUser user, string notice)
+        {
+            // Make sure the message is coming from NickServ
+            if (user.NickName.Equals("nickserv", StringComparison.OrdinalIgnoreCase))
+            {
+                return notice.StartsWith("You are now identified for", StringComparison.OrdinalIgnoreCase) ||
+                       (notice.StartsWith("The nickname", StringComparison.OrdinalIgnoreCase) && notice.EndsWith("is not registered", StringComparison.OrdinalIgnoreCase));
+            }
+
+            return false;
+        }
+
         // TODO: Kog 11/15/2009 - Refactor the following behavior to be network specific.
 
         /// <summary>
@@ -291,17 +304,65 @@ namespace SpikeLite.Communications
         /// set up upon connect. Consider this an analog to mIRC's onConnect. The bot currently blocks on a response, see
         /// <see cref="OnPrivateNotice"/>.
         /// </remarks>
-        private void OnRegister()
+        void Registered(object sender, EventArgs e)
         {
+            // Make sure we can handle privmsg events.
+            // We have to subscribe to public messages on a per channel basis
+            _ircClient.LocalUser.JoinedChannel += JoinedChannel;
+            _ircClient.LocalUser.LeftChannel += LeftChannel;
+            _ircClient.LocalUser.NoticeReceived += NoticeReceived;
+            _ircClient.LocalUser.MessageReceived += PrivateMessageReceived;
+
             if (SupportsIdentification)
             {
-                _connection.Sender.PrivateMessage("nickserv", String.Format("identify {0}", NetworkList[0].AccountPassword));
+                _ircClient.LocalUser.SendMessage("nickserv", String.Format("identify {0}", NetworkList[0].AccountPassword));
             }
             else
             {
                 // Don't bother blocking, we don't expect to identify.
                 JoinChannelsForNetwork();
             }
+        }
+
+        void JoinedChannel(object sender, IrcChannelEventArgs e)
+        {
+            e.Channel.MessageReceived += PublicMessageReceived;
+        }
+
+        void LeftChannel(object sender, IrcChannelEventArgs e)
+        {
+            e.Channel.MessageReceived -= PublicMessageReceived;
+        }
+
+        void PublicMessageReceived(object sender, IrcMessageEventArgs e)
+        {
+            IrcChannel sourceChannel = (IrcChannel)sender;
+
+            if (e.Source is IrcUser)
+            {
+                IrcUser sourceUser = (IrcUser)e.Source;
+
+                User user = new User()
+                {
+                    NickName = sourceUser.NickName,
+                    HostName = sourceUser.HostName
+                };
+
+                MessageParser.HandleMultiTargetMessage(user, sourceChannel.Name, e.Text);
+            }
+        }
+
+        void PrivateMessageReceived(object sender, IrcMessageEventArgs e)
+        {
+            IrcUser sourceUser = (IrcUser)sender;
+
+            User user = new User()
+            {
+                NickName = sourceUser.NickName,
+                HostName = sourceUser.HostName
+            };
+
+            MessageParser.HandleSingleTargetMessage(user, e.Text);
         }
 
         // TODO: Kog 11/23/2009 - Refactor this into some sort of multi-network arrangement.
@@ -317,42 +378,22 @@ namespace SpikeLite.Communications
         /// We currently block upon connect between registration and receiving an authentication response. This is so that the
         /// real hostmask of the bot will not be revealed inadvertently. 
         /// </remarks>
-        private void OnPrivateNotice(UserInfo user, string notice)
+        void NoticeReceived(object sender, IrcMessageEventArgs e)
         {
+            IrcUser user = sender as IrcUser;
+
             // Log the notice if we're set to the proper level.
             if (_logger.IsTraceEnabled)
             {
-                _logger.TraceFormat("{0} {1} sent a NOTICE: {2}", user.Nick, user.Hostname, notice);
+                _logger.TraceFormat("{0} {1} sent a NOTICE: {2}", user.NickName, user.HostName, e.Text);
             }
 
             // If we support identification of some sort, we need to block until we receive confirmation of successful identification from services agents.
             // This keeps us from joining a channel before we have a vanity host.
-            if (SupportsIdentification && NoticeIsExpectedServicesAgentMessage(user, notice))
+            if (SupportsIdentification && NoticeIsExpectedServicesAgentMessage(user, e.Text))
             {
                 JoinChannelsForNetwork();
             }
-        }
-
-        // TODO: Kog 11/23/2009 - Refactor this into some sort of multi-network arrangement.
-
-        /// <summary>
-        /// A convenience method for checking if we've received the notice we're blocking on from a services agent.
-        /// </summary>
-        /// 
-        /// <param name="notice">The notice to digest.</param>
-        /// <param name="user">The user sending the notice.</param>
-        /// 
-        /// <returns>True if we've been responded to by a services agent, else false.</returns>
-        private bool NoticeIsExpectedServicesAgentMessage(UserInfo user, string notice)
-        {
-            // Make sure the message is coming from NickServ
-            if (user.Nick.Equals("nickserv", StringComparison.OrdinalIgnoreCase))
-            {
-                return notice.StartsWith("You are now identified for", StringComparison.OrdinalIgnoreCase) ||
-                       (notice.StartsWith("The nickname", StringComparison.OrdinalIgnoreCase) && notice.EndsWith("is not registered", StringComparison.OrdinalIgnoreCase));
-            }
-
-            return false;
         }
 
         #endregion
@@ -370,11 +411,11 @@ namespace SpikeLite.Communications
         /// <remarks>
         /// The message text will be unformatted, as sent by the IRCD. May be RFC1459 compliant. 
         /// </remarks>
-        private void OnRawMessageSent(string message)
+        void RawMessageSent(object sender, IrcRawMessageEventArgs e)
         {
             if (_logger.IsTraceEnabled)
             {
-                _logger.TraceFormat("Sent: {0}", message);
+                _logger.TraceFormat("Sent: {0}", e.RawContent);
             }
         }
 
@@ -389,14 +430,13 @@ namespace SpikeLite.Communications
         /// <remarks>
         /// The message text will be unformatted, as sent by the IRCD. May be RFC1459 compliant. 
         /// </remarks>
-        private void OnRawMessageReceived(string message)
+        void RawMessageReceived(object sender, IrcRawMessageEventArgs e)
         {
             if (_logger.IsTraceEnabled)
             {
-                _logger.TraceFormat("Received: {0}", message);
+                _logger.TraceFormat("Received: {0}", e.RawContent);
             }
         }
-
         #endregion
 
         #endregion
@@ -414,20 +454,18 @@ namespace SpikeLite.Communications
             {
                 if (response.ResponseType == ResponseType.Public)
                 {
-                    _connection.Sender.PublicMessage(response.Channel, response.Message);
+                    _ircClient.LocalUser.SendMessage(response.Channel, response.Message);
                 }
-
                 else if (response.ResponseType == ResponseType.Private)
                 {
-                    _connection.Sender.PrivateMessage(response.Nick, response.Message);
-                }                
+                    _ircClient.LocalUser.SendMessage(response.Nick, response.Message);
+                }
             }
             catch (Exception ex)
             {
-                _logger.WarnFormat("Caught an exception trying to SendResponse on [channel: {0} by nick: {1} of message {2}]: {3}", 
+                _logger.WarnFormat("Caught an exception trying to SendResponse on [channel: {0} by nick: {1} of message {2}]: {3}",
                                    response.Channel, response.Nick ?? "N/A", response.Message, ex);
             }
-
         }
 
         // TODO: Kog 11/15/2009 - We can probably refactor some of these methods to take advantage of optional params in .NET4.
@@ -443,7 +481,7 @@ namespace SpikeLite.Communications
         /// </remarks>
         public void JoinChannel(string channelName)
         {
-            _connection.Sender.Join(channelName);
+            _ircClient.Channels.Join(channelName);
         }
 
         /// <summary>
@@ -457,7 +495,7 @@ namespace SpikeLite.Communications
         /// </remarks>
         public void PartChannel(string channelName)
         {
-            _connection.Sender.Part(channelName);
+            _ircClient.Channels.Leave(channelName);
         }
 
         /// <summary>
@@ -468,7 +506,8 @@ namespace SpikeLite.Communications
         /// <param name="emoteText">The text to combine with the action.</param>
         public void DoAction(string channelName, string emoteText)
         {
-            _connection.Sender.Action(channelName, emoteText);
+            throw new NotImplementedException("Not implimented yet. Not sure how to do an action with IrcDotNet");
+            //_connection.Sender.Action(channelName, emoteText);
         }
 
         #endregion
@@ -487,16 +526,16 @@ namespace SpikeLite.Communications
                 if (_requestReceived != null)
                 {
                     _requestReceived(this, new RequestReceivedEventArgs(request));
-                }              
+                }
             }
             catch (Exception ex)
             {
                 _logger.WarnFormat("Caught an exception trying to HandleRequestReceived on [channel {0} nick {1} request type {2} message {3}]: {4}",
-                                   request.Channel ?? "N/A", request.RequestFrom.User.DisplayName, request.RequestType, request.Message, ex);    
+                                   request.Channel ?? "N/A", request.RequestFrom.User.DisplayName, request.RequestType, request.Message, ex);
             }
 
         }
-        
+
         #endregion
     }
 }
