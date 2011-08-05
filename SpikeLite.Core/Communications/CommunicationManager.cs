@@ -8,12 +8,14 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using Cadenza.Collections;
 using IrcDotNet;
 using log4net.Ext.Trace;
 using SpikeLite.Communications.IRC;
 using SpikeLite.Communications.Messaging;
+using IrcDotNet.Ctcp;
 
 namespace SpikeLite.Communications
 {
@@ -77,6 +79,8 @@ namespace SpikeLite.Communications
         /// Holds the connection object handed to us from SpikeLite, which handles reconnections etc.
         /// </summary>
         private IrcClient _ircClient;
+
+        private CtcpClient _ctcpClient;
 
         /// <summary>
         /// Stores our log4net logger.
@@ -164,6 +168,7 @@ namespace SpikeLite.Communications
                 Server server = network.ServerList[0];
 
                 _ircClient = new IrcClient();
+                _ctcpClient = new CtcpClient(_ircClient);
 
                 // Subscribe our events
                 _ircClient.Registered += Registered;
@@ -506,8 +511,11 @@ namespace SpikeLite.Communications
         /// <param name="emoteText">The text to combine with the action.</param>
         public void DoAction(string channelName, string emoteText)
         {
-            throw new NotImplementedException("Not implimented yet. Not sure how to do an action with IrcDotNet");
-            //_connection.Sender.Action(channelName, emoteText);
+            _ctcpClient.SendAction(_ircClient
+                .Channels
+                .Where(c => c.Name.Equals(channelName, StringComparison.OrdinalIgnoreCase))
+                .Single(),
+                emoteText);
         }
 
         #endregion
