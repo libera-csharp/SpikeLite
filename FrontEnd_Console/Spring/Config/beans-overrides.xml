@@ -37,7 +37,7 @@
         <add key="apikeys.bing" value="NOT CONFIGURED" />
 
         <!-- Configure our referrers -->
-        <add key="referrers.googleajax" value="NOT CONFIGURED" />
+        <add key="referrers.googleajax" value="http://tempuri.org" />
 
         <!-- Database setup - this will build an SQLite3 database if none exists. 
              This should work out of the box on Windows, but on Linux you'll need SQLite3 already installed.-->
