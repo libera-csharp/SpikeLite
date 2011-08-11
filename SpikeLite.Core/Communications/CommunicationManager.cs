@@ -171,11 +171,11 @@ namespace SpikeLite.Communications
                 _ctcpClient = new CtcpClient(_ircClient);
 
                 // Subscribe our events
-                _ircClient.Registered += Registered;
+                _ircClient.Registered += ClientRegisteredWithIrcd;
                 _ircClient.RawMessageReceived += RawMessageReceived;
                 _ircClient.RawMessageSent += RawMessageSent;
 
-                _ircClient.Connect(server.Host, server.Port ?? 6667, false, new IrcUserRegistrationInfo()
+                _ircClient.Connect(server.Host, server.Port ?? 6667, false, new IrcUserRegistrationInfo
                 {
                     NickName = network.BotNickname,
                     UserName = network.BotUsername,
@@ -254,7 +254,7 @@ namespace SpikeLite.Communications
             _ircClient.LocalUser.JoinedChannel -= JoinedChannel;
             _ircClient.LocalUser.LeftChannel -= LeftChannel;
             _ircClient.LocalUser.MessageReceived -= PrivateMessageReceived;
-            _ircClient.Registered -= Registered;
+            _ircClient.Registered -= ClientRegisteredWithIrcd;
             _ircClient.LocalUser.NoticeReceived -= NoticeReceived;
             _ircClient.RawMessageReceived -= RawMessageReceived;
             _ircClient.RawMessageSent -= RawMessageSent;
@@ -305,21 +305,27 @@ namespace SpikeLite.Communications
         /// </summary>
         /// 
         /// <remarks>
-        /// This is a good place to send your services registration. Some networks provide cloaks for users that are best
-        /// set up upon connect. Consider this an analog to mIRC's onConnect. The bot currently blocks on a response, see
-        /// <see cref="OnPrivateNotice"/>.
+        /// 
+        /// <para>This is a good place to send your services registration. Some networks provide cloaks for users that are best
+        /// set up upon connect. Consider this an analog to mIRC's onConnect.
+        /// </para> 
+        /// 
+        /// <para>
+        /// Please note that this is *not* the same as being registered with services, this just means that the IRCD has taken notice of you, and that you are now
+        /// free to move about the cabin, as it were.
+        /// </para>
         /// </remarks>
-        void Registered(object sender, EventArgs e)
+        void ClientRegisteredWithIrcd(object sender, EventArgs e)
         {
-            // Make sure we can handle privmsg events.
-            // We have to subscribe to public messages on a per channel basis
+            // Make sure we can handle privmsg events. We have to subscribe to public messages on a per channel basis
             _ircClient.LocalUser.JoinedChannel += JoinedChannel;
             _ircClient.LocalUser.LeftChannel += LeftChannel;
             _ircClient.LocalUser.NoticeReceived += NoticeReceived;
             _ircClient.LocalUser.MessageReceived += PrivateMessageReceived;
 
+            // If we're expecting services identification, hold off on joining channels until we're identified.  
             if (SupportsIdentification)
-            {
+            {              
                 _ircClient.LocalUser.SendMessage("nickserv", String.Format("identify {0}", NetworkList[0].AccountPassword));
             }
             else
@@ -341,13 +347,13 @@ namespace SpikeLite.Communications
 
         void PublicMessageReceived(object sender, IrcMessageEventArgs e)
         {
-            IrcChannel sourceChannel = (IrcChannel)sender;
+            var sourceChannel = (IrcChannel)sender;
 
             if (e.Source is IrcUser)
             {
-                IrcUser sourceUser = (IrcUser)e.Source;
+                var sourceUser = (IrcUser)e.Source;
 
-                User user = new User()
+                var user = new User
                 {
                     NickName = sourceUser.NickName,
                     HostName = sourceUser.HostName
@@ -359,9 +365,9 @@ namespace SpikeLite.Communications
 
         void PrivateMessageReceived(object sender, IrcMessageEventArgs e)
         {
-            IrcUser sourceUser = (IrcUser)sender;
+            var sourceUser = (IrcUser)sender;
 
-            User user = new User()
+            var user = new User
             {
                 NickName = sourceUser.NickName,
                 HostName = sourceUser.HostName
@@ -376,8 +382,8 @@ namespace SpikeLite.Communications
         /// We've recieved a NOTICE from the server.
         /// </summary>
         /// 
-        /// <param name="user">A user representing the sender.</param>
-        /// <param name="notice">The message being NOTICE'd.</param>
+        /// <param name="sender">A user representing the sender.</param>
+        /// <param name="e">The message being NOTICE'd.</param>
         /// 
         /// <remarks>
         /// We currently block upon connect between registration and receiving an authentication response. This is so that the
@@ -385,7 +391,7 @@ namespace SpikeLite.Communications
         /// </remarks>
         void NoticeReceived(object sender, IrcMessageEventArgs e)
         {
-            IrcUser user = sender as IrcUser;
+            var user = e.Source as IrcUser;
 
             // Log the notice if we're set to the proper level.
             if (_logger.IsTraceEnabled)
@@ -411,7 +417,8 @@ namespace SpikeLite.Communications
         /// We're sending a message. 
         /// </summary>
         /// 
-        /// <param name="message">The text of the message sent to the IRCD.</param>
+        /// <param name="sender">The object sending the message</param>
+        /// <param name="e">The eventargs encapsulating information about the message being sent.</param>
         /// 
         /// <remarks>
         /// The message text will be unformatted, as sent by the IRCD. May be RFC1459 compliant. 
@@ -430,7 +437,8 @@ namespace SpikeLite.Communications
         /// The IRCD has sent us a message that isn't a PRIVMSG or NOTICE.
         /// </summary>
         /// 
-        /// <param name="message">The text of the message sent by the IRCD.</param>
+        /// <param name="sender">The object sending the message.</param>
+        /// <param name="e">The eventargs encapsulating the message being sent.</param>
         /// 
         /// <remarks>
         /// The message text will be unformatted, as sent by the IRCD. May be RFC1459 compliant. 
