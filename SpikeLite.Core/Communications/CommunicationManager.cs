@@ -365,7 +365,7 @@ namespace SpikeLite.Communications
 
         void PrivateMessageReceived(object sender, IrcMessageEventArgs e)
         {
-            var sourceUser = (IrcUser)sender;
+            var sourceUser = (IrcUser)e.Source;
 
             var user = new User
             {
