@@ -202,7 +202,7 @@
     <property name="Name" value="wiki"/>
     <property name="Description" value="Returns the link to the community wiki."/>
     <property name="Instructions" value="~wiki"/>
-    <property name="Phrase" value="http://www.freenode-csharp.net/wiki/"/>
+    <property name="Phrase" value="http://wiki.freenode-csharp.net/wiki/"/>
   </object>
   
   <object id="ConnectLinkModule" type="SpikeLite.Modules.Say.SayModule, SpikeLite.Modules.Say"  parent="ParentModule">
