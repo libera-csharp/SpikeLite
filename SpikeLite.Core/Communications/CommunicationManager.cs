@@ -169,7 +169,7 @@ namespace SpikeLite.Communications
 
                 _ircClient = new IrcClient();
                 _ctcpClient = new CtcpClient(_ircClient);
-
+                
                 // Subscribe our events
                 _ircClient.Registered += ClientRegisteredWithIrcd;
                 _ircClient.RawMessageReceived += RawMessageReceived;
@@ -449,7 +449,20 @@ namespace SpikeLite.Communications
             {
                 _logger.TraceFormat("Received: {0}", e.RawContent);
             }
+            
+            //HACK: AJ: This is to handle nick collisions
+            if(e.Message.Command == "433")
+            {
+                string nickSuffix = nickRetryCount.ToString();
+                string newNick = _ircClient.LocalUser.NickName
+                    .Substring(0, _ircClient.LocalUser.NickName.Length - nickSuffix.Length) + nickSuffix;
+
+                _ircClient.LocalUser.SetNickName(newNick);
+
+                nickRetryCount++;
+            }
         }
+        private int nickRetryCount = 0;
         #endregion
 
         #endregion
