@@ -14,4 +14,4 @@ Iesi Collections 3.0.0.4000 - Public Domain licensed (https://olex.openlogic.com
 ANTLR.NET runtime 3.1.0.39271 - Eclipse C# License (http://antlrcsharp.codeplex.com/license)
 SQLite3 Native 3.7.6.3 - Public Domain (http://sqlite.org/copyright.html)
 System.Data.SQLite.dll 1.0.65.0 - Public Domain (http://sourceforge.net/projects/sqlite-dotnet2/develop)
-IRCDotNet - LGPL (http://code.google.com/p/ircdotnet/)
+IRCDotNet - MIT (https://launchpad.net/ircdotnet)
