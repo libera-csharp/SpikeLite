@@ -151,6 +151,11 @@ namespace SpikeLite.Domain.Model.Authentication
         public virtual DateTime? AccessTokenIssueTime { get; set; }
 
         /// <summary>
+        /// Gets or sets the <see cref="DateTime"/> at which the <see cref="AccessToken"/> will expire.
+        /// </summary>
+        public virtual DateTime? AccessTokenExpiration { get; set; }
+
+        /// <summary>
         /// Contains an email address to use for the purposes of remote credentials, such as delegated auth.
         /// </summary>
         public virtual String EmailAddress { get; set; }

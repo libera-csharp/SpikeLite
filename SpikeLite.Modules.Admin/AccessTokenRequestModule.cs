@@ -41,6 +41,16 @@ namespace SpikeLite.Modules.Admin
                     // Handle a user requesting a new access token.
                     if (splitMessage[1].Equals("request", StringComparison.InvariantCultureIgnoreCase))
                     {
+                        // Try and pull the TTL for the token out of the args.
+                        var timeToLive = 1;
+
+                        if (splitMessage.Length > 2)
+                        {
+                            int.TryParse(splitMessage[2], out timeToLive);
+                        }
+
+                        var accessTokenExpiration = timeToLive == 0 ? DateTime.MaxValue : DateTime.Now.ToUniversalTime().AddDays(timeToLive);
+
                         // Generate a new GUID.
                         var accessToken = Guid.NewGuid();
                         var accessTokenCreationTime = DateTime.Now.ToUniversalTime();
@@ -48,6 +58,7 @@ namespace SpikeLite.Modules.Admin
                         // Slap it on the user's account.
                         user.AccessToken = accessToken.ToString();
                         user.AccessTokenIssueTime = accessTokenCreationTime;
+                        user.AccessTokenExpiration = accessTokenExpiration;
                         
                         // Update the account.
                         AuthenticationManager.UpdateHost(user);
@@ -61,8 +72,8 @@ namespace SpikeLite.Modules.Admin
                     {
                         ModuleManagementContainer.HandleResponse(request.CreateResponse(ResponseType.Private,
                                                                                         user.AccessToken == null ? "You have no access token. Please request one." :
-                                                                                        String.Format("Your access token is {0} and was generated at {1} UTC.",
-                                                                                                        user.AccessToken, user.AccessTokenIssueTime)));                            
+                                                                                        String.Format("Your access token is {0} and was generated at {1} UTC. The token will expire at {2} UTC.",
+                                                                                                        user.AccessToken, user.AccessTokenIssueTime, user.AccessTokenExpiration)));                            
                     }
                 }
                 else

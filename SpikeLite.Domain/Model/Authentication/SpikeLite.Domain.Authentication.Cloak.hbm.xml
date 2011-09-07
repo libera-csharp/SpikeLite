@@ -21,6 +21,7 @@
     <property name="AccessLevel" column="access_level" type="int" length="10"/>
     <property name="AccessToken" column="access_token" type="string" length="255"/>
     <property name="AccessTokenIssueTime" column="access_token_issue_time" type="UtcDateTime"/>
+    <property name="AccessTokenExpiration" column="access_token_expiration" type="UtcDateTime"/>
     
     <property name="EmailAddress" type="string" length="255">
       <column name="email_address" unique-key="email_address"/>

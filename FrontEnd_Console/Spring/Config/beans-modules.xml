@@ -263,8 +263,8 @@
 
   <object id="AccessTokenRequestModule" type="SpikeLite.Modules.Admin.AccessTokenRequestModule, SpikeLite.Modules.Admin" parent="ParentModule">
     <property name="Name" value="AccessToken"/>
-    <property name="Description" value="Allows a user to request an access token for delegated authentication."/>
-    <property name="Instructions" value="~accesstoken [request | display]"/>
+    <property name="Description" value="Allows a user to request an access token for delegated authentication. If no duration is given 1 day is assumed, if a duration of 0 is given the token is considered immortal."/>
+    <property name="Instructions" value="~accesstoken [request | display] (ttl in days)"/>
     <property name="AuthenticationManager" ref="IrcAuthenticationModule"/>
   </object>
 

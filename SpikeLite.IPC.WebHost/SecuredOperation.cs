@@ -172,10 +172,8 @@ namespace SpikeLite.IPC.WebHost
             // If the auth information from the headers isn't empty, let's try and find the user given the information we've got.
             if (!string.IsNullOrEmpty(emailAddress) && !string.IsNullOrEmpty(accessToken))
             {
-                // TODO [Kog 07/26/2011] : Make this an injectable policy.
-
-                // Make sure the user/token combination exists, and that the token is no more than 24 hours old.
-                user = authenticationModule.FindHostByEmailAddress(emailAddress, accessToken, x => x.HasValue && DateTime.Now.ToUniversalTime().Subtract(x.Value).Hours <= 24);
+                // Make sure the user/token combination exists, and that the token within the acceptable TTL.
+                user = authenticationModule.FindHostByEmailAddress(emailAddress, accessToken, x => x.HasValue && (x.Value.Subtract(DateTime.Now.ToUniversalTime()) > TimeSpan.Zero));
             }
 
             return user;

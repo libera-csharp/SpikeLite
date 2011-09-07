@@ -233,7 +233,7 @@ namespace SpikeLite.AccessControl
             return _cloaks.FirstOrDefault(x => !string.IsNullOrEmpty(x.EmailAddress) 
                                                && x.EmailAddress.Equals(emailAddress, StringComparison.OrdinalIgnoreCase)
                                                && x.AccessToken.Equals(accessToken, StringComparison.InvariantCultureIgnoreCase)
-                                               && longevityFilter(x.AccessTokenIssueTime));
+                                               && longevityFilter(x.AccessTokenExpiration));
         }
 
         #endregion 
