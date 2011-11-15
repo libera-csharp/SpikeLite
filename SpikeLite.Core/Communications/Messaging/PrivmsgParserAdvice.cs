@@ -8,7 +8,7 @@
 
 using System.Reflection;
 using log4net.Ext.Trace;
-using SpikeLite.Communications.IRC;
+using SpikeLite.Communications.Irc;
 using Spring.Aop;
 
 namespace SpikeLite.Communications.Messaging

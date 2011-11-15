@@ -8,7 +8,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading;
-using SpikeLite.Communications.IRC;
+using SpikeLite.Communications.Irc;
 
 namespace SpikeLite.AccessControl
 {

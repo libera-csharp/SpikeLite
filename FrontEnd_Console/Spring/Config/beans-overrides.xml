@@ -52,16 +52,16 @@
   <!-- Set the list of channels we're going to join. -->
   <object id="ChannelList" type="FrontEnd_Console.Spring.ChannelList, FrontEnd_Console">
     <constructor-arg index="0">
-      <list element-type="SpikeLite.Communications.IRC.Channel, SpikeLite">
-        
+      <list element-type="SpikeLite.Communications.Irc.Configuration.Channel, SpikeLite.Shared">
+
         <!-- You probably want to alter this... -->
-        <object id="Test" type="SpikeLite.Communications.IRC.Channel, SpikeLite">
+        <object id="Test" type="SpikeLite.Communications.Irc.Configuration.Channel, SpikeLite.Shared">
           <property name="Name" value="#spikelite" />
         </object>
 
       </list>
     </constructor-arg>
   </object>
-  
+
   <!-- For information about modules, please consult our dev wiki at http://svn.freenode-csharp.net/spikelite -->
 </objects>

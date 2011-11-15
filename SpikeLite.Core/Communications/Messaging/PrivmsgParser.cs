@@ -7,7 +7,7 @@
  */
 
 using SpikeLite.AccessControl;
-using SpikeLite.Communications.IRC;
+using SpikeLite.Communications.Irc;
 
 namespace SpikeLite.Communications.Messaging
 {

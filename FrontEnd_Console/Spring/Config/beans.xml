@@ -42,7 +42,7 @@
   -->
   <object id="CommunicationManager" type="SpikeLite.Communications.CommunicationManager, SpikeLite">
     <property name="NetworkList">
-      <list element-type="SpikeLite.Communications.IRC.Network, SpikeLite">
+      <list element-type="SpikeLite.Communications.Irc.Configuration.Network, SpikeLite.Shared">
         <ref object="Network" />
       </list>
     </property>
@@ -51,20 +51,20 @@
     <property name="BotContext" ref="SpikeLite" />
   </object>
 
-  <object id="Network" type="SpikeLite.Communications.IRC.Network, SpikeLite">
+  <object id="Network" type="SpikeLite.Communications.Irc.Configuration.Network, SpikeLite.Shared">
     <property name="NetworkName" value="${network.name}" />
     <property name="BotNickname" value="${bot.nick}" />
     <property name="BotRealname" value="${bot.realname}" />
     <property name="BotUsername" value="${bot.username}" />
     <property name="AccountPassword" value="${bot.accountpass}" />
     <property name="ServerList">
-      <list element-type="SpikeLite.Communications.IRC.Server, SpikeLite">
+      <list element-type="SpikeLite.Communications.Irc.Configuration.Server, SpikeLite.Shared">
         <ref object="Server" />
       </list>
     </property>
   </object>
 
-  <object id="Server" type="SpikeLite.Communications.IRC.Server, SpikeLite">
+  <object id="Server" type="SpikeLite.Communications.Irc.Configuration.Server, SpikeLite.Shared">
     <property name="Host" value="${server.host}" />
     <property name="Port" value="${server.port}" />
     <property name="ChannelList" ref="ChannelList" />
@@ -72,8 +72,8 @@
 
   <object id="ChannelList" type="FrontEnd_Console.ChannelList, FrontEnd_Console">
     <constructor-arg index="0">
-      <list element-type="SpikeLite.Communications.IRC.Channel, SpikeLite">
-        <object id="TestingChannel" type="SpikeLite.Communications.IRC.Channel, SpikeLite">
+      <list element-type="SpikeLite.Communications.Irc.Configuration.Channel, SpikeLite.Shared">
+        <object id="TestingChannel" type="SpikeLite.Communications.Irc.Configuration.Channel, SpikeLite.Shared">
           <property name="Name" value="#kog" />
         </object>
       </list>
@@ -111,30 +111,30 @@
   <!-- Holds a list of cloaks to use when running the bot for the first time. -->
   <object id="seedCloaks" type="FrontEnd_Console.Spring.CloakList, FrontEnd_Console">
     <constructor-arg index="0">
-      <list element-type="SpikeLite.Domain.Model.Authentication.KnownHost, SpikeLite.Domain">        
+      <list element-type="SpikeLite.Domain.Model.Authentication.KnownHost, SpikeLite.Shared">        
         <!-- Create a user for Kog. -->
-        <object id ="kog" type="SpikeLite.Domain.Model.Authentication.KnownHost, SpikeLite.Domain">
+        <object id ="kog" type="SpikeLite.Domain.Model.Authentication.KnownHost, SpikeLite.Shared">
           <property name="AccessLevel" value="Root"/>
           <property name="HostMatchType" value="Start"/>
           <property name="HostMask" value="about/csharp/regular/Kog"/>
         </object>
 
         <!-- Create a user for Andy. -->
-        <object id ="smippy" type="SpikeLite.Domain.Model.Authentication.KnownHost, SpikeLite.Domain">
+        <object id ="smippy" type="SpikeLite.Domain.Model.Authentication.KnownHost, SpikeLite.Shared">
           <property name="AccessLevel" value="Root"/>
           <property name="HostMatchType" value="Start"/>
           <property name="HostMask" value="about/csharp/regular/smellyhippy"/>
         </object>
         
         <!-- Create a user for KotS. -->
-        <object id ="KeeperOfTheSoul" type="SpikeLite.Domain.Model.Authentication.KnownHost, SpikeLite.Domain">
+        <object id ="KeeperOfTheSoul" type="SpikeLite.Domain.Model.Authentication.KnownHost, SpikeLite.Shared">
           <property name="AccessLevel" value="Root"/>
           <property name="HostMatchType" value="Start"/>
           <property name="HostMask" value="about/csharp/regular/KeeperOfTheSoul"/>
         </object>
         
         <!-- And now everyone else, the regulars. They all have the same access type... -->
-        <object id ="Regulars" type="SpikeLite.Domain.Model.Authentication.KnownHost, SpikeLite.Domain">
+        <object id ="Regulars" type="SpikeLite.Domain.Model.Authentication.KnownHost, SpikeLite.Shared">
           <property name="AccessLevel" value="Public"/>
           <property name="HostMatchType" value="Start"/>
           <property name="HostMask" value="about/csharp/"/>

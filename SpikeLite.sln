@@ -27,6 +27,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpikeLite.IPC.WebHost", "Sp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpikeLite.Modules.People", "SpikeLite.Modules.People\SpikeLite.Modules.People.csproj", "{5AD939A6-C1CC-4F4E-B093-C10C00BB2EA2}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpikeLite.Irc.IrcDotNet", "SpikeLite.Irc.IrcDotNet\SpikeLite.Irc.IrcDotNet.csproj", "{4B8CC285-E8CE-4985-83E6-A926DF3B27BF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpikeLite.Shared", "SpikeLite.Shared\SpikeLite.Shared.csproj", "{70D474C9-467C-4D0C-B279-C38CBC1215EF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpikeLite.Irc.ThresherIrc", "SpikeLite.Irc.ThresherIrc\SpikeLite.Irc.ThresherIrc.csproj", "{0B128EAA-403D-416F-9A0E-F9D87CA2DD3E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -139,6 +145,24 @@ Global
 		{5AD939A6-C1CC-4F4E-B093-C10C00BB2EA2}.Release|Any CPU.Build.0 = Release|Any CPU
 		{5AD939A6-C1CC-4F4E-B093-C10C00BB2EA2}.Release|x86.ActiveCfg = Release|x86
 		{5AD939A6-C1CC-4F4E-B093-C10C00BB2EA2}.Release|x86.Build.0 = Release|x86
+		{4B8CC285-E8CE-4985-83E6-A926DF3B27BF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4B8CC285-E8CE-4985-83E6-A926DF3B27BF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4B8CC285-E8CE-4985-83E6-A926DF3B27BF}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{4B8CC285-E8CE-4985-83E6-A926DF3B27BF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4B8CC285-E8CE-4985-83E6-A926DF3B27BF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4B8CC285-E8CE-4985-83E6-A926DF3B27BF}.Release|x86.ActiveCfg = Release|Any CPU
+		{70D474C9-467C-4D0C-B279-C38CBC1215EF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{70D474C9-467C-4D0C-B279-C38CBC1215EF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{70D474C9-467C-4D0C-B279-C38CBC1215EF}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{70D474C9-467C-4D0C-B279-C38CBC1215EF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{70D474C9-467C-4D0C-B279-C38CBC1215EF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{70D474C9-467C-4D0C-B279-C38CBC1215EF}.Release|x86.ActiveCfg = Release|Any CPU
+		{0B128EAA-403D-416F-9A0E-F9D87CA2DD3E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0B128EAA-403D-416F-9A0E-F9D87CA2DD3E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0B128EAA-403D-416F-9A0E-F9D87CA2DD3E}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{0B128EAA-403D-416F-9A0E-F9D87CA2DD3E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0B128EAA-403D-416F-9A0E-F9D87CA2DD3E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0B128EAA-403D-416F-9A0E-F9D87CA2DD3E}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

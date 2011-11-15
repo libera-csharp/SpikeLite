@@ -9,7 +9,7 @@
 -->
 
 <hibernate-mapping xmlns="urn:nhibernate-mapping-2.2">
-  <class name="SpikeLite.Domain.Model.Authentication.AccessFlag,  SpikeLite.Domain" table="ACCESS_FLAGS">    
+  <class name="SpikeLite.Domain.Model.Authentication.AccessFlag,  SpikeLite.Shared" table="ACCESS_FLAGS">    
     <id name="Id" column="access_flag_id">
       <generator class="native">
         <param name="sequence">access_flags_id_seq</param>

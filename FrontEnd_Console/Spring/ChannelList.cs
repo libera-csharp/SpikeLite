@@ -6,7 +6,7 @@
  * distributed license.txt for details.
  */
 using System.Collections.Generic;
-using SpikeLite.Communications.IRC;
+using SpikeLite.Communications.Irc.Configuration;
 
 namespace FrontEnd_Console.Spring
 {

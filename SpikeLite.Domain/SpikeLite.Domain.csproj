@@ -98,14 +98,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Model\Authentication\AccessFlag.cs" />
-    <Compile Include="Model\Authentication\KnownHostMetaDatum.cs" />
     <Compile Include="Model\People\Person.cs" />
     <Compile Include="Model\People\PersonFactoid.cs" />
     <Compile Include="Persistence\Authentication\AccessFlagDao.cs" />
     <Compile Include="Persistence\Authentication\IAccessFlagDao.cs" />
     <Compile Include="Persistence\Authentication\IKnownHostDao.cs" />
-    <Compile Include="Model\Authentication\KnownHost.cs" />
     <Compile Include="Persistence\Authentication\KnownHostDao.cs" />
     <Compile Include="Persistence\Karma\IKarmaDao.cs" />
     <Compile Include="Persistence\Karma\KarmaDao.cs" />
@@ -129,6 +126,12 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Model\Authentication\SpikeLite.Domain.Authentication.AccessFlag.hbm.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SpikeLite.Shared\SpikeLite.Shared.csproj">
+      <Project>{70D474C9-467C-4D0C-B279-C38CBC1215EF}</Project>
+      <Name>SpikeLite.Shared</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
