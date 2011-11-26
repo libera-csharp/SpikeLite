@@ -7,13 +7,11 @@
  */
 
 using System;
-using SpikeLite.Communications.Irc;
-using SpikeLite.Communications.Irc.Configuration;
-using SpikeLite.Communications.Messaging;
-using SpikeLite.Shared.Communications;
+using System.Reflection;
 using Cadenza.Collections;
+using SpikeLite.Communications.Irc.Configuration;
 
-namespace SpikeLite.Irc
+namespace SpikeLite.Communications.Irc
 {
     public abstract class IrcClientBase : IIrcClient
     {
@@ -22,13 +20,22 @@ namespace SpikeLite.Irc
         public event EventHandler<PublicMessageReceivedEventArgs> PublicMessageReceived;
         #endregion
 
+        public abstract bool IsConnected { get; }
+
         #region Auto Properties
-        public IPrivmsgParser MessageParser { get; set; }
-        public ICommunicationManager CommunicationManager { get; protected set; }
         public Network Network { get; protected set; }
         public Server Server { get; protected set; }
         public bool SupportsIdentification { get; set; }
+        public string Description { get; protected set; }
         #endregion
+
+        public IrcClientBase() { }
+        public IrcClientBase(Assembly assemblyForDescription)
+        {
+            AssemblyName assemblyName = assemblyForDescription.GetName();
+
+            this.Description = string.Format("{0} : {1}", assemblyName.Name, assemblyName.Version);
+        }
 
         #region OnEvent Methods
         protected virtual void OnPrivateMessageReceived(User user, string message)
@@ -39,7 +46,7 @@ namespace SpikeLite.Irc
                 privateMessageReceived(this, new PrivateMessageReceivedEventArgs(user, message));
         }
 
-        protected virtual void OnPrivateMessageReceived(User user, string channelName, string message)
+        protected virtual void OnPublicMessageReceived(User user, string channelName, string message)
         {
             EventHandler<PublicMessageReceivedEventArgs> publicMessageReceived = this.PublicMessageReceived;
 
@@ -67,14 +74,12 @@ namespace SpikeLite.Irc
             return false;
         }
 
-        public abstract bool IsConnected { get; }
-
-        public abstract void Connect(ICommunicationManager communicationManager, Network network);
+        public abstract void Connect(Network network);
         public abstract void DoAction(string channelName, string emoteText);
         public abstract void JoinChannel(string channelName);
         public abstract void PartChannel(string channelName);
         public abstract void Quit();
         public abstract void Quit(string message);
-        public abstract void SendResponse(Communications.Response response);
+        public abstract void SendResponse(Response response);
     }
 }

@@ -43,27 +43,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AccessControl\AuthToken.cs" />
-    <Compile Include="AccessControl\IAuthenticationModule.cs" />
-    <Compile Include="AccessControl\IUserToken.cs" />
-    <Compile Include="BotStatus.cs" />
-    <Compile Include="Communications\ICommunicationManager.cs" />
-    <Compile Include="Communications\Messaging\IPrivmsgParser.cs" />
-    <Compile Include="Communications\Request.cs" />
-    <Compile Include="Communications\Response.cs" />
-    <Compile Include="Domain\Model\Authentication\AccessFlag.cs" />
-    <Compile Include="Domain\Model\Authentication\AccessLevel.cs" />
-    <Compile Include="Domain\Model\Authentication\HostMatchType.cs" />
-    <Compile Include="Domain\Model\Authentication\KnownHost.cs" />
-    <Compile Include="Domain\Model\Authentication\KnownHostMetaDatum.cs" />
-    <Compile Include="Irc\Configuration\Channel.cs" />
-    <Compile Include="Irc\Configuration\Network.cs" />
-    <Compile Include="Irc\Configuration\Server.cs" />
-    <Compile Include="Irc\IIrcClient.cs" />
-    <Compile Include="Irc\IrcClientBase.cs" />
-    <Compile Include="Irc\PrivateMessageReceivedEventArgs.cs" />
-    <Compile Include="Irc\PublicMessageReceivedEventArgs.cs" />
-    <Compile Include="Irc\User.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

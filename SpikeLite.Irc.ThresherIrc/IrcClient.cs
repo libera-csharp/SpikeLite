@@ -1,33 +1,38 @@
-﻿using System;
+﻿/**
+ * SpikeLite C# IRC Bot
+ * Copyright (c) 2011 FreeNode ##Csharp Community
+ * 
+ * This source is licensed under the terms of the MIT license. Please see the 
+ * distributed license.txt for details.
+ */
+
+using System;
+using System.Linq;
 using System.Threading;
 using log4net.Ext.Trace;
 using Sharkbite.Irc;
 using SpikeLite.Communications;
 using SpikeLite.Communications.Irc;
 using SpikeLite.Communications.Irc.Configuration;
-using SpikeLite.Shared.Communications;
 
 namespace SpikeLite.Irc.ThresherIrc
 {
     public class IrcClient : IrcClientBase, IIrcClient
     {
         private Connection _ircConnection;
+        private bool _userInitiatedDisconnect = false;
         private readonly TraceLogImpl _logger = (TraceLogImpl)TraceLogManager.GetLogger(typeof(IrcClient));
 
-        public override bool IsConnected
-        {
-            get 
-            { 
-                return _ircConnection.Connected; 
-            }
-        }
+        public override bool IsConnected { get { return _ircConnection.Connected; } }
 
-        public override void Connect(ICommunicationManager communicationManager, Network network)
-        {
-            this.CommunicationManager = communicationManager;
-            this.Network = network;
+        public IrcClient() : base(typeof(Connection).Assembly) { }
 
-            this.Connect();
+        public override void Connect(Network network)
+        {
+            Network = network;
+            Server = Network.ServerList.First();
+
+            Connect();
         }
 
         public override void DoAction(string channelName, string emoteText)
@@ -47,11 +52,13 @@ namespace SpikeLite.Irc.ThresherIrc
 
         public override void Quit()
         {
+            _userInitiatedDisconnect = true;
             _ircConnection.Disconnect(string.Empty);
         }
 
         public override void Quit(string message)
         {
+            _userInitiatedDisconnect = true;
             _ircConnection.Disconnect(message);
         }
 
@@ -77,13 +84,15 @@ namespace SpikeLite.Irc.ThresherIrc
 
         private void Connect()
         {
+            _userInitiatedDisconnect = false;
+
             ConnectionArgs connectionArgs = new ConnectionArgs()
             {
-                Nick = this.Network.BotNickname,
-                RealName = this.Network.BotRealname,
-                UserName = this.Network.BotUsername,
-                Hostname = this.Network.ServerList[0].Host,
-                Port = this.Network.ServerList[0].Port ?? 6667
+                Nick = Network.BotNickname,
+                RealName = Network.BotRealname,
+                UserName = Network.BotUsername,
+                Hostname = Network.ServerList[0].Host,
+                Port = Network.ServerList[0].Port ?? 6667
             };
 
             _ircConnection = new Connection(connectionArgs, true, false);
@@ -109,6 +118,7 @@ namespace SpikeLite.Irc.ThresherIrc
             _ircConnection.Listener.OnDisconnected -= Listener_OnDisconnected;
         }
 
+        #region Event Handlers
         void _ircConnection_OnRawMessageReceived(string message)
         {
             if (_logger.IsTraceEnabled)
@@ -158,7 +168,7 @@ namespace SpikeLite.Irc.ThresherIrc
                 HostName = userInfo.Hostname
             };
 
-            MessageParser.HandleMultiTargetMessage(user, channel, message);
+            OnPublicMessageReceived(user, channel, message);
         }
 
         void Listener_OnPrivate(UserInfo userInfo, string message)
@@ -169,7 +179,7 @@ namespace SpikeLite.Irc.ThresherIrc
                 HostName = userInfo.Hostname
             };
 
-            MessageParser.HandleSingleTargetMessage(user, message);
+            OnPrivateMessageReceived(user, message);
         }
 
         void Listener_OnDisconnected()
@@ -178,7 +188,7 @@ namespace SpikeLite.Irc.ThresherIrc
 
             UnwireEvents();
 
-            if (CommunicationManager.BotStatus == BotStatus.Started)
+            if (!_userInitiatedDisconnect)
             {
                 while (!IsConnected)
                 {
@@ -194,5 +204,6 @@ namespace SpikeLite.Irc.ThresherIrc
                 }
             }
         }
+        #endregion
     }
 }

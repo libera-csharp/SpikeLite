@@ -6,7 +6,7 @@
  * distributed license.txt for details.
  */
 
-using SpikeLite.Communications.IRC;
+using SpikeLite.Communications.Irc;
 
 namespace SpikeLite.Communications.Messaging
 {

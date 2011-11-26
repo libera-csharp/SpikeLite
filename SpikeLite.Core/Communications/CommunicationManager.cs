@@ -8,36 +8,14 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using log4net.Ext.Trace;
 using SpikeLite.Communications.Irc;
 using SpikeLite.Communications.Irc.Configuration;
 using SpikeLite.Communications.Messaging;
-using SpikeLite.Shared.Communications;
-using SpikeLite.Irc.ThresherIrc;
 
 namespace SpikeLite.Communications
 {
-    /// <summary>
-    /// Defines a set of event arguments for a message being received.
-    /// </summary>
-    public class RequestReceivedEventArgs : EventArgs
-    {
-        /// <summary>
-        /// Holds the <see cref="Request"/> for the inbound message.
-        /// </summary>
-        public Request Request { get; private set; }
-
-        /// <summary>
-        /// Constructs an instance of our request arguments, which basically wrap a <see cref="Request"/>.
-        /// </summary>
-        /// 
-        /// <param name="request">The <see cref="Request"/> representing our inbound message.</param>
-        public RequestReceivedEventArgs(Request request)
-        {
-            Request = request;
-        }
-    }
-
     // TODO: Kog 11/23/2009 - I removed a lot of behavior from SpikeLite that was network specific and placed it here. This isn't the proper place for some of the responsibilities,
     // TODO: Kog 11/23/2009 - we'll probably have to decompose this into two or more classes: there's communications, there's network-aware routing, there's network-aware behavior
     // TODO: Kog 11/23/2009 - and more. But for now this will suffice to decouple our engine.
@@ -46,7 +24,7 @@ namespace SpikeLite.Communications
     /// Our communications manager handles sending of messages between the external world and our internal
     /// systems.
     /// </summary>
-    public class CommunicationManager : ICommunicationManager
+    public class CommunicationManager
     {
         #region Events
 
@@ -73,7 +51,8 @@ namespace SpikeLite.Communications
 
         #region Data members
 
-        private IIrcClient _ircClient = new IrcClient();
+        private IIrcClient _ircClient;
+        private bool _isStarted = false;
 
         /// <summary>
         /// Stores our log4net logger.
@@ -84,40 +63,14 @@ namespace SpikeLite.Communications
 
         #region Properties
 
-        public BotStatus BotStatus
-        {
-            get
-            {
-                return this.BotContext.BotStatus;
-            }
-        }
-
-        /// <summary>
-        /// Gets our connection status.
-        /// </summary>
-        /// 
-        /// <remarks>
-        /// This will need to be refactored for multi-network support.
-        /// </remarks>
-        private bool IsConnected
-        {
-            get { return _ircClient != null && _ircClient.IsConnected; }
-        }
+        //private Type _ircClientType = typeof(IrcClient);
+        //public Type IrcClientType { get { return _ircClientType; } set { _ircClientType = value; } }
+        public Type IrcClientType { get; set; }
 
         /// <summary>
         /// Gets or sets a collaborator we use to parse PRIVMSGes from our IRC library into internal <see cref="Request"/> structs.
         /// </summary>
-        public IPrivmsgParser MessageParser
-        {
-            get
-            {
-                return _ircClient.MessageParser;
-            }
-            set
-            {
-                _ircClient.MessageParser = value;
-            }
-        }
+        public IPrivmsgParser MessageParser { get; set; }
 
         /// <summary>
         /// Gets or sets the list of networks to consider connecting to.
@@ -131,17 +84,7 @@ namespace SpikeLite.Communications
         /// <remarks>
         /// TODO Kog: 11/15/2009 - This needs to be refactored for multi-network support, we should fold it into our network-aware context when we build said functionality.
         /// </remarks>
-        public bool SupportsIdentification
-        {
-            get
-            {
-                return _ircClient.SupportsIdentification;
-            }
-            set
-            {
-                _ircClient.SupportsIdentification = value;
-            }
-        }
+        public bool SupportsIdentification { get; set; }
 
         /// <summary>
         /// Gets or sets a reference to the bot's main context. Useful for doing things like shutting down.
@@ -149,8 +92,6 @@ namespace SpikeLite.Communications
         public SpikeLite BotContext { get; set; }
 
         #endregion
-
-        #region Things needing refactoring for multi-network support
 
         /// <summary>
         /// Attempt to connect to our pre-configured network. Does nothing if you're already connected.
@@ -162,25 +103,18 @@ namespace SpikeLite.Communications
         /// This will need to be refactored to allow multi-network support. This will perform a no-op
         /// if you are already connected.
         /// </para>
-        ///
-        /// <para>
-        /// Unfortunately there's a rather annoying bug with Thresher's IRC library: when you re-use the same
-        /// connection object, it maintains a cache of capability options, as sent as part of the registration
-        /// preamble from the IRCD. There's no way (so far) to flush this cache, and it's not a very intelligent
-        /// cache - it doesn't look for hits, only misses - so we wind up trying to cache something twice and
-        /// an exception resulting from said behavior.
-        /// </para>
-        /// 
-        /// <para>
-        /// So... In order to support a reconnect ability you need to create a NEW connection object. This requires
-        /// unsubscribing your old event handlers (to prevent memory leaks), and re-registering them. Painful duplication,
-        /// crappy mixing of responsibility... name your reason why this is bad. Unfortunately there's not much choice.
-        /// </para>
-        /// 
-        /// </remarks>
         public void Connect()
         {
-            _ircClient.Connect(this, NetworkList[0]);
+            if (!_isStarted)
+            {
+                _ircClient = (IIrcClient)Activator.CreateInstance(IrcClientType);
+                _ircClient.SupportsIdentification = SupportsIdentification;
+                _ircClient.PublicMessageReceived += _ircClient_PublicMessageReceived;
+                _ircClient.PrivateMessageReceived += _ircClient_PrivateMessageReceived;
+                _ircClient.Connect(NetworkList.First());
+
+                _isStarted = true;
+            }
         }
 
         /// <summary>
@@ -194,10 +128,15 @@ namespace SpikeLite.Communications
         /// </remarks>
         public void Quit(string quitMessage)
         {
-            _ircClient.Quit(quitMessage);
-        }
+            if (_isStarted)
+            {
+                _ircClient.Quit(quitMessage);
+                _ircClient.PublicMessageReceived -= _ircClient_PublicMessageReceived;
+                _ircClient.PrivateMessageReceived -= _ircClient_PrivateMessageReceived;
 
-        #endregion
+                _isStarted = false;
+            }
+        }
 
         #region Outgoing Messages
 
@@ -255,6 +194,16 @@ namespace SpikeLite.Communications
         #endregion
 
         #region Incoming Messages
+
+        void _ircClient_PublicMessageReceived(object sender, PublicMessageReceivedEventArgs e)
+        {
+            MessageParser.HandleMultiTargetMessage(e.User, e.ChannelName, e.Message);
+        }
+
+        void _ircClient_PrivateMessageReceived(object sender, PrivateMessageReceivedEventArgs e)
+        {
+            MessageParser.HandleSingleTargetMessage(e.User, e.Message);
+        }
 
         /// <summary>
         /// Passes our internal message format to all subscribers.

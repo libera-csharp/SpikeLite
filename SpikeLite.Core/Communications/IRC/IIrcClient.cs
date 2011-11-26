@@ -8,7 +8,6 @@
 
 using System;
 using SpikeLite.Communications.Irc.Configuration;
-using SpikeLite.Shared.Communications;
 using SpikeLite.Communications.Messaging;
 
 namespace SpikeLite.Communications.Irc
@@ -18,11 +17,11 @@ namespace SpikeLite.Communications.Irc
         event EventHandler<PrivateMessageReceivedEventArgs> PrivateMessageReceived;
         event EventHandler<PublicMessageReceivedEventArgs> PublicMessageReceived;
 
+        string Description { get; }
         bool IsConnected { get; }
-        IPrivmsgParser MessageParser { get; set; }
         bool SupportsIdentification { get; set; }
 
-        void Connect(ICommunicationManager communicationManager, Network network);
+        void Connect(Network network);
         void DoAction(string channelName, string emoteText);
         void JoinChannel(string channelName);
         void PartChannel(string channelName);

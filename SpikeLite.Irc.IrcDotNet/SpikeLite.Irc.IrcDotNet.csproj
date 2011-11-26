@@ -17,7 +17,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
+    <OutputPath>..\output\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -56,9 +56,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\SpikeLite.Shared\SpikeLite.Shared.csproj">
-      <Project>{70D474C9-467C-4D0C-B279-C38CBC1215EF}</Project>
-      <Name>SpikeLite.Shared</Name>
+    <ProjectReference Include="..\SpikeLite.Core\SpikeLite.Core.csproj">
+      <Project>{2DB890EF-6D6C-44FD-B607-244CAE1D55F7}</Project>
+      <Name>SpikeLite.Core</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

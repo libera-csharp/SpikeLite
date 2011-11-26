@@ -9,7 +9,7 @@
 -->
 
 <hibernate-mapping xmlns="urn:nhibernate-mapping-2.2">
-  <class name="SpikeLite.Domain.Model.Authentication.KnownHostMetaDatum,  SpikeLite.Shared" table="CLOAK_METADATA">
+  <class name="SpikeLite.Domain.Model.Authentication.KnownHostMetaDatum, SpikeLite.Domain" table="CLOAK_METADATA">
     <id name="Id" column="Id">
       <generator class="native">
         <param name="sequence">meta_datum_id_seq</param>

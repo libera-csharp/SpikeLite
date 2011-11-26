@@ -74,14 +74,30 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AccessControl\AuthToken.cs" />
+    <Compile Include="AccessControl\IAuthenticationModule.cs" />
+    <Compile Include="AccessControl\IUserToken.cs" />
     <Compile Include="AccessControl\RootAuthModule.cs" />
     <Compile Include="AccessControl\BasicUserToken.cs" />
     <Compile Include="AccessControl\IrcAuthenticationModule.cs" />
     <Compile Include="AccessControl\IrcUserToken.cs" />
     <Compile Include="AccessControl\UserTokenCache.cs" />
+    <Compile Include="BotStatus.cs" />
     <Compile Include="Communications\CommunicationManager.cs" />
+    <Compile Include="Communications\Messaging\IPrivmsgParser.cs" />
     <Compile Include="Communications\Messaging\PrivmsgParser.cs" />
     <Compile Include="Communications\Messaging\PrivmsgParserAdvice.cs" />
+    <Compile Include="Communications\Request.cs" />
+    <Compile Include="Communications\RequestReceivedEventArgs.cs" />
+    <Compile Include="Communications\Response.cs" />
+    <Compile Include="Communications\Irc\Configuration\Channel.cs" />
+    <Compile Include="Communications\Irc\Configuration\Network.cs" />
+    <Compile Include="Communications\Irc\Configuration\Server.cs" />
+    <Compile Include="Communications\Irc\IIrcClient.cs" />
+    <Compile Include="Communications\Irc\IrcClientBase.cs" />
+    <Compile Include="Communications\Irc\PrivateMessageReceivedEventArgs.cs" />
+    <Compile Include="Communications\Irc\PublicMessageReceivedEventArgs.cs" />
+    <Compile Include="Communications\Irc\User.cs" />
     <Compile Include="Modules\IModule.cs" />
     <Compile Include="Modules\ModuleBase.cs" />
     <Compile Include="Modules\ModuleManager.cs" />
@@ -92,14 +108,6 @@
     <ProjectReference Include="..\SpikeLite.Domain\SpikeLite.Domain.csproj">
       <Project>{A9084592-C90E-4A8E-AFF9-00709EE6513C}</Project>
       <Name>SpikeLite.Domain</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\SpikeLite.Irc.ThresherIrc\SpikeLite.Irc.ThresherIrc.csproj">
-      <Project>{0B128EAA-403D-416F-9A0E-F9D87CA2DD3E}</Project>
-      <Name>SpikeLite.Irc.ThresherIrc</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\SpikeLite.Shared\SpikeLite.Shared.csproj">
-      <Project>{70D474C9-467C-4D0C-B279-C38CBC1215EF}</Project>
-      <Name>SpikeLite.Shared</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

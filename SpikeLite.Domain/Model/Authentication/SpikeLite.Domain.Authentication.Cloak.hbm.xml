@@ -9,7 +9,7 @@
 -->
 
 <hibernate-mapping xmlns="urn:nhibernate-mapping-2.2">
-  <class name="SpikeLite.Domain.Model.Authentication.KnownHost,  SpikeLite.Shared" table="CLOAKS">
+  <class name="SpikeLite.Domain.Model.Authentication.KnownHost,  SpikeLite.Domain" table="CLOAKS">
     <id name="Id" column="Id">
       <generator class="native">
         <param name="sequence">cloak_id_seq</param>
@@ -31,13 +31,13 @@
          so there's not really any better choice... -->
     <set name="MetaData" lazy="false" cascade="all-delete-orphan">
       <key column="cloak_id"/>
-      <one-to-many class="SpikeLite.Domain.Model.Authentication.KnownHostMetaDatum, SpikeLite.Shared"/>
+      <one-to-many class="SpikeLite.Domain.Model.Authentication.KnownHostMetaDatum, SpikeLite.Domain"/>
     </set>
 
     <!-- Map all of our access flags. -->
     <bag name="AccessFlags" table="CLOAK_ACCESS_FLAGS" lazy="false">
       <key column="Id" />
-      <many-to-many class="SpikeLite.Domain.Model.Authentication.AccessFlag,  SpikeLite.Shared" column="access_flag_id" />
+      <many-to-many class="SpikeLite.Domain.Model.Authentication.AccessFlag,  SpikeLite" column="access_flag_id" />
     </bag>
   </class>
 </hibernate-mapping>

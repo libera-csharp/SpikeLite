@@ -1,18 +1,20 @@
-﻿using System;
+﻿/**
+ * SpikeLite C# IRC Bot
+ * Copyright (c) 2011 FreeNode ##Csharp Community
+ * 
+ * This source is licensed under the terms of the MIT license. Please see the 
+ * distributed license.txt for details.
+ */
+
+using System;
 using System.Linq;
 using System.Threading;
-
-using Cadenza.Collections;
-
 using IrcDotNet;
 using IrcDotNet.Ctcp;
-
 using log4net.Ext.Trace;
-using SpikeLite.Communications.Irc;
-using SpikeLite.Shared.Communications;
-using SpikeLite.Communications.Irc.Configuration;
 using SpikeLite.Communications;
-using SpikeLite.Communications.Messaging;
+using SpikeLite.Communications.Irc;
+using SpikeLite.Communications.Irc.Configuration;
 
 namespace SpikeLite.Irc.IrcDotNet
 {
@@ -22,25 +24,26 @@ namespace SpikeLite.Irc.IrcDotNet
         private global::IrcDotNet.IrcClient _ircClient;
         private CtcpClient _ctcpClient;
         private readonly TraceLogImpl _logger = (TraceLogImpl)TraceLogManager.GetLogger(typeof(IrcClient));
-        private int nickRetryCount = 0;
+        private int _nickRetryCount = 0;
+        private bool _userInitiatedDisconnect = false;
         #endregion
 
-        public override bool IsConnected
-        {
-            get { return _ircClient != null && _ircClient.IsConnected; }
-        }
+        public override bool IsConnected { get { return _ircClient != null && _ircClient.IsConnected; } }
 
-        public override void Connect(ICommunicationManager communicationManager, Network network)
-        {
-            this.CommunicationManager = communicationManager;
-            this.Network = network;
-            this.Server = this.Network.ServerList.First();
+        public IrcClient() : base(typeof(global::IrcDotNet.IrcClient).Assembly) { }
 
-            this.Connect();
+        public override void Connect(Network network)
+        {
+            Network = network;
+            Server = this.Network.ServerList.First();
+
+            Connect();
         }
 
         private void Connect()
         {
+            _userInitiatedDisconnect = false;
+
             _ircClient = new global::IrcDotNet.IrcClient();
             _ctcpClient = new CtcpClient(_ircClient);
 
@@ -48,11 +51,11 @@ namespace SpikeLite.Irc.IrcDotNet
             _ircClient.RawMessageReceived += IrcClient_RawMessageReceived;
             _ircClient.RawMessageSent += IrcClient_RawMessageSent;
 
-            _ircClient.Connect(this.Server.Host, this.Server.Port ?? 6667, false, new IrcUserRegistrationInfo
+            _ircClient.Connect(Server.Host, Server.Port ?? 6667, false, new IrcUserRegistrationInfo
             {
-                NickName = this.Network.BotNickname,
-                UserName = this.Network.BotUsername,
-                RealName = this.Network.BotRealname
+                NickName = Network.BotNickname,
+                UserName = Network.BotUsername,
+                RealName = Network.BotRealname
             });
 
             _ircClient.Disconnected += Disconnected;
@@ -81,6 +84,7 @@ namespace SpikeLite.Irc.IrcDotNet
         {
             if (IsConnected)
             {
+                _userInitiatedDisconnect = true;
                 _logger.TraceFormat("Quitting with no message.");
                 _ircClient.Quit();
             }
@@ -90,6 +94,7 @@ namespace SpikeLite.Irc.IrcDotNet
         {
             if (IsConnected)
             {
+                _userInitiatedDisconnect = true;
                 _logger.TraceFormat("Sending quit message {0}.", message);
                 _ircClient.Quit(message);
             }
@@ -152,7 +157,7 @@ namespace SpikeLite.Irc.IrcDotNet
                     HostName = sourceUser.HostName
                 };
 
-                MessageParser.HandleMultiTargetMessage(user, sourceChannel.Name, e.Text);
+                OnPublicMessageReceived(user, sourceChannel.Name, e.Text);
             }
         }
 
@@ -166,7 +171,7 @@ namespace SpikeLite.Irc.IrcDotNet
                 HostName = sourceUser.HostName
             };
 
-            MessageParser.HandleSingleTargetMessage(user, e.Text);
+            OnPrivateMessageReceived(user, e.Text);
         }
 
         void NoticeReceived(object sender, IrcMessageEventArgs e)
@@ -218,13 +223,13 @@ namespace SpikeLite.Irc.IrcDotNet
 
             if (e.Message.Command == "433")
             {
-                string nickSuffix = nickRetryCount.ToString();
+                string nickSuffix = _nickRetryCount.ToString();
                 string newNick = _ircClient.LocalUser.NickName
                     .Substring(0, _ircClient.LocalUser.NickName.Length - nickSuffix.Length) + nickSuffix;
 
                 _ircClient.LocalUser.SetNickName(newNick);
 
-                nickRetryCount++;
+                _nickRetryCount++;
             }
         }
 
@@ -234,7 +239,7 @@ namespace SpikeLite.Irc.IrcDotNet
 
             UnwireEvents();
 
-            if (CommunicationManager.BotStatus == BotStatus.Started)
+            if (!_userInitiatedDisconnect)
             {
                 while (!IsConnected)
                 {

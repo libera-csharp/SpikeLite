@@ -60,10 +60,6 @@
       <Project>{A9084592-C90E-4A8E-AFF9-00709EE6513C}</Project>
       <Name>SpikeLite.Domain</Name>
     </ProjectReference>
-    <ProjectReference Include="..\SpikeLite.Shared\SpikeLite.Shared.csproj">
-      <Project>{70D474C9-467C-4D0C-B279-C38CBC1215EF}</Project>
-      <Name>SpikeLite.Shared</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Cadenza, Version=0.1.0.0, Culture=neutral, processorArchitecture=MSIL">
