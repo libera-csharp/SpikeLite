@@ -52,10 +52,10 @@
   <!-- Set the list of channels we're going to join. -->
   <object id="ChannelList" type="FrontEnd_Console.Spring.ChannelList, FrontEnd_Console">
     <constructor-arg index="0">
-      <list element-type="SpikeLite.Communications.Irc.Configuration.Channel, SpikeLite.Shared">
+      <list element-type="SpikeLite.Communications.Irc.Configuration.Channel, SpikeLite">
 
         <!-- You probably want to alter this... -->
-        <object id="Test" type="SpikeLite.Communications.Irc.Configuration.Channel, SpikeLite.Shared">
+        <object id="Test" type="SpikeLite.Communications.Irc.Configuration.Channel, SpikeLite">
           <property name="Name" value="#spikelite" />
         </object>
 
