@@ -29,7 +29,7 @@ namespace SpikeLite.Modules.People
         /// <summary>
         /// Holds the valid patterns for using this module.
         /// </summary>
-        private const string _regexPattern = @"(~\w+)\s(\w+)\s?(.*)?";
+        private const string _regexPattern = @"(~\w+)\s(\S+)\s?(.*)?";
 
         /// <summary>
         /// Holds a pre-compiled matcher.
