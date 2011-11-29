@@ -26,7 +26,7 @@ namespace SpikeLite.IPC.WebHost.Services
         /// <returns>A collection of flags the user has been granted. May be empty, or null.</returns>
         [OperationContract]
         [SecuredOperation]
-        IEnumerable<AccessFlag> GetFlags();
+        AccessFlag[] GetFlags();
     }
 
     /// <summary>
@@ -34,11 +34,10 @@ namespace SpikeLite.IPC.WebHost.Services
     /// </summary>
     public class FlagCheckService : AbstractUserContextAwareService, IFlagCheckService
     {
-        public IEnumerable<AccessFlag> GetFlags()
+        public AccessFlag[] GetFlags()
         {
             var principal = GetPrincipal();
-
-            return null == principal ? new List<AccessFlag>() : principal.AccessFlags.ToList();
+            return null == principal ? new List<AccessFlag>().ToArray() : principal.AccessFlags.ToArray();
         }
     }
 }
