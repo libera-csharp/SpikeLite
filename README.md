@@ -1,9 +1,7 @@
 SpikeLite - FreeNode ##csharp's IRC bot
 =============
 
-This readme provides a basic set of information about SpikeLite. We're working on moving our Wiki pages to Github, but for now more can be found at http://wiki.freenode-csharp.net/wiki/.
-
-SpikeLite is MIT licensed.
+This readme provides a basic set of information about SpikeLite. SpikeLite is MIT licensed.
 
 Getting Started:
 ------------
@@ -12,7 +10,7 @@ Obviously you'll need to get the source from GitHub. There should be plenty of h
 
 ### Building The Bot
 
-SpikeLite targets .NET4, so the project file is VS2010 compatible. It has been verified to work on Mono 2.10, and against
+SpikeLite targets .NET4, so the project file is VS2010 compatible. It has been verified to work on Mono 2.10/2.11, and against
 MonoDevelop 2.6. You'll want to set the FrontEnd_Console as your start project, if you'd like to run the bot via an IDE. All
 build artifacts will be present in output\Debug or output\Release, depending on how you built it. Right now you'll want x86 only.
 
@@ -73,5 +71,3 @@ You can ask the Bot for help (~help users), and hopefully the directions should 
 * ~users add hostmask admin: this will add a user at the Root level.
 * ~users add hostmask user: this will add a user at the Public level.
 * ~users del hostmask: this will delete a user.
-
-For more information please see http://wiki.freenode-csharp.net/wiki/.
