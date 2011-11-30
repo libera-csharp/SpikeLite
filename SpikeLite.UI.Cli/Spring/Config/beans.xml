@@ -81,7 +81,7 @@
     <property name="ChannelList" ref="ChannelList" />
   </object>
 
-  <object id="ChannelList" type="FrontEnd_Console.ChannelList, FrontEnd_Console">
+  <object id="ChannelList" type="SpikeLite.UI.Cli.ChannelList, SpikeLite.UI.Cli">
     <constructor-arg index="0">
       <list element-type="SpikeLite.Communications.Irc.Configuration.Channel, SpikeLite">
         <object id="TestingChannel" type="SpikeLite.Communications.Irc.Configuration.Channel, SpikeLite">
@@ -120,7 +120,7 @@
   </object>
 
   <!-- Holds a list of cloaks to use when running the bot for the first time. -->
-  <object id="seedCloaks" type="FrontEnd_Console.Spring.CloakList, FrontEnd_Console">
+  <object id="seedCloaks" type="SpikeLite.UI.Cli.Spring.CloakList, SpikeLite.UI.Cli">
     <constructor-arg index="0">
       <list element-type="SpikeLite.Domain.Model.Authentication.KnownHost, SpikeLite.Domain">        
         <!-- Create a user for Kog. -->

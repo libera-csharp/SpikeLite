@@ -9,7 +9,7 @@
 using System.Collections.Generic;
 using SpikeLite.Domain.Model.Authentication;
 
-namespace FrontEnd_Console.Spring
+namespace SpikeLite.UI.Cli.Spring
 {
     /// <summary>
     /// Because we want to have a first class <see cref="IList{T}"/> of <see cref="KnownHost"/>, we have to craft this work around for Spring.NET.

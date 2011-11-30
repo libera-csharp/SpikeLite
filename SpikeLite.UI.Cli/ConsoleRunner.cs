@@ -9,11 +9,9 @@
 using System;
 using System.Threading;
 using log4net.Ext.Trace;
-using Spring.Context;
 using Spring.Context.Support;
-using SpikeLite;
 
-namespace FrontEnd_Console
+namespace SpikeLite.UI.Cli
 {
     /// <summary>
     /// A CLI runner for Spike Lite. 
@@ -39,7 +37,7 @@ namespace FrontEnd_Console
                 Console.WriteLine("We've spun up the bot and are currently logging to our appenders. Hit CTL+C to quit.");
 
                 // We want to know when it's ok to shutdown the bot.
-                using (ManualResetEventSlim shutdownManualResetEvent = new ManualResetEventSlim(false))
+                using (var shutdownManualResetEvent = new ManualResetEventSlim(false))
                 {
                     // This won't actually work while we're debugging:
                     // http://connect.microsoft.com/VisualStudio/feedback/details/524889/debugging-c-console-application-that-handles-console-cancelkeypress-is-broken-in-net-4-0
@@ -56,18 +54,18 @@ namespace FrontEnd_Console
                     });
 
                     // We want to know when it's ok to exit the application.
-                    using (ManualResetEventSlim exitManualResetEvent = new ManualResetEventSlim())
+                    using (var exitManualResetEvent = new ManualResetEventSlim())
                     {
                         // The bot is in a seperate thread so we can block this one until we're ready to exit
-                        Thread botThread = new Thread(() =>
+                        var botThread = new Thread(() =>
                         {
                             _logger.Trace("Bot thread started.");
 
                             // Get our application context from Spring.NET.
-                            IApplicationContext applicationContext = ContextRegistry.GetContext();
+                            var applicationContext = ContextRegistry.GetContext();
 
                             // Grab our bean and spin it up.
-                            SpikeLite.SpikeLite bot = applicationContext.GetObject("SpikeLite") as SpikeLite.SpikeLite;
+                            var bot = applicationContext.GetObject("SpikeLite") as SpikeLite;
 
                             // Listen for status changes so we know when to exit
                             bot.BotStatusChanged += (sender, eventArgs) => 

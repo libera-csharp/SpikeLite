@@ -11,14 +11,14 @@ Obviously you'll need to get the source from GitHub. There should be plenty of h
 ### Building The Bot
 
 SpikeLite targets .NET4, so the project file is VS2010 compatible. It has been verified to work on Mono 2.10/2.11, and against
-MonoDevelop 2.6. You'll want to set the FrontEnd_Console as your start project, if you'd like to run the bot via an IDE. All
+MonoDevelop 2.6. You'll want to set the SpikeLite.UI.Cli as your start project, if you'd like to run the bot via an IDE. All
 build artifacts will be present in output\Debug or output\Release, depending on how you built it. Right now you'll want x86 only.
 
 There's a NAnt build file that seems to work well enough with XBuild, but still seems to have problems on Windows against MSBuild.
 
 ### Artifact Structure
 
-* FrontEnd_Console.exe - This is the console runner, and runs the bot. Running it (when properly configured) will also cause the bot to log to spikelite.log.
+* SpikeLite.UI.Cli.exe - This is the console runner, and runs the bot. Running it (when properly configured) will also cause the bot to log to spikelite.log.
 * DLL files - These are the misc dependencies the bot uses. 
 * Config files - SpikeLite does not actually use the standard app.config file, and instead uses Spring.NET. More on that later.
 * log4net.xml - This configures Log4NET for the bot. We've tried to provide sensible defaults, when possible.
@@ -42,7 +42,7 @@ If you take a gander at beans-overrides.xml, you'll see some points that need se
 When the bot starts up with no SQLite database (or if the cloaks table is empty), it will seed the ACLs with a set of hosts that can be found in beans.xml.
 If you'd like to override this, however, you can add the following XML snippet to your beans-overrides.xml:
 
-  <object id="seedCloaks" type="FrontEnd_Console.Spring.CloakList, FrontEnd_Console">
+  <object id="seedCloaks" type="SpikeLite.UI.Cli.Spring.CloakList, SpikeLite.UI.Cli">
     <constructor-arg index="0">
       <list element-type="SpikeLite.Domain.Model.Authentication.KnownHost, SpikeLite.Domain">
         <object id ="bob" type="SpikeLite.Domain.Model.Authentication.KnownHost, SpikeLite.Domain">

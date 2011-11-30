@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpikeLite.Core", "SpikeLite.Core\SpikeLite.Core.csproj", "{2DB890EF-6D6C-44FD-B607-244CAE1D55F7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FrontEnd_Console", "FrontEnd_Console\FrontEnd_Console.csproj", "{F239531E-3FBC-4DC0-B499-235E91740A5B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpikeLite.UI.Cli", "SpikeLite.UI.Cli\SpikeLite.UI.Cli.csproj", "{F239531E-3FBC-4DC0-B499-235E91740A5B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpikeLite.Modules.Search", "SpikeLite.Modules.Search\SpikeLite.Modules.Search.csproj", "{454DE4CA-4F2D-4D0F-86D8-F8086706DF1B}"
 EndProject

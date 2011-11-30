@@ -50,7 +50,7 @@
   </object>
 
   <!-- Set the list of channels we're going to join. -->
-  <object id="ChannelList" type="FrontEnd_Console.Spring.ChannelList, FrontEnd_Console">
+  <object id="ChannelList" type="SpikeLite.UI.Cli.Spring.ChannelList, SpikeLite.UI.Cli">
     <constructor-arg index="0">
       <list element-type="SpikeLite.Communications.Irc.Configuration.Channel, SpikeLite">
 

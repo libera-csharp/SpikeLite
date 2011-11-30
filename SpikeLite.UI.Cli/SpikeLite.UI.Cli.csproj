@@ -8,8 +8,8 @@
     <ProjectGuid>{F239531E-3FBC-4DC0-B499-235E91740A5B}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>FrontEnd_Console</RootNamespace>
-    <AssemblyName>FrontEnd_Console</AssemblyName>
+    <RootNamespace>SpikeLite.UI.Cli</RootNamespace>
+    <AssemblyName>SpikeLite.UI.Cli</AssemblyName>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
     <OldToolsVersion>3.5</OldToolsVersion>
