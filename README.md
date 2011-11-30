@@ -1,7 +1,9 @@
 SpikeLite - FreeNode ##csharp's IRC bot
 =============
 
-This readme provides a basic set of information about SpikeLite. More can be found at http://wiki.freenode-csharp.net/wiki/.
+This readme provides a basic set of information about SpikeLite. We're working on moving our Wiki pages to Github, but for now more can be found at http://wiki.freenode-csharp.net/wiki/.
+
+SpikeLite is MIT licensed.
 
 Getting Started:
 ------------
