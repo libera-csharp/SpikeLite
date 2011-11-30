@@ -1,5 +1,0 @@
-		  <!-- Database setup -->
-		  <add key="db.provider" value="System.Data.SqlClient"/>
-		  <add key="db.connectionstring" value="Server=myServer\myInstance;Database=SpikeLite;User Id=myUsername;Password=myPassword"/>
-		  <add key="db.dialect" value="NHibernate.Dialect.MsSql2005Dialect"/>
-		  <add key="db.driver" value="NHibernate.Driver.SqlClientDriver"/>
