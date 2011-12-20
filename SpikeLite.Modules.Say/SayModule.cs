@@ -29,10 +29,11 @@ namespace SpikeLite.Modules.Say
         /// <param name="request">A <see cref="Request"/> representing a message sent to the bot.</param>
         public override void HandleRequest(Request request)
         {
-            string[] messageArray = request.Message.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+            var messageArray = request.Message.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
 
             if (request.RequestFrom.AccessLevel >= AccessLevel.Public
                 && request.RequestType == RequestType.Public
+                && messageArray.Length > 0
                 && messageArray[0].Equals("~"+Name, StringComparison.OrdinalIgnoreCase))
             {
                 ModuleManagementContainer.HandleResponse(request.CreateResponse(ResponseType.Public, Phrase));
