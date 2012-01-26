@@ -39,6 +39,20 @@ namespace SpikeLite.UI.Cli
                 // We want to know when it's ok to shutdown the bot.
                 using (var shutdownManualResetEvent = new ManualResetEventSlim(false))
                 {
+                    // Get our application context from Spring.NET.
+                    var applicationContext = ContextRegistry.GetContext();
+
+                    // Grab our bean and spin it up.
+                    var bot = applicationContext.GetObject("SpikeLite") as SpikeLite;
+
+                    // Listen for status changes so we know when to exit
+                    bot.BotStatusChanged += (sender, eventArgs) =>
+                    {
+                        if (eventArgs.NewStatus == BotStatus.Stopped)
+                            // Signal that we're ready to shutdown the bot.
+                            shutdownManualResetEvent.Set();
+                    };
+
                     // This won't actually work while we're debugging:
                     // http://connect.microsoft.com/VisualStudio/feedback/details/524889/debugging-c-console-application-that-handles-console-cancelkeypress-is-broken-in-net-4-0
                     // Handle SIGTERM gracefully.
@@ -47,58 +61,23 @@ namespace SpikeLite.UI.Cli
                         // Let us handle the shutdown of the bot
                         args.Cancel = true;
 
+                        // Clean up.
+                        bot.Shutdown("Caught SIGTERM, quitting");
+
                         // Signal that we're ready to shutdown the bot.
                         shutdownManualResetEvent.Set();
 
                         _logger.Trace("Cancel key pressed. Shutting down bot.");
                     });
 
-                    // We want to know when it's ok to exit the application.
-                    using (var exitManualResetEvent = new ManualResetEventSlim())
-                    {
-                        // The bot is in a seperate thread so we can block this one until we're ready to exit
-                        var botThread = new Thread(() =>
-                        {
-                            _logger.Trace("Bot thread started.");
+                    bot.Start();
 
-                            // Get our application context from Spring.NET.
-                            var applicationContext = ContextRegistry.GetContext();
+                    // Wait untill we're ready to shutdown the bot.
+                    shutdownManualResetEvent.Wait();
 
-                            // Grab our bean and spin it up.
-                            var bot = applicationContext.GetObject("SpikeLite") as SpikeLite;
+                    _logger.Trace("Application shutting down.");
 
-                            // Listen for status changes so we know when to exit
-                            bot.BotStatusChanged += (sender, eventArgs) => 
-                            {
-                                if(eventArgs.NewStatus == BotStatus.Stopped)
-                                    // Signal that we're ready to shutdown the bot.
-                                    shutdownManualResetEvent.Set();
-                            };
-
-                            bot.Start();
-
-                            // Wait untill we're ready to shutdown the bot.
-                            shutdownManualResetEvent.Wait();
-
-                            // Clean up.
-                            bot.Shutdown("Caught SIGTERM, quitting");
-
-                            applicationContext.Dispose();
-
-                            _logger.Trace("Bot thread shutdown.");
-
-                            // Signal that we're ready to exit the application.
-                            exitManualResetEvent.Set();
-                        });
-
-                        botThread.IsBackground = true;
-                        botThread.Start();
-
-                        // Wait untill we're ready to exit the application.
-                        exitManualResetEvent.Wait();
-
-                        _logger.Trace("Application shutdown.");
-                    }
+                    applicationContext.Dispose();
                 }
             }
             catch (Exception ex)
