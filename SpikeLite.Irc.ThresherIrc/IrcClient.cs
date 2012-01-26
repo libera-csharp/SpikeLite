@@ -162,47 +162,74 @@ namespace SpikeLite.Irc.ThresherIrc
 
         void Listener_OnPublic(UserInfo userInfo, string channel, string message)
         {
-            var user = new User
-            {
-                NickName = userInfo.Nick,
-                HostName = userInfo.Hostname
-            };
+            ManualResetEventSlim finishedEvent = new ManualResetEventSlim();
 
-            OnPublicMessageReceived(user, channel, message);
+            new Thread(() =>
+                {
+                    var user = new User
+                    {
+                        NickName = userInfo.Nick,
+                        HostName = userInfo.Hostname
+                    };
+
+                    OnPublicMessageReceived(user, channel, message);
+
+                    finishedEvent.Set();
+                }) { IsBackground = true }.Start();
+
+            finishedEvent.Wait();
         }
 
         void Listener_OnPrivate(UserInfo userInfo, string message)
         {
-            var user = new User
-            {
-                NickName = userInfo.Nick,
-                HostName = userInfo.Hostname
-            };
+            ManualResetEventSlim finishedEvent = new ManualResetEventSlim();
 
-            OnPrivateMessageReceived(user, message);
+            new Thread(() =>
+                {
+                    var user = new User
+                    {
+                        NickName = userInfo.Nick,
+                        HostName = userInfo.Hostname
+                    };
+
+                    OnPrivateMessageReceived(user, message);
+
+                    finishedEvent.Set();
+                }) { IsBackground = true }.Start();
+
+            finishedEvent.Wait();
         }
 
         void Listener_OnDisconnected()
         {
-            int reconnectCount = 1;
+            ManualResetEventSlim finishedEvent = new ManualResetEventSlim();
 
-            UnwireEvents();
-
-            if (!_userInitiatedDisconnect)
-            {
-                while (!IsConnected)
+            new Thread(() =>
                 {
-                    Connect();
+                    int reconnectCount = 1;
 
-                    if (!IsConnected)
+                    UnwireEvents();
+
+                    if (!_userInitiatedDisconnect)
                     {
-                        _logger.WarnFormat("Failed whilst attempting reconnection attempt #{0}", reconnectCount);
+                        while (!IsConnected)
+                        {
+                            Connect();
 
-                        Thread.Sleep(30000);
-                        reconnectCount++;
+                            if (!IsConnected)
+                            {
+                                _logger.WarnFormat("Failed whilst attempting reconnection attempt #{0}", reconnectCount);
+
+                                Thread.Sleep(30000);
+                                reconnectCount++;
+                            }
+                        }
                     }
-                }
-            }
+
+                    finishedEvent.Set();
+                }) { IsBackground = true }.Start();
+
+            finishedEvent.Wait();
         }
         #endregion
     }
