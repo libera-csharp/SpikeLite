@@ -8,7 +8,6 @@
 
 using System.ServiceModel;
 using SpikeLite.Communications;
-using Spring.Context.Support;
 
 namespace SpikeLite.IPC.WebHost.Services
 {
@@ -25,7 +24,7 @@ namespace SpikeLite.IPC.WebHost.Services
         /// <param name="channelTarget">The channel to target. If the bot is not in the channel then the message will not be sent.</param>
         /// <param name="messageText">The text of the message to send.</param>
         [OperationContract]
-        [SecuredOperation]
+        [SecuredOperation("sendMessage")]
         void SendMessage(string channelTarget, string messageText);    
     }
 
