@@ -6,6 +6,7 @@
  * distributed license.txt for details.
  */
 
+using System;
 using System.Collections.Generic;
 using SpikeLite.Domain.Model.People;
 using Spring.Data.NHibernate.Generic.Support;
@@ -42,6 +43,18 @@ namespace SpikeLite.Domain.Persistence.People
         public void SaveFactoid(PersonFactoid factoid)
         {
             HibernateTemplate.Save(factoid);
+        }
+
+        public void DeleteFactoidById(int factoidId)
+        {
+            var target = Session.QueryOver<PersonFactoid>()
+                                .Where(factoid => factoid.Id == factoidId)
+                                .SingleOrDefault();
+
+            if (target != null)
+            {
+                Session.Delete(target);
+            }
         }
     }
 }

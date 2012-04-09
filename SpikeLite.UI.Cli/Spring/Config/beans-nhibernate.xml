@@ -87,6 +87,7 @@
         <add key="Save*" value="PROPAGATION_REQUIRED"/>
         <add key="Create*" value="PROPAGATION_REQUIRED"/>
         <add key="SeedAcLs*" value="PROPAGATION_REQUIRED"/>
+        <add key="Delete*" value="PROPAGATION_REQUIRED"/>
       </name-values>
     </property>
   </object>

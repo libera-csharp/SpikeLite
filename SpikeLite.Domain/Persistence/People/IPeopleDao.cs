@@ -43,5 +43,12 @@ namespace SpikeLite.Domain.Persistence.People
         /// and save the factoid by itself.
         /// </remarks>
         void SaveFactoid(PersonFactoid factoid);
+
+        /// <summary>
+        /// Deletes a factoid, by ID.
+        /// </summary>
+        /// 
+        /// <param name="factoidId">The ID of the factoid to delete.</param>
+        void DeleteFactoidById(int factoidId);
     }
 }
