@@ -51,7 +51,7 @@ namespace SpikeLite.IPC.WebHost.Services
         /// <param name="type">The type of the factoid: warning, idiot, unban etc.</param>
         /// <param name="factoid">The text of the factoid.</param>
         [OperationContract]
-        [SecuredOperation]
+        [SecuredOperation("addFactoid")]
         void AddFactoidForPerson(string person, string type, string factoid);
 
         // TODO [Kog 04/09/2012] : Mark deleted instead of doing an actual delete...
@@ -62,7 +62,7 @@ namespace SpikeLite.IPC.WebHost.Services
         /// 
         /// <param name="id">The ID of the factoid.</param>
         [OperationContract]
-        [SecuredOperation]
+        [SecuredOperation("deleteFactoid")]
         void DeleteFactoidById(int id);
 
     }

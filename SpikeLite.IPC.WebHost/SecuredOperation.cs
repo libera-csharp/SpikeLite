@@ -69,7 +69,7 @@ namespace SpikeLite.IPC.WebHost
             }
 
             // Make sure said principal has the required flags.
-            if (null != principal && !RequiredFlagsSet(principal))
+            if (null != principal && (principal.AccessLevel != AccessLevel.Root && !RequiredFlagsSet(principal)))
             {
                 Logger.InfoFormat("User {0} does not have the required flags to complete operation {1}", 
                                   principal.EmailAddress, OperationContext.Current.EndpointDispatcher.EndpointAddress);
