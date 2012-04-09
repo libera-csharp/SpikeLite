@@ -45,8 +45,11 @@
     <DebugType>pdbonly</DebugType>
     <PlatformTarget>x86</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
-  </PropertyGroup>  
+  </PropertyGroup>
   <ItemGroup>
+    <Reference Include="AutoMapper">
+      <HintPath>..\Dependencies\AutoMapper.dll</HintPath>
+    </Reference>
     <Reference Include="Cadenza">
       <HintPath>..\Dependencies\Cadenza.dll</HintPath>
     </Reference>

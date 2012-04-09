@@ -89,7 +89,7 @@ namespace SpikeLite.IPC.WebHost
                 // Shove our principal into the current context, so operations can get it later.
                 OperationContext.Current.IncomingMessageProperties.Add("principal", principal);
 
-                // If we've got credentials, invoke our delegated behavior.);
+                // If we've got credentials, invoke our delegated behavior.
                 return _delegatedInvoker.Invoke(instance, inputs, out outputs);                
             }
         }

@@ -20,9 +20,9 @@ namespace SpikeLite.IPC.WebHost
     /// this particular prototype are set up to do SOAP hosting.
     /// </summary>
     /// 
-    /// <typeparam name="C">The concrete type of our service implementation, such that it is an implementation of <typeparamref name="C"/>.</typeparam>
-    /// <typeparam name="I">Our service interface, fully decorated with the appropriate <see cref="ServiceContractAttribute"/> et al.</typeparam>
-    public class ServiceHostModule<I, C> : ModuleBase where C : I
+    /// <typeparam name="C">The concrete type of our service implementation, such that it is an implementation of <typeparamref name="C"/>. Must conform to the "new" constraint.</typeparam>
+    /// <typeparam name="I">Our service interface, fully decorated with the appropriate <see cref="ServiceContractAttribute"/> et al. Must also implement <see cref="IConfigurableServiceHost"/></typeparam>
+    public class ServiceHostModule<I, C> : ModuleBase where C : I, new() where I : IConfigurableServiceHost
     {
         #region Data Members
 
@@ -155,7 +155,12 @@ namespace SpikeLite.IPC.WebHost
         /// </summary>
         private ServiceHost CreateServiceHost()
         {
-            ServiceHost serviceHost = new ServiceHost(typeof(C), new Uri(ServiceAddress));
+            // Create and configure our endpoint.
+            var concreteEndpoint = new C();
+            concreteEndpoint.Configure();
+
+            // Wire up everything via our self-hosted WCF harness.
+            var serviceHost = new ServiceHost(concreteEndpoint, new Uri(ServiceAddress));
             serviceHost.AddServiceEndpoint(typeof(I), new BasicHttpBinding(), Name);
             serviceHost.Description.Behaviors.Add(new ServiceMetadataBehavior { HttpGetEnabled = true });
 

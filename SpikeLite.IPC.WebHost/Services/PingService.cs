@@ -14,7 +14,7 @@ namespace SpikeLite.IPC.WebHost.Services
     /// Provides the service contract for our Ping service. We don't really have any namespace stuff setup, so use the gold ol' fashioned "tempuri."
     /// </summary>
     [ServiceContract(Namespace = "http://tempuri.org")]
-    public interface IPingService
+    public interface IPingService : IConfigurableServiceHost
     {
         /// <summary>
         /// The simplest possible service: says PONG!.
@@ -29,7 +29,8 @@ namespace SpikeLite.IPC.WebHost.Services
     /// <summary>
     /// Implements our <see cref="IPingService"/> contract.
     /// </summary>
-    public class PingService : IPingService
+    [ServiceBehavior(InstanceContextMode = InstanceContextMode.Single)]
+    public class PingService : AbstractUserContextAwareService, IPingService
     {
         public string Ping()
         {

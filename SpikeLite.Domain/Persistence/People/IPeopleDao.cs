@@ -6,6 +6,7 @@
  * distributed license.txt for details.
  */
 
+using System.Collections.Generic;
 using SpikeLite.Domain.Model.People;
 
 namespace SpikeLite.Domain.Persistence.People
@@ -15,6 +16,13 @@ namespace SpikeLite.Domain.Persistence.People
     /// </summary>
     public interface IPeopleDao
     {
+        /// <summary>
+        /// Finds all the people known to the system.
+        /// </summary>
+        /// 
+        /// <returns>A collection of all people known to the system.</returns>
+        IList<Person> FindAllPeople();
+
         /// <summary>
         /// Does much what it says on the tin: either creates (and persists) a new <see cref="Person"/> or pulls back a currently existing person by said name.
         /// </summary>

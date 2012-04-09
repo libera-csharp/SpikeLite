@@ -55,6 +55,9 @@
     <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="AutoMapper">
+      <HintPath>..\Dependencies\AutoMapper.dll</HintPath>
+    </Reference>
     <Reference Include="Cadenza, Version=0.1.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Dependencies\Cadenza.dll</HintPath>
@@ -82,12 +85,16 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AbstractUserContextAwareService.cs" />
+    <Compile Include="IConfigurableServiceHost.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SecuredOperation.cs" />
     <Compile Include="ServiceHostModule.cs" />
-    <Compile Include="Services\FlagCheckService.cs" />
+    <Compile Include="Services\FactoidService.cs" />
+    <Compile Include="Services\AccountService.cs" />
     <Compile Include="Services\MessagingService.cs" />
     <Compile Include="Services\PingService.cs" />
+    <Compile Include="Transport\Person.cs" />
+    <Compile Include="Transport\PersonFactoid.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SpikeLite.Domain\SpikeLite.Domain.csproj">
@@ -99,6 +106,7 @@
       <Name>SpikeLite.Core</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

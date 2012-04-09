@@ -16,7 +16,7 @@ namespace SpikeLite.IPC.WebHost.Services
     /// Provides us with a mechanism for messaging targets via the bot, from an external WS endpoint.
     /// </summary>
     [ServiceContract(Namespace = "http://tempuri.org")]
-    public interface IMessagingService
+    public interface IMessagingService : IConfigurableServiceHost
     {
         /// <summary>
         /// Attempts to send a message to a channel. If a nick is supplied, the bot will attempt to address it, else it will address the entire channel.
@@ -32,15 +32,12 @@ namespace SpikeLite.IPC.WebHost.Services
     /// <summary>
     /// Implements the <see cref="IMessagingService"/> contract, providing a concrete implementation of our service.
     /// </summary>
-    public class MessagingService : IMessagingService
+    [ServiceBehavior(InstanceContextMode = InstanceContextMode.Single)]
+    public class MessagingService : AbstractUserContextAwareService, IMessagingService
     {
         public void SendMessage(string channelTarget, string messageText)
         {
-            // Get our application context from Spring.NET.
-            var ctx = ContextRegistry.GetContext();
-
-            // Grab our bean and spin it up.
-            var mgr = (ctx.GetObject("CommunicationManager") as CommunicationManager);
+            var mgr = GetBean<CommunicationManager>("CommunicationManager");
             mgr.SendResponse(new Response { Channel = channelTarget, Message = messageText, ResponseType = ResponseType.Public });
         }
     }
