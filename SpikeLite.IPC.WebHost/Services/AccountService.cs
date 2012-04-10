@@ -9,9 +9,13 @@
 using System;
 using System.Collections.Generic;
 using System.ServiceModel;
+using AutoMapper;
 using SpikeLite.AccessControl;
 using SpikeLite.Domain.Model.Authentication;
 using System.Linq;
+using SpikeLite.Domain.Persistence.Authentication;
+using TransportKnownHost = SpikeLite.IPC.WebHost.Transport.KnownHost;
+using TransportKnownHostMetaDatum = SpikeLite.IPC.WebHost.Transport.KnownHostMetaDatum;
 
 namespace SpikeLite.IPC.WebHost.Services
 {
@@ -49,6 +53,36 @@ namespace SpikeLite.IPC.WebHost.Services
         [OperationContract]
         [SecuredOperation]
         DateTime GetTokenExpiration();
+
+        /// <summary>
+        /// Gets a collection of <see cref="Transport.KnownHost"/> corresponding to all the users known to the system.
+        /// </summary>
+        /// 
+        /// <returns>A collection of all the hosts known to the system. If this is empty you might have configuration problems.</returns>
+        [OperationContract]
+        [SecuredOperation("manageUsers")]
+        TransportKnownHost[] GetAllUsers();
+
+        /// <summary>
+        /// Gets a user by id.
+        /// </summary>
+        /// 
+        /// <param name="id">The ID of the user to search for.</param>
+        /// 
+        /// <returns>A <see cref="Transport.KnownHost"/> that corresponds to the ID, if known.</returns>
+        [OperationContract]
+        [SecuredOperation("manageUsers")]
+        TransportKnownHost GetUserById(int id);
+
+        /// <summary>
+        /// Revokes an issued access token, using the primary identifier for a <see cref="KnownHost"/>.
+        /// </summary>
+        /// 
+        /// <param name="accessToken">The access token literal to revoke.</param>
+        [OperationContract]
+        [SecuredOperation("manageUsers")]
+        void RevokeAccessToken(string accessToken);
+
     }
 
     /// <summary>
@@ -57,6 +91,14 @@ namespace SpikeLite.IPC.WebHost.Services
     [ServiceBehavior(InstanceContextMode = InstanceContextMode.Single)]
     public class AccountService : AbstractUserContextAwareService, IAccountService
     {
+        public override void Configure()
+        {
+            Mapper.CreateMap<KnownHost, TransportKnownHost>();
+            Mapper.CreateMap<KnownHostMetaDatum, TransportKnownHostMetaDatum>();
+
+            Mapper.AssertConfigurationIsValid();
+        }
+
         public AccessFlag[] GetFlags()
         {
             var principal = GetPrincipal();
@@ -95,6 +137,30 @@ namespace SpikeLite.IPC.WebHost.Services
         {
             var principal = GetPrincipal();
             return principal.AccessTokenExpiration.GetValueOrDefault();
+        }
+
+        public TransportKnownHost[] GetAllUsers()
+        {
+            var knownHostDao = GetBean<IKnownHostDao>("KnownHostDao");
+            return Mapper.Map<IList<KnownHost>, TransportKnownHost[]>(knownHostDao.FindAll());
+        }
+
+        public TransportKnownHost GetUserById(int id)
+        {
+            var knownHostDao = GetBean<IKnownHostDao>("KnownHostDao");
+            return Mapper.Map<KnownHost, TransportKnownHost>(knownHostDao.FindAll().FirstOrDefault(x => x.Id == id));
+        }
+
+        public void RevokeAccessToken(string accessToken)
+        {
+            var authenticationManager = GetBean<IrcAuthenticationModule>("IrcAuthenticationModule");
+            var host = authenticationManager.FindHostByAccessToken(accessToken);
+
+            if (null != host)
+            {
+                host.AccessTokenExpiration = DateTime.Now.ToUniversalTime();
+                authenticationManager.UpdateHost(host);
+            }
         }
     }
 }

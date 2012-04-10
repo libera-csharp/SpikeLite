@@ -193,7 +193,7 @@ namespace SpikeLite.AccessControl
         /// </remarks>
         public void ForgetHost(string hostmask)
         {
-            KnownHost host = _cloaks.First(x => x.HostMask.Equals(hostmask, StringComparison.OrdinalIgnoreCase));
+            var host = _cloaks.First(x => x.HostMask.Equals(hostmask, StringComparison.OrdinalIgnoreCase));
             _cloaks.Remove(host);
             _hostDao.Delete(host);
         }
@@ -234,6 +234,12 @@ namespace SpikeLite.AccessControl
                                                && x.EmailAddress.Equals(emailAddress, StringComparison.OrdinalIgnoreCase)
                                                && x.AccessToken.Equals(accessToken, StringComparison.InvariantCultureIgnoreCase)
                                                && longevityFilter(x.AccessTokenExpiration));
+        }
+
+        public KnownHost FindHostByAccessToken(string token)
+        {
+            return _cloaks.FirstOrDefault(x => !String.IsNullOrEmpty(x.AccessToken) && 
+                                               x.AccessToken.Equals(token));
         }
 
         #endregion 

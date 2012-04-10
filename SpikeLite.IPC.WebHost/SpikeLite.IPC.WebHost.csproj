@@ -93,6 +93,8 @@
     <Compile Include="Services\AccountService.cs" />
     <Compile Include="Services\MessagingService.cs" />
     <Compile Include="Services\PingService.cs" />
+    <Compile Include="Transport\KnownHost.cs" />
+    <Compile Include="Transport\KnownHostMetaDatum.cs" />
     <Compile Include="Transport\Person.cs" />
     <Compile Include="Transport\PersonFactoid.cs" />
   </ItemGroup>
