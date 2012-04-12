@@ -242,6 +242,11 @@ namespace SpikeLite.AccessControl
                                                x.AccessToken.Equals(token));
         }
 
+        public KnownHost FindHostById(int id)
+        {
+            return _cloaks.FirstOrDefault(x => x.Id == id);
+        }
+
         #endregion 
     }
 }

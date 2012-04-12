@@ -29,7 +29,6 @@ namespace SpikeLite.IPC.WebHost.Services
     /// <summary>
     /// Implements our <see cref="IPingService"/> contract.
     /// </summary>
-    [ServiceBehavior(InstanceContextMode = InstanceContextMode.Single)]
     public class PingService : AbstractUserContextAwareService, IPingService
     {
         public string Ping()

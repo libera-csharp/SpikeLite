@@ -17,6 +17,7 @@ namespace SpikeLite.IPC.WebHost
     /// <summary>
     /// Provides a service base class that is "user context" aware - namely, it can pull from a predetermined incoming property. Mostly a convenience.
     /// </summary>
+    [ServiceBehavior(InstanceContextMode = InstanceContextMode.Single)]
     public abstract class AbstractUserContextAwareService : IConfigurableServiceHost
     {
         /// <summary>

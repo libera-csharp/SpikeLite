@@ -83,12 +83,49 @@ namespace SpikeLite.IPC.WebHost.Services
         [SecuredOperation("manageUsers")]
         void RevokeAccessToken(string accessToken);
 
+        /// <summary>
+        /// Gets the set of <see cref="AccessFlag"/> known to the system.
+        /// </summary>
+        /// 
+        /// <returns>An array of all the known <see cref="AccessFlag"/> within the system.</returns>
+        [OperationContract]
+        [SecuredOperation]
+        AccessFlag[] GetAllKnownAccessFlags();
+
+        /// <summary>
+        /// Creates a new access flag within the system.
+        /// </summary>
+        /// 
+        /// <param name="name">The name of the access flag. Should be an alpha string.</param>
+        /// <param name="description">A textual description of the access flag.</param>
+        [OperationContract]
+        [SecuredOperation("manageUsers")]
+        void CreateAccessFlag(string name, string description);
+
+        /// <summary>
+        /// Adds a specific flag to a user.
+        /// </summary>
+        /// 
+        /// <param name="userId">The ID of the user to add the flag to.</param>
+        /// <param name="accessFlag">The IDs of the flag to add to the given user.</param>
+        [OperationContract]
+        [SecuredOperation("manageUsers")]
+        void AddAccessFlagToUser(int userId, int accessFlag);
+
+        /// <summary>
+        /// Revokes an access flag from a user.
+        /// </summary>
+        /// 
+        /// <param name="userId">The ID of the user to revoke the flag from.</param>
+        /// <param name="accessFlag">The access flag to revoke.</param>
+        [OperationContract]
+        [SecuredOperation("manageUsers")]
+        void RevokeAccessFlagFromUser(int userId, int accessFlag);
     }
 
     /// <summary>
     /// Provides a concrete implementation of <see cref="IAccountService"/>.
     /// </summary>
-    [ServiceBehavior(InstanceContextMode = InstanceContextMode.Single)]
     public class AccountService : AbstractUserContextAwareService, IAccountService
     {
         public override void Configure()
@@ -141,8 +178,8 @@ namespace SpikeLite.IPC.WebHost.Services
 
         public TransportKnownHost[] GetAllUsers()
         {
-            var knownHostDao = GetBean<IKnownHostDao>("KnownHostDao");
-            return Mapper.Map<IList<KnownHost>, TransportKnownHost[]>(knownHostDao.FindAll());
+            var authenticationManager = GetBean<IrcAuthenticationModule>("IrcAuthenticationModule");
+            return Mapper.Map<IEnumerable<KnownHost>, TransportKnownHost[]>(authenticationManager.GetHosts());
         }
 
         public TransportKnownHost GetUserById(int id)
@@ -161,6 +198,62 @@ namespace SpikeLite.IPC.WebHost.Services
                 host.AccessTokenExpiration = DateTime.Now.ToUniversalTime();
                 authenticationManager.UpdateHost(host);
             }
+        }
+
+        public AccessFlag[] GetAllKnownAccessFlags()
+        {
+            var accessFlagDao = GetBean<IAccessFlagDao>("AccessFlagDao");
+            return accessFlagDao.FindAll().ToArray();
+        }
+
+        public void CreateAccessFlag(string name, string description)
+        {
+            var accessFlagDao = GetBean<IAccessFlagDao>("AccessFlagDao");
+
+            if (!accessFlagDao.FindAll().Any(x => x.Flag.Equals(name, StringComparison.InvariantCultureIgnoreCase)))
+            {
+                accessFlagDao.SaveOrUpdate(accessFlagDao.CreateFlag(name, description));
+            }
+        }
+
+        public void AddAccessFlagToUser(int userId, int accessFlag)
+        {
+            var authenticationManager = GetBean<IrcAuthenticationModule>("IrcAuthenticationModule");
+            var accessFlagDao = GetBean<IAccessFlagDao>("AccessFlagDao");
+            var knownHost = authenticationManager.FindHostById(userId);
+
+            // Make sure we know the host corresponding to the id.
+            if (null != knownHost)
+            {
+                // Make sure the access flag actually exists as well...
+                var flag = accessFlagDao.FindAll().FirstOrDefault(x => x.Id == accessFlag);
+
+                // Lastly, make sure the flag is not already set.
+                if (null != flag && ! knownHost.AccessFlags.Any(x => x.Id == accessFlag))
+                {
+                    knownHost.AccessFlags.Add(flag);
+                    authenticationManager.UpdateHost(knownHost);    
+                }                
+            }            
+        }
+
+        public void RevokeAccessFlagFromUser(int userId, int accessFlag)
+        {
+            var authenticationManager = GetBean<IrcAuthenticationModule>("IrcAuthenticationModule");
+            var accessFlagDao = GetBean<IAccessFlagDao>("AccessFlagDao");
+            var knownHost = authenticationManager.FindHostById(userId);
+
+            // Make sure we know the host corresponding to the id.
+            if (null != knownHost)
+            {
+                // Make sure that we know what this flag is.
+                if (accessFlagDao.FindAll().Any(x => x.Id == accessFlag))
+                {
+                    // Try and remove the flag - if it's not set, we should have a no-op here.
+                    knownHost.AccessFlags.Remove(knownHost.AccessFlags.FirstOrDefault(x => x.Id == accessFlag));
+                    authenticationManager.UpdateHost(knownHost);
+                }
+            } 
         }
     }
 }

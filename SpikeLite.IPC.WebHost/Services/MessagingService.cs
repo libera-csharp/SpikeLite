@@ -31,7 +31,6 @@ namespace SpikeLite.IPC.WebHost.Services
     /// <summary>
     /// Implements the <see cref="IMessagingService"/> contract, providing a concrete implementation of our service.
     /// </summary>
-    [ServiceBehavior(InstanceContextMode = InstanceContextMode.Single)]
     public class MessagingService : AbstractUserContextAwareService, IMessagingService
     {
         public void SendMessage(string channelTarget, string messageText)
