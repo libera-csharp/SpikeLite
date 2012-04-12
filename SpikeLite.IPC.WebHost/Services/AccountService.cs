@@ -126,6 +126,7 @@ namespace SpikeLite.IPC.WebHost.Services
     /// <summary>
     /// Provides a concrete implementation of <see cref="IAccountService"/>.
     /// </summary>
+    [ServiceBehavior(InstanceContextMode = InstanceContextMode.Single)]
     public class AccountService : AbstractUserContextAwareService, IAccountService
     {
         public override void Configure()

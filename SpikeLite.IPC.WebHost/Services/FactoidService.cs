@@ -70,6 +70,7 @@ namespace SpikeLite.IPC.WebHost.Services
     /// <summary>
     /// Provides a concrete implementation of <see cref="IFactoidService"/>.
     /// </summary>
+    [ServiceBehavior(InstanceContextMode = InstanceContextMode.Single)]
     public class FactoidService : AbstractUserContextAwareService, IFactoidService
     {
         public override void Configure()
