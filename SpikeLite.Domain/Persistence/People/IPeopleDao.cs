@@ -33,16 +33,11 @@ namespace SpikeLite.Domain.Persistence.People
         Person CreateOrFindPerson(string name);
 
         /// <summary>
-        /// Appends a factoid to the given name.
+        /// Saves the factoids for a given user.
         /// </summary>
         /// 
-        /// <param name="factoid">A fully-formed <see cref="PersonFactoid"/> to persist.</param>
-        /// 
-        /// <remarks>
-        /// Because we may not have the entire <see cref="Person"/> with all the associated factoids faulted into memory, we'll just try
-        /// and save the factoid by itself.
-        /// </remarks>
-        void SaveFactoid(PersonFactoid factoid);
+        /// <param name="factoid">A fully-formed <see cref="Person"/> to persist.</param>
+        void SaveFactoids(Person factoid);
 
         /// <summary>
         /// Deletes a factoid, by ID.

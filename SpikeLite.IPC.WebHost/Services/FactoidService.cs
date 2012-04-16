@@ -43,18 +43,7 @@ namespace SpikeLite.IPC.WebHost.Services
         [SecuredOperation]
         TransportPerson GetFactoidForPerson(string person);
 
-        /// <summary>
-        /// Adds a factoid for the given string identifier, of a given type.
-        /// </summary>
-        /// 
-        /// <param name="person">The string identifier to attach the factoid to. Will be created if does not already exist.</param>
-        /// <param name="type">The type of the factoid: warning, idiot, unban etc.</param>
-        /// <param name="factoid">The text of the factoid.</param>
-        [OperationContract]
-        [SecuredOperation("addFactoid")]
-        void AddFactoidForPerson(string person, string type, string factoid);
-
-        // TODO [Kog 04/09/2012] : Mark deleted instead of doing an actual delete...
+        // TODO [Kog 04/09/2012] : Consider marking deleted instead of doing an actual delete.
 
         /// <summary>
         /// Deletes a factoid by ID.
@@ -91,23 +80,6 @@ namespace SpikeLite.IPC.WebHost.Services
         {
             var peopleDao = GetBean <IPeopleDao> ("PersonDao");
             return Mapper.Map<Person, TransportPerson>(peopleDao.CreateOrFindPerson(person));
-        }
-
-        // TODO [Kog 04/09/2012] : Consider replacing email address with a nickname here. Need to wire a bit more context first though...
-
-        public void AddFactoidForPerson(string person, string type, string factoid)
-        {
-            var peopleDao = GetBean<IPeopleDao>("PersonDao");
-            var target = peopleDao.CreateOrFindPerson(person.ToUpperInvariant());
-
-            peopleDao.SaveFactoid(new PersonFactoid
-            {
-                Description = factoid,
-                CreationDate = DateTime.UtcNow,
-                Person = target,
-                Type = type,
-                CreatedBy = GetPrincipal().EmailAddress
-            });
         }
 
         public void DeleteFactoidById(int id)

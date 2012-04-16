@@ -32,9 +32,9 @@ namespace SpikeLite.Domain.Persistence.People
             return entity;
         }
 
-        public void SaveFactoid(PersonFactoid factoid)
+        public void SaveFactoids(Person person)
         {
-            HibernateTemplate.Save(factoid);
+            HibernateTemplate.SaveOrUpdate(person);
         }
 
         public void DeleteFactoidById(int factoidId)

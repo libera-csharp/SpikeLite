@@ -70,14 +70,17 @@ namespace SpikeLite.Modules.People
                     // If we've got a description, they're added to said person.
                     if (description.Length > 0)
                     {
-                        PersonDao.SaveFactoid(new PersonFactoid
+                        var factoid = new PersonFactoid
                         {
                             Description = description,
                             CreationDate = DateTime.UtcNow,
                             Person = target,
-                            Type = command,  
+                            Type = command,
                             CreatedBy = request.Nick
-                        });
+                        };
+
+                        target.Factoids.Add(factoid);
+                        PersonDao.SaveFactoids(target);
 
                         response = request.CreateResponse(ResponseType.Public, "Factoid saved.");
                     }
