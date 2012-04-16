@@ -247,6 +247,11 @@ namespace SpikeLite.AccessControl
             return _cloaks.FirstOrDefault(x => x.Id == id);
         }
 
+        public KnownHost FindHostByHostmaskMatch(string hostmask)
+        {
+            return _cloaks.FirstOrDefault(x => x.HostMask.Equals(hostmask, StringComparison.InvariantCultureIgnoreCase));
+        }
+
         #endregion 
     }
 }

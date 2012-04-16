@@ -121,6 +121,29 @@ namespace SpikeLite.IPC.WebHost.Services
         [OperationContract]
         [SecuredOperation("manageUsers")]
         void RevokeAccessFlagFromUser(int userId, int accessFlag);
+
+        // TODO [Kog 04/16/2012] : This should probably throw some sort of exception...
+
+        /// <summary>
+        /// Creates a new known host entry.
+        /// </summary>
+        /// 
+        /// <param name="hostMask">The hostmask to create a record for.</param>
+        /// <param name="accessLevel">The access level to give the host.</param>
+        /// 
+        /// <returns>The ID of the newly created user, or -1.</returns>
+        [OperationContract]
+        [SecuredOperation("manageUsers")]
+        long CreateHostEntry(string hostMask, AccessLevel accessLevel);
+
+        /// <summary>
+        /// Deletes a known host entry.
+        /// </summary>
+        /// 
+        /// <param name="hostMask">The hostmask entry to remove the record of.</param>
+        [OperationContract]
+        [SecuredOperation("manageUsers")]
+        void DeleteHostEntry(string hostMask);
     }
 
     /// <summary>
@@ -255,6 +278,41 @@ namespace SpikeLite.IPC.WebHost.Services
                     authenticationManager.UpdateHost(knownHost);
                 }
             } 
+        }
+
+        public long CreateHostEntry(string hostMask, AccessLevel accessLevel)
+        {
+            var authenticationManager = GetBean<IrcAuthenticationModule>("IrcAuthenticationModule");
+            var host = authenticationManager.FindHostByHostmaskMatch(hostMask);
+
+            // TODO [Kog 04/16/2012] : This should probably throw an exception.
+            
+            // If we've seen this host before, short circuit and return the ID on file.
+            if (null != host)
+            {
+                return host.Id;
+            }
+
+            host = new KnownHost
+            {
+                AccessLevel = accessLevel,
+                HostMask = hostMask,
+                HostMatchType = HostMatchType.Start,
+            };
+
+            // If we've never seen the host, create a new one and return that id.
+            authenticationManager.RememberHost(host);
+            return host.Id;
+        }
+
+        public void DeleteHostEntry(string hostMask)
+        {
+            var authenticationManager = GetBean<IrcAuthenticationModule>("IrcAuthenticationModule");
+
+            if (authenticationManager.KnowsHost(hostMask))
+            {
+                authenticationManager.ForgetHost(hostMask);
+            }
         }
     }
 }

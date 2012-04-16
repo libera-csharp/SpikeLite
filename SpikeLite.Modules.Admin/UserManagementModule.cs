@@ -116,12 +116,12 @@ namespace SpikeLite.Modules.Admin
             }
             else
             {
-                KnownHost host = new KnownHost
-                                 {
-                                     AccessLevel = GetAccessLevelByName(level),
-                                     HostMask = hostmask,
-                                     HostMatchType = HostMatchType.Start,
-                                 };
+                var host = new KnownHost
+                {
+                    AccessLevel = GetAccessLevelByName(level),
+                    HostMask = hostmask,
+                    HostMatchType = HostMatchType.Start,
+                };
  
                 AuthenticationManager.RememberHost(host);
                 ModuleManagementContainer.HandleResponse(request.CreateResponse(ResponseType.Private, String.Format("Learned host {0}", TranslateHostToString(host))));
