@@ -6,3 +6,4 @@ output/*
 */bin/*
 SpikeLite.sln.cache
 */beans-overrides.xml
+packages/*
