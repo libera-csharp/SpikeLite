@@ -71,3 +71,11 @@ You can ask the Bot for help (~help users), and hopefully the directions should 
 * ~users add hostmask admin: this will add a user at the Root level.
 * ~users add hostmask user: this will add a user at the Public level.
 * ~users del hostmask: this will delete a user.
+
+### NuGet
+
+As of July, 2012 we've started to rely on NuGet rather than having all our dependencies as binaries in VCS. Some of our dependencies don't exist in the standard repositories and are kept around. We've tested both the standard MS CLR on Windows as well as against Mono 2.11. If you find yourself having issues with the latter you might want to look at issue #7 (https://github.com/Freenode-Csharp/SpikeLite/issues/7). The short of it is that you'll want to do the following:
+
+    "mozroots --import --sync"
+
+ This will grab the standard set of SSL certs that Mozilla ships, and put them into the "trusted" category (use certmgr to check if you're curious). The --sync option means that you're not going to have to say yes to the approximately 140 certificates. If you have trouble parsing the file and get "No certificates found" you should fetch the file via wget/curl/whatever and use the -file parameter.
