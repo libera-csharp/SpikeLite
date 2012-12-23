@@ -24,20 +24,18 @@
         <!-- Set values for our bot's setup. -->
         <add key="network.name" value="Localhost" />
         <add key="bot.nick" value="SpikeLite" />
-        <add key="bot.realname" value="##CSharp irc bot" />
+        <add key="bot.realname" value="SpikeLite" />
         <add key="bot.username" value="SpikeLite" />
-        <add key="bot.accountpass" value="password" />
-        <add key="server.supports.identification" value="true" />
+        <add key="bot.accountpass" value="" />
+        <add key="server.supports.identification" value="false" />
 
         <!-- Configure our server -->
-        <add key="server.host" value="127.0.0.1" />
+        <add key="server.host" value="localhost" />
         <add key="server.port" value="6667" />
 
         <!-- Configure our API keys -->
-        <add key="apikeys.bing" value="NOT CONFIGURED" />
-
-        <!-- Configure our referrers -->
-        <add key="referrers.googleajax" value="http://tempuri.org" />
+        <add key="apikeys.bing" value=""/>
+        <add key="apikeys.google" value=""/>
 
         <!-- Database setup - this will build an SQLite3 database if none exists. 
              This should work out of the box on Windows, but on Linux you'll need SQLite3 already installed.-->
@@ -56,7 +54,7 @@
 
         <!-- You probably want to alter this... -->
         <object id="Test" type="SpikeLite.Communications.Irc.Configuration.Channel, SpikeLite">
-          <property name="Name" value="#spikelite" />
+          <property name="Name" value="#test" />
         </object>
 
       </list>

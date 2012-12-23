@@ -12,6 +12,8 @@ using System.Web;
 using System.Net;
 using Newtonsoft.Json.Linq;
 using System.Linq;
+using System.Net.Http;
+using Newtonsoft.Json;
 
 namespace SpikeLite.Modules.Search
 {
@@ -24,22 +26,75 @@ namespace SpikeLite.Modules.Search
     /// second being that Microsoft allows a higher number of searches per day. This provider is only used, by default, for the Google search
     /// itself.
     /// </remarks>
-    public class GoogleAjaxSearchProvider : AbstractReferrerSearchProvider
+    public class GoogleAjaxSearchProvider : AbstractApiKeySearchProvider
     {
         #region Constants
 
-        private static readonly Uri SearchUri = new Uri("http://ajax.googleapis.com/ajax/services/search/");
-        private const string ApiVersion = "v=1.0";
+        private static readonly Uri SearchUri = new Uri("https://www.googleapis.com/customsearch/v1");
 
         #endregion
 
         #region Inner Classes
 
-        private class State
+        private class Url
         {
-            internal string SearchCriteria { get; set; }
-            internal Action<string[]> CallbackHandler { get; set; }
-            internal WebClient WebClient { get; set; }
+            public string type { get; set; }
+            public string template { get; set; }
+        }
+
+        private class NextPage
+        {
+            public string title { get; set; }
+            public int totalResults { get; set; }
+            public string searchTerms { get; set; }
+            public int count { get; set; }
+            public int startIndex { get; set; }
+            public string inputEncoding { get; set; }
+            public string outputEncoding { get; set; }
+            public string cx { get; set; }
+        }
+
+        private class Request
+        {
+            public string title { get; set; }
+            public int totalResults { get; set; }
+            public string searchTerms { get; set; }
+            public int count { get; set; }
+            public int startIndex { get; set; }
+            public string inputEncoding { get; set; }
+            public string outputEncoding { get; set; }
+            public string cx { get; set; }
+        }
+
+        private class Queries
+        {
+            public List<NextPage> nextPage { get; set; }
+            public List<Request> request { get; set; }
+        }
+
+        private class Context
+        {
+            public string title { get; set; }
+        }
+
+        private class Item
+        {
+            public string kind { get; set; }
+            public string title { get; set; }
+            public string htmlTitle { get; set; }
+            public string link { get; set; }
+            public string displayLink { get; set; }
+            public string snippet { get; set; }
+            public string htmlSnippet { get; set; }
+        }
+
+        private class GoogleCustomSearchResults
+        {
+            public string kind { get; set; }
+            public Url url { get; set; }
+            public Queries queries { get; set; }
+            public Context context { get; set; }
+            public List<Item> items { get; set; }
         }
 
         #endregion
@@ -48,72 +103,35 @@ namespace SpikeLite.Modules.Search
 
         public override void ExecuteSearch(string searchCriteria, string domain, Action<string[]> callbackHandler)
         {
-            WebClient webClient = new WebClient();
-            webClient.Headers.Add("Referer", Referrer.AbsoluteUri);
-            webClient.DownloadStringCompleted += SearchCompletionHandler;
+            HttpClient httpClient = new HttpClient();
+            Uri searchUri = BuildQueryUri(ApiKey, searchCriteria, domain);
 
-            //AJ: Currently only web search is supported
-            Uri searchUri = BuildQueryUri(searchCriteria, "web");
-
-            State state = new State
+            httpClient.GetAsync(searchUri).ContinueWith((getTask) =>
             {
-                SearchCriteria = searchCriteria,
-                CallbackHandler = callbackHandler,
-                WebClient = webClient
-            };
+                HttpResponseMessage response = getTask.Result;
 
-            webClient.DownloadStringAsync(searchUri, state);
+                response.Content.ReadAsStringAsync().ContinueWith((readAsStringTask) =>
+                {
+                    string content = readAsStringTask.Result;
+
+                    GoogleCustomSearchResults customSearchResults = JsonConvert.DeserializeObject<GoogleCustomSearchResults>(content);
+                    List<string> results = new List<string>();
+
+                    foreach (Item item in customSearchResults.items.Take(1))
+                    {
+                        results.Add(String.Format("'%query%': {0} | {1}",
+                                  item.title,
+                                  item.link));
+                    }
+
+                    callbackHandler(results.ToArray());
+                });
+            });
         }
 
-                /// <summary>
-        /// Our callback to use when we've received our data from our "provider."
-        /// </summary>
-        /// 
-        /// <param name="sender">Ignored.</param>
-        /// <param name="e">The respose from our provider, including the state that we shoved in.</param>
-        private void SearchCompletionHandler(object sender, DownloadStringCompletedEventArgs e)
+        private static Uri BuildQueryUri(string apiKey, string searchCriteria, string domain)
         {
-            State state = (State)e.UserState;
-            List<string> results = new List<string>();
-
-            try
-            {
-                JObject json = JObject.Parse(e.Result);
-
-                if (json["responseData"]["results"].Children().Count() > 0)
-                {
-                    var result = json["responseData"]["results"].Children().First();
-
-                    // Grab the actual URL. We're going to need to strip off the quotes that Google hands back to us.
-                    var resultUrl = result["url"].ToString().Replace("\"", "");
-
-                    results.Add(String.Format("'{0}': {1} | {2}",
-                                              state.SearchCriteria,
-                                              result["titleNoFormatting"],
-                                              resultUrl));
-                }
-                else
-                {
-                    results.Add(String.Format("'{0}': No Results.", state.SearchCriteria));
-                }
-            }
-            catch (Exception)
-            {
-                results.Add("The service is currently b00rked, please try again in a few minutes.");
-            }
-            finally
-            {
-                state.WebClient.DownloadStringCompleted -= SearchCompletionHandler;
-                state.WebClient.Dispose();
-            }
-
-            // Call back our callback from our container.
-            state.CallbackHandler.Invoke(results.ToArray());
-        }
-
-        private static Uri BuildQueryUri(string searchCriteria, string searchType)
-        {
-            return new Uri(string.Format("{0}{1}?{2}&q={3}", SearchUri.AbsoluteUri, searchType, ApiVersion, HttpUtility.UrlEncode(searchCriteria)));
+            return new Uri(string.Format("?key={0}&cx=&q={1}&siteSearch={2}", apiKey, HttpUtility.UrlEncode(searchCriteria), domain));
         }
 
         #endregion

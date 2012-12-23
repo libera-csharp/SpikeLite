@@ -176,11 +176,8 @@
         <add key="server.port" value="6667" />
 
         <!-- Configure our API keys -->
-        <add key="apikeys.google" value="NOT CONFIGURED" />
         <add key="apikeys.bing" value="NOT CONFIGURED" />
-
-        <!-- Configure our referrers -->
-        <add key="referrers.googleajax" value="NOT CONFIGURED" />
+        <add key="apikeys.google" value="NOT CONFIGURED" />
 
         <!-- Database setup -->
         <add key="db.provider" value="SQLite-1.0.65" />

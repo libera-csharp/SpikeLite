@@ -35,12 +35,13 @@
   </object>
 
   <!-- Set up our search providers -->
-  <object id="GoogleAjaxSearchProvider" type="SpikeLite.Modules.Search.GoogleAjaxSearchProvider, SpikeLite.Modules.Search">
-    <property name="Referrer" ref="GoogleAjaxReferrer"/>
-  </object>
 	
   <object id="MicrosoftBingSearchProvider" type="SpikeLite.Modules.Search.MicrosoftBingSearchProvider, SpikeLite.Modules.Search">
     <property name="ApiKey" ref="BingApiKey"/>
+  </object>
+
+  <object id="GoogleAjaxSearchProvider" type="SpikeLite.Modules.Search.GoogleAjaxSearchProvider, SpikeLite.Modules.Search">
+    <property name="ApiKey" ref="GoogleApiKey"/>
   </object>
 
   <!-- Default search-based modules. -->
@@ -389,11 +390,10 @@
   </object>
 
   <!-- Our Google and MS Live API keys. Please define these in the beans-overrides.xml. -->
-  <object name="GoogleAjaxReferrer" type="System.Uri">
-	<constructor-arg index="0" value="${referrers.googleajax}"/>
-  </object>
-	
   <object name="BingApiKey" type="String">
     <constructor-arg index="0" value="${apikeys.bing}"/>
+  </object>
+  <object name="GoogleApiKey" type="System.Uri">
+    <constructor-arg index="0" value="${apikeys.google}"/>
   </object>
 </objects>

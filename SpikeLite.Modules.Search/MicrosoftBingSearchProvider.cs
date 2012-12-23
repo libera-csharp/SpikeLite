@@ -8,7 +8,11 @@
 
 using System;
 using System.Collections.Generic;
-using SpikeLite.Modules.Search.net.bing.api;
+using System.Linq;
+using System.Net;
+using Bing;
+
+//https://api.datamarket.azure.com/Data.ashx/Bing/Search/v1/Web?Query=%27string%20class%20site%3amsdn.microsoft.com%27&$top=50&$format=Atom 
 
 namespace SpikeLite.Modules.Search
 {
@@ -23,65 +27,36 @@ namespace SpikeLite.Modules.Search
     /// </remarks>
     public class MicrosoftBingSearchProvider : AbstractApiKeySearchProvider
     {
-        private readonly BingService _searchBroker;
-
-        public MicrosoftBingSearchProvider()
-        {
-            _searchBroker = new BingService();
-            _searchBroker.SearchCompleted += SearchCompleted;
-        }
-
         public override void ExecuteSearch(string searchCriteria, string domain, Action<string[]> callbackHandler)
         {
+            BingSearchContainer _searchBroker = new BingSearchContainer(new Uri("https://api.datamarket.azure.com/Bing/Search/"))
+            {
+                Credentials = new NetworkCredential(ApiKey, ApiKey)
+            };
+
             string domainSpecificSearchCriteria = searchCriteria.Trim();
 
             // Not everything needs a domain qualifier - BING and Google being the primary cases. Only add the domain if required, this will
             // prevent BING from searching MS docs no one cares about.
-            if (!String.IsNullOrEmpty(domain))
+            if (!String.IsNullOrWhiteSpace(domain))
             {
                 domainSpecificSearchCriteria += String.Format(" site:{0}", domain);
             }
 
-            SearchRequest searchRequest = new SearchRequest
-            {
-                Adult = AdultOption.Off,
-                AppId = ApiKey,
-                Market = "en-US",
-                Query = domainSpecificSearchCriteria,
-                Sources = new[] { SourceType.Web },
-                Version = "2.2",
-                Web = new WebRequest { Count = 1 }
-            };
+            //TODO: AJ: Thread
+            var query = _searchBroker.Web(domainSpecificSearchCriteria, null, null, "en-US", "Off", null, null, null);
+            var webResults = query.Execute();
 
-            _searchBroker.SearchAsync(searchRequest, callbackHandler);
-        }
-
-        static void SearchCompleted(object sender, SearchCompletedEventArgs e)
-        {
             List<string> results = new List<string>();
 
-            // Our Async finder may have thrown an exception, so let's catch it and spit it out at the user if we must.
-            try
+            foreach (WebResult webResult in webResults.Take(1))
             {
-                if (e.Result.Web.Results.Length > 0)
-                {
-                    WebResult webResult = e.Result.Web.Results[0];
-                    results.Add(String.Format("'%query%': {0} | {1}",
-                                              webResult.Description,
-                                              webResult.Url));
-                }
-                else
-                {
-                    results.Add(String.Format("'%query%': No Results."));
-                }
-            }
-            catch (Exception)
-            {
-                results.Add("The service is currently b00rked, please try again in a few minutes.");
+                results.Add(String.Format("'%query%': {0} | {1}",
+                          webResult.Description,
+                          webResult.Url));
             }
 
-            // Call back our callback from our container.
-            ((Action<string[]>)e.UserState).Invoke(results.ToArray());     
+            callbackHandler(results.ToArray());
         }
     }
 }
