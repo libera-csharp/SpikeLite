@@ -52,7 +52,7 @@ namespace SpikeLite.Communications
         #region Data members
 
         private IIrcClient _ircClient;
-        private bool _isStarted = false;
+        private bool _isStarted;
 
         /// <summary>
         /// Stores our log4net logger.

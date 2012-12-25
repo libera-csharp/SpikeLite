@@ -86,7 +86,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AbstractApiKeySearchProvider.cs" />
-    <Compile Include="AbstractReferrerSearchProvider.cs" />
     <Compile Include="Bing\BingSearchContainer.cs" />
     <Compile Include="GoogleAjaxSearchProvider.cs" />
     <Compile Include="MicrosoftBingSearchProvider.cs" />
