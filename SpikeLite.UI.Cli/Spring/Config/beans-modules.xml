@@ -393,7 +393,7 @@
   <object name="BingApiKey" type="String">
     <constructor-arg index="0" value="${apikeys.bing}"/>
   </object>
-  <object name="GoogleApiKey" type="System.Uri">
+  <object name="GoogleApiKey" type="String">
     <constructor-arg index="0" value="${apikeys.google}"/>
   </object>
 </objects>
