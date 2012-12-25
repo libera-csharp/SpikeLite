@@ -27,10 +27,10 @@ namespace SpikeLite.Modules.About
 
         private void SendResponse(Request request)
         {
-            string message = string.Format("{0} (V{1}) is the ##csharp irc bot on freenode.net", 
+            var message = string.Format("{0} (V{1}) is the ##csharp irc bot on freenode.net", 
                                            NetworkConnectionInformation.BotNickname, 
                                            Assembly.GetEntryAssembly().GetName().Version.ToString(2));
-            Response response = request.CreateResponse(ResponseType.Private, message);
+            var response = request.CreateResponse(ResponseType.Private, message);
             ModuleManagementContainer.HandleResponse(response);
 
             response.Message = "====================================";

@@ -50,9 +50,9 @@ namespace SpikeLite.Modules.Admin
             if (request.RequestFrom.AccessLevel >= AccessLevel.Root && request.Message.StartsWith("~Channel", StringComparison.OrdinalIgnoreCase))
             {
                 // Parse our message and split out a couple of vars... a tad bit nicer than magic numbers.
-                string[] splitMessage = request.Message.Split(' ');
-                string operationDescription = splitMessage[1];
-                string target = splitMessage[2];
+                var splitMessage = request.Message.Split(' ');
+                var operationDescription = splitMessage[1];
+                var target = splitMessage[2];
 
                 // Do the operation if we know how, else log.
                 if (splitMessage.Length == 3 && _supportedOperations.ContainsKey(operationDescription))

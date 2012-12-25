@@ -21,7 +21,7 @@ namespace SpikeLite.Communications.Irc.Configuration
         /// <remarks>
         /// No cleaning is done to ensure that the channel name is appropriate to the set of capabilities an IRCD
         /// exposes. For example, it's possible to have a channel type that's local only by naming the channel
-        /// something like &localchannel. Your IRCD may or may not support this.
+        /// something like &amp;localchannel. Your IRCD may or may not support this.
         /// </remarks>
         public string Name { get; set; }
 

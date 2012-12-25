@@ -6,7 +6,6 @@
  * distributed license.txt for details.
  */
 
-using System;
 using System.Collections.Generic;
 using SpikeLite.Domain.Model.People;
 using Spring.Data.NHibernate.Generic.Support;

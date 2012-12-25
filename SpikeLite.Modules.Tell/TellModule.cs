@@ -18,15 +18,15 @@ namespace SpikeLite.Modules.Tell
 
         public override void HandleRequest(Request request)
         {
-            string[] messageArray = request.Message.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+            var messageArray = request.Message.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
 
             if (request.RequestFrom.AccessLevel >= AccessLevel.Public
                 && request.RequestType == RequestType.Public
                 && messageArray[0].Equals("~tell", StringComparison.OrdinalIgnoreCase))
             {
-                string newMessage = string.Empty;
+                var newMessage = string.Empty;
 
-                for (int i = 1; i < messageArray.Length; i++)
+                for (var i = 1; i < messageArray.Length; i++)
                 {
                     if (i == 1)
                     {

@@ -18,14 +18,14 @@ using SpikeLite.Communications.Irc.Configuration;
 
 namespace SpikeLite.Irc.IrcDotNet
 {
-    public class IrcClient : IrcClientBase, IIrcClient
+    public class IrcClient : IrcClientBase
     {
         #region Data members
         private global::IrcDotNet.IrcClient _ircClient;
         private CtcpClient _ctcpClient;
         private readonly TraceLogImpl _logger = (TraceLogImpl)TraceLogManager.GetLogger(typeof(IrcClient));
-        private int _nickRetryCount = 0;
-        private bool _userInitiatedDisconnect = false;
+        private int _nickRetryCount;
+        private bool _userInitiatedDisconnect;
         #endregion
 
         public override bool IsConnected { get { return _ircClient != null && _ircClient.IsConnected; } }
@@ -35,7 +35,7 @@ namespace SpikeLite.Irc.IrcDotNet
         public override void Connect(Network network)
         {
             Network = network;
-            Server = this.Network.ServerList.First();
+            Server = Network.ServerList.First();
 
             Connect();
         }
@@ -63,11 +63,7 @@ namespace SpikeLite.Irc.IrcDotNet
 
         public override void DoAction(string channelName, string emoteText)
         {
-            _ctcpClient.SendAction(_ircClient
-                .Channels
-                .Where(c => c.Name.Equals(channelName, StringComparison.OrdinalIgnoreCase))
-                .Single(),
-                emoteText);
+            _ctcpClient.SendAction(_ircClient.Channels.Single(c => c.Name.Equals(channelName, StringComparison.OrdinalIgnoreCase)), emoteText);
         }
 
         public override void JoinChannel(string channelName)
@@ -147,9 +143,10 @@ namespace SpikeLite.Irc.IrcDotNet
         {
             var sourceChannel = (IrcChannel)sender;
 
-            if (e.Source is IrcUser)
+            var source = e.Source as IrcUser;
+            if (source != null)
             {
-                var sourceUser = (IrcUser)e.Source;
+                var sourceUser = source;
 
                 var user = new User
                 {
@@ -223,9 +220,8 @@ namespace SpikeLite.Irc.IrcDotNet
 
             if (e.Message.Command == "433")
             {
-                string nickSuffix = _nickRetryCount.ToString();
-                string newNick = _ircClient.LocalUser.NickName
-                    .Substring(0, _ircClient.LocalUser.NickName.Length - nickSuffix.Length) + nickSuffix;
+                var nickSuffix = _nickRetryCount.ToString();
+                var newNick = _ircClient.LocalUser.NickName.Substring(0, _ircClient.LocalUser.NickName.Length - nickSuffix.Length) + nickSuffix;
 
                 _ircClient.LocalUser.SetNickName(newNick);
 
@@ -235,7 +231,7 @@ namespace SpikeLite.Irc.IrcDotNet
 
         void Disconnected(object sender, EventArgs e)
         {
-            int reconnectCount = 1;
+            var reconnectCount = 1;
 
             UnwireEvents();
 

@@ -89,7 +89,7 @@ namespace SpikeLite.Communications
         /// <returns>A response structure capable of being sent along the application as a message.</returns>
         public Response CreateResponse( ResponseType maxResponse, string message )
         {
-            ResponseType responseType = GetResponseType(maxResponse);
+            var responseType = GetResponseType(maxResponse);
 
             return new Response
             {

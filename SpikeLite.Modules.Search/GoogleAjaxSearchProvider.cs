@@ -9,8 +9,6 @@
 using System;
 using System.Collections.Generic;
 using System.Web;
-using System.Net;
-using Newtonsoft.Json.Linq;
 using System.Linq;
 using System.Net.Http;
 using Newtonsoft.Json;
@@ -103,21 +101,21 @@ namespace SpikeLite.Modules.Search
 
         public override void ExecuteSearch(string searchCriteria, string domain, Action<string[]> callbackHandler)
         {
-            HttpClient httpClient = new HttpClient();
-            Uri searchUri = BuildQueryUri(ApiKey, searchCriteria, domain);
+            var httpClient = new HttpClient();
+            var searchUri = BuildQueryUri(ApiKey, searchCriteria, domain);
 
             httpClient.GetAsync(searchUri).ContinueWith((getTask) =>
             {
-                HttpResponseMessage response = getTask.Result;
+                var response = getTask.Result;
 
-                response.Content.ReadAsStringAsync().ContinueWith((readAsStringTask) =>
+                response.Content.ReadAsStringAsync().ContinueWith(readAsStringTask =>
                 {
-                    string content = readAsStringTask.Result;
+                    var content = readAsStringTask.Result;
 
-                    GoogleCustomSearchResults customSearchResults = JsonConvert.DeserializeObject<GoogleCustomSearchResults>(content);
-                    List<string> results = new List<string>();
+                    var customSearchResults = JsonConvert.DeserializeObject<GoogleCustomSearchResults>(content);
+                    var results = new List<string>();
 
-                    foreach (Item item in customSearchResults.items.Take(1))
+                    foreach (var item in customSearchResults.items.Take(1))
                     {
                         results.Add(String.Format("'%query%': {0} | {1}",
                                   item.title,

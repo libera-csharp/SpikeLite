@@ -103,6 +103,8 @@ namespace SpikeLite.Communications
         /// This will need to be refactored to allow multi-network support. This will perform a no-op
         /// if you are already connected.
         /// </para>
+        /// 
+        /// </remarks>
         public void Connect()
         {
             if (!_isStarted)

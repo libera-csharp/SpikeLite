@@ -6,7 +6,6 @@
  * distributed license.txt for details.
  */
 
-using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Web;
@@ -63,7 +62,7 @@ namespace SpikeLite.Modules.GeoIP
         {
             if (request.Message.StartsWith("~geoip") && request.RequestFrom.AccessLevel >= AccessLevel.Public)
             {
-                Match expressionMatch = GeoIpRegex.Match(request.Message);
+                var expressionMatch = GeoIpRegex.Match(request.Message);
 
                 if (expressionMatch.Success)
                 {
@@ -99,9 +98,9 @@ namespace SpikeLite.Modules.GeoIP
         /// <param name="request">Context about our request, useful for constructing our ResponseTemplate to the user.</param>
         private void ExecuteSearch(string ipAddress, Request request)
         {
-            Uri searchUri = new Uri(string.Format("{0}?ip={1}", SearchUri.AbsoluteUri, HttpUtility.UrlEncode(ipAddress)));
+            var searchUri = new Uri(string.Format("{0}?ip={1}", SearchUri.AbsoluteUri, HttpUtility.UrlEncode(ipAddress)));
 
-            WebClient webClient = new WebClient();
+            var webClient = new WebClient();
             webClient.DownloadStringCompleted += SearchCompletionHandler;
             webClient.DownloadStringAsync(searchUri, new Tuple<Request, string, WebClient>(request, ipAddress, webClient));
         }
@@ -115,20 +114,20 @@ namespace SpikeLite.Modules.GeoIP
         private void SearchCompletionHandler(object sender, DownloadStringCompletedEventArgs e)
         {
             // Blargh this is nasty. Pull out our context and start casting crap.
-            Tuple<Request, string, WebClient> userContext = (Tuple<Request, string, WebClient>)e.UserState;
-            Request requestContext = userContext.Item1;
-            string ip = userContext.Item2;
-            WebClient webclient = userContext.Item3;
+            var userContext = (Tuple<Request, string, WebClient>)e.UserState;
+            var requestContext = userContext.Item1;
+            var ip = userContext.Item2;
+            var webclient = userContext.Item3;
 
             string response;
 
             try
             {
                 // Construct an XLinq document fragment and start anonymously pulling things out.
-                XDocument xmlResponse = XDocument.Parse(e.Result);
+                var xmlResponse = XDocument.Parse(e.Result);
 
 
-                IEnumerable<XElement> root = xmlResponse.Descendants("Hostip");
+                var root = xmlResponse.Descendants("Hostip");
                 response = String.Format(ResponseTemplate,
                                          requestContext.Addressee ?? requestContext.Nick,
                                          ip,

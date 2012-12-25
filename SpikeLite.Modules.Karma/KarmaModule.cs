@@ -58,12 +58,12 @@ namespace SpikeLite.Modules.Karma
         {
             if (request.RequestFrom.AccessLevel >= AccessLevel.Public)
             {
-                Match expressionMatch = _karmaRegex.Match(request.Message);
+                var expressionMatch = _karmaRegex.Match(request.Message);
 
                 if (expressionMatch.Success)
                 {
-                    String nick = expressionMatch.Groups[1].Value;
-                    String op = expressionMatch.Groups[2].Value;
+                    var nick = expressionMatch.Groups[1].Value;
+                    var op = expressionMatch.Groups[2].Value;
 
                     Response response;
 
@@ -76,7 +76,7 @@ namespace SpikeLite.Modules.Karma
                     else
                     {
                         // Attempt to look the user up.
-                        KarmaItem karma = KarmaDao.FindKarma(nick.ToLower()) ?? new KarmaItem {KarmaLevel = 0, UserName = nick.ToLower()};
+                        var karma = KarmaDao.FindKarma(nick.ToLower()) ?? new KarmaItem {KarmaLevel = 0, UserName = nick.ToLower()};
 
                         // If they're doing anything more than looking...
                         if (!String.IsNullOrEmpty(op))

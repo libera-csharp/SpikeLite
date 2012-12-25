@@ -42,17 +42,17 @@ namespace SpikeLite.Modules.Admin
 
         public override void HandleRequest(Request request)
         {
-            string[] message = request.Message.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+            var message = request.Message.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
 
             if (request.RequestFrom.AccessLevel >= AccessLevel.Root
                 && message[0].Equals("~logging", StringComparison.OrdinalIgnoreCase)
                 && message.Length == 2)
             {
-                string levelName = message[1].ToLower();
+                var levelName = message[1].ToLower();
 
                 if (_loggingLevels.ContainsKey(levelName))
                 {
-                    Level loggingLevel = _loggingLevels[levelName];
+                    var loggingLevel = _loggingLevels[levelName];
 
                     LoggerManager.GetAllRepositories().ForEach(x =>
                     {

@@ -64,7 +64,7 @@ namespace SpikeLite.AccessControl
         /// <returns>The set of all ACLs within the system, or the default set injected set of hosts if the cloaks table is empty.</returns>
         private IList<KnownHost> FindOrSeedAcls(IEnumerable<KnownHost> seedCloaks)
         {
-            IList<KnownHost> cloaks = _hostDao.FindAll();
+            var cloaks = _hostDao.FindAll();
 
             if (cloaks.Count < 1)
             {                
@@ -111,8 +111,8 @@ namespace SpikeLite.AccessControl
         {
             if (user != null)
             {
-                KnownHost knownHost = FindKnownHostForCloakHostmask(user.HostMask);
-                AccessLevel accessLevel = (knownHost == null) ? AccessLevel.None : knownHost.AccessLevel;
+                var knownHost = FindKnownHostForCloakHostmask(user.HostMask);
+                var accessLevel = (knownHost == null) ? AccessLevel.None : knownHost.AccessLevel;
 
                 if (accessLevel != AccessLevel.None)
                 {
@@ -132,12 +132,12 @@ namespace SpikeLite.AccessControl
         /// <returns>An associated access level for the mask, which may be <code>NONE</code> if the mask is unknown.</returns>
         private KnownHost FindKnownHostForCloakHostmask(string hostMask)
         {
-            AccessLevel userLevel = AccessLevel.None;
+            var userLevel = AccessLevel.None;
             KnownHost targetCloak = null;
 
             if (!string.IsNullOrEmpty(hostMask))
             {
-                foreach (KnownHost cloak in _cloaks)
+                foreach (var cloak in _cloaks)
                 {
                     if (userLevel < cloak.AccessLevel && cloak.Matches(hostMask))
                     {

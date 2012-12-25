@@ -22,7 +22,9 @@ namespace SpikeLite.IPC.WebHost
     /// 
     /// <typeparam name="C">The concrete type of our service implementation, such that it is an implementation of <typeparamref name="C"/>. Must conform to the "new" constraint.</typeparam>
     /// <typeparam name="I">Our service interface, fully decorated with the appropriate <see cref="ServiceContractAttribute"/> et al. Must also implement <see cref="IConfigurableServiceHost"/></typeparam>
+// ReSharper disable InconsistentNaming
     public class ServiceHostModule<I, C> : ModuleBase where C : I, new() where I : IConfigurableServiceHost
+// ReSharper restore InconsistentNaming
     {
         #region Data Members
 
@@ -88,13 +90,13 @@ namespace SpikeLite.IPC.WebHost
 
         public override void HandleRequest(Request request)
         {
-            string[] message = request.Message.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+            var message = request.Message.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
 
             if (request.RequestFrom.AccessLevel >= AccessLevel.Root &&
                 message[0].Equals(String.Format("~{0}", Name), StringComparison.OrdinalIgnoreCase) &&
                 message.Length == 2)
             {
-                string resultMessage = String.Format("Unknown {0} operation. Please specify one of the following operations: start, stop, status.", Name);
+                var resultMessage = String.Format("Unknown {0} operation. Please specify one of the following operations: start, stop, status.", Name);
 
                 // Someone is attempting to start our servicehost...
                 if (message[1].Equals("start", StringComparison.OrdinalIgnoreCase))

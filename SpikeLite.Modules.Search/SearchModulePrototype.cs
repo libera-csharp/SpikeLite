@@ -49,16 +49,16 @@ namespace SpikeLite.Modules.Search
         {
             if (request.RequestType == RequestType.Public)
             {
-                string[] messageArray = request.Message.Split(' ');
+                var messageArray = request.Message.Split(' ');
 
                 if (request.Message.StartsWith("~")
                     && request.RequestFrom.AccessLevel >= AccessLevel.Public
                     && messageArray.Length >= 2
                     && messageArray[0].ToLower() == SearchTrigger)
                 {
-                    string searchTerms = string.Empty;
+                    var searchTerms = string.Empty;
 
-                    for (int i = 1; i < messageArray.Length; i++)
+                    for (var i = 1; i < messageArray.Length; i++)
                     {
                         searchTerms += messageArray[i] + " ";
                     }
@@ -75,9 +75,9 @@ namespace SpikeLite.Modules.Search
                         && messageArray.Length >= 3
                         && messageArray[1].ToLower() == SearchTrigger.Substring(1))
                     {
-                        string searchTerms = string.Empty;
+                        var searchTerms = string.Empty;
 
-                        for (int i = 2; i < messageArray.Length; i++)
+                        for (var i = 2; i < messageArray.Length; i++)
                         {
                             searchTerms += messageArray[i] + " ";
                         }
@@ -99,9 +99,9 @@ namespace SpikeLite.Modules.Search
         private void HandleResults(IEnumerable<string> results, Request request, string searchTerms)
         {
             // Not every search provider returns us our query strings, so do a quick token substitution for the services that don't. 
-            foreach (string result in results)
+            foreach (var result in results)
             {
-                string resultWithQuery = result.Replace("%query%", searchTerms.Trim());
+                var resultWithQuery = result.Replace("%query%", searchTerms.Trim());
 
                 ModuleManagementContainer.HandleResponse(
                     request.CreateResponse(ResponseType.Public, "{0}, {1} {2}", request.Addressee ?? request.Nick, Name,

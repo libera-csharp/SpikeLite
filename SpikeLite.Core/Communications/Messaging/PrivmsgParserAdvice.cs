@@ -35,8 +35,8 @@ namespace SpikeLite.Communications.Messaging
         /// <param name="target">The execution target.</param>
         public void Before(MethodInfo method, object[] args, object target)
         {
-            User user = (User)args[0];
-            string channelTarget = "<privmsg>";
+            var user = (User)args[0];
+            var channelTarget = "<privmsg>";
             string message;
 
             // We've received a 1:1 PRIVMSG.

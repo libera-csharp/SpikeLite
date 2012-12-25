@@ -33,7 +33,7 @@ namespace SpikeLite.Modules.Admin
 
         public override void HandleRequest(Request request)
         {
-            string[] message = request.Message.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+            var message = request.Message.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
 
             // The user must be root, the request must be a 1:1 PRIVMSG and it's gotta be of a known form factor.
             if (request.RequestFrom.AccessLevel >= AccessLevel.Root

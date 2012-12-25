@@ -6,7 +6,6 @@
  * distributed license.txt for details.
  */
 
-using System;
 using System.Collections.Generic;
 using System.ServiceModel;
 using AutoMapper;

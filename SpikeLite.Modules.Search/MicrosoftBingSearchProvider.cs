@@ -29,12 +29,12 @@ namespace SpikeLite.Modules.Search
     {
         public override void ExecuteSearch(string searchCriteria, string domain, Action<string[]> callbackHandler)
         {
-            BingSearchContainer _searchBroker = new BingSearchContainer(new Uri("https://api.datamarket.azure.com/Bing/Search/"))
+            var _searchBroker = new BingSearchContainer(new Uri("https://api.datamarket.azure.com/Bing/Search/"))
             {
                 Credentials = new NetworkCredential(ApiKey, ApiKey)
             };
 
-            string domainSpecificSearchCriteria = searchCriteria.Trim();
+            var domainSpecificSearchCriteria = searchCriteria.Trim();
 
             // Not everything needs a domain qualifier - BING and Google being the primary cases. Only add the domain if required, this will
             // prevent BING from searching MS docs no one cares about.
@@ -47,9 +47,9 @@ namespace SpikeLite.Modules.Search
             var query = _searchBroker.Web(domainSpecificSearchCriteria, null, null, "en-US", "Off", null, null, null);
             var webResults = query.Execute();
 
-            List<string> results = new List<string>();
+            var results = new List<string>();
 
-            foreach (WebResult webResult in webResults.Take(1))
+            foreach (var webResult in webResults.Take(1))
             {
                 results.Add(String.Format("'%query%': {0} | {1}",
                           webResult.Description,

@@ -25,22 +25,22 @@ namespace SpikeLite.Modules.Help
         {
             if (request.RequestFrom.AccessLevel >= AccessLevel.Public)
             {
-                string[] messageArray = request.Message.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                var messageArray = request.Message.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
 
                 if (messageArray[0].Equals("~help", StringComparison.OrdinalIgnoreCase))
                 {
                     // A user has asked for help, not specifying a module. List what we've got.
                     if (messageArray.Length == 1)
                     {
-                        SendHelpResponses(ModuleManagementContainer.Modules.Where(module => module.Name.Equals("Help")).First(), request);
+                        SendHelpResponses(ModuleManagementContainer.Modules.First(module => module.Name.Equals("Help")), request);
                         SendModulesListResponse(request);
                     }
+
                     // A user has asked for help regarding a specific module. Attempt to display help for it.
                     else if (messageArray.Length == 2)
                     {
-                        string moduleName = messageArray[1];
-                        IModule targetModule = ModuleManagementContainer.Modules.Where(module => 
-                                                                                       module.Name.Equals(moduleName, StringComparison.InvariantCultureIgnoreCase)).FirstOrDefault();
+                        var moduleName = messageArray[1];
+                        var targetModule = ModuleManagementContainer.Modules.FirstOrDefault(module => module.Name.Equals(moduleName, StringComparison.InvariantCultureIgnoreCase));
 
                         // We know what that module is!
                         if (null != targetModule && targetModule.RequiredAccessLevel <= request.RequestFrom.AccessLevel)
@@ -57,7 +57,7 @@ namespace SpikeLite.Modules.Help
                     else
                     {
                         SendIncorrectRequestSyntaxResponse(request);
-                        SendHelpResponses(ModuleManagementContainer.Modules.Where(module => module.Name.Equals("Help")).First(), request);
+                        SendHelpResponses(ModuleManagementContainer.Modules.First(module => module.Name.Equals("Help")), request);
                         SendModulesListResponse(request);
                     }
                 }
@@ -74,7 +74,7 @@ namespace SpikeLite.Modules.Help
         /// <param name="request">The incoming message to respond to.</param>
         private void SendHelpResponses(IModule module, Request request)
         {
-            Response response = request.CreateResponse(ResponseType.Private);
+            var response = request.CreateResponse(ResponseType.Private);
             
             response.Message = "Module Name: " + module.Name;
             ModuleManagementContainer.HandleResponse(response);
@@ -94,7 +94,7 @@ namespace SpikeLite.Modules.Help
         private void SendModulesListResponse(Request request)
         {
             // TODO: Kog 07/06/2009 - This is a quick hack to get the help system working. Make it more awesome after the next commit.
-            StringBuilder modulesList = new StringBuilder();
+            var modulesList = new StringBuilder();
             ModuleManagementContainer.Modules.Where(module => module.Name != "Help"
                                                                                   &&
                                                                                   module.RequiredAccessLevel <=
@@ -102,7 +102,7 @@ namespace SpikeLite.Modules.Help
                                               ForEach(x => { modulesList.Append(x.Name); modulesList.Append(", "); });
 
 
-            Response response = request.CreateResponse(ResponseType.Private);
+            var response = request.CreateResponse(ResponseType.Private);
             response.Message = "Modules list: " + modulesList.ToString().Trim().Trim(',');
             ModuleManagementContainer.HandleResponse(response);
         }
@@ -115,7 +115,7 @@ namespace SpikeLite.Modules.Help
         /// <param name="request">The incoming message to respond to.</param>
         private void SendModuleNotFoundResponse(string moduleName, Request request)
         {
-            Response response = request.CreateResponse(ResponseType.Private);
+            var response = request.CreateResponse(ResponseType.Private);
             response.Message = string.Format("Module '{0}' could not be found.", moduleName);
             ModuleManagementContainer.HandleResponse(response);
         }
@@ -127,7 +127,7 @@ namespace SpikeLite.Modules.Help
         /// <param name="request">The incoming message to respond to.</param>
         private void SendIncorrectRequestSyntaxResponse(Request request)
         {
-            Response response = request.CreateResponse(ResponseType.Private);
+            var response = request.CreateResponse(ResponseType.Private);
             response.Message = "Request was not in the correct syntax.";
             ModuleManagementContainer.HandleResponse(response);
         }

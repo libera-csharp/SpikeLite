@@ -49,8 +49,10 @@ namespace SpikeLite.UI.Cli
                     bot.BotStatusChanged += (sender, eventArgs) =>
                     {
                         if (eventArgs.NewStatus == BotStatus.Stopped)
+                        {
                             // Signal that we're ready to shutdown the bot.
-                            shutdownManualResetEvent.Set();
+                            shutdownManualResetEvent.Set();    
+                        }    
                     };
 
                     // This won't actually work while we're debugging:

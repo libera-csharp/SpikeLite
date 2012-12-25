@@ -34,10 +34,10 @@ namespace SpikeLite.Communications.Messaging
 
         public void HandleMultiTargetMessage(User user, string channel, string message)
         {
-            IUserToken userToken = UserTokenCache.RetrieveToken(user);
-            AuthToken authToken = AuthHandler.Authenticate(userToken);
+            var userToken = UserTokenCache.RetrieveToken(user);
+            var authToken = AuthHandler.Authenticate(userToken);
 
-            Request request = new Request
+            var request = new Request
             {
                 RequestFrom = authToken,
                 Channel = channel,
@@ -52,10 +52,10 @@ namespace SpikeLite.Communications.Messaging
 
         public void HandleSingleTargetMessage(User user, string message)
         {
-            IUserToken userToken = UserTokenCache.RetrieveToken(user);
-            AuthToken authToken = AuthHandler.Authenticate(userToken);
+            var userToken = UserTokenCache.RetrieveToken(user);
+            var authToken = AuthHandler.Authenticate(userToken);
 
-            Request request = new Request
+            var request = new Request
             {
                 RequestFrom = authToken,
                 Channel = null,

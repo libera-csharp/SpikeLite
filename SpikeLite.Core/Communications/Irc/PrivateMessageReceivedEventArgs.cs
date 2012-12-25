@@ -17,8 +17,8 @@ namespace SpikeLite.Communications.Irc
 
         public PrivateMessageReceivedEventArgs(User user, string message)
         {
-            this.User = user;
-            this.Message = message;
+            User = user;
+            Message = message;
         }
     }
 }

@@ -17,10 +17,10 @@ using SpikeLite.Communications.Irc.Configuration;
 
 namespace SpikeLite.Irc.ThresherIrc
 {
-    public class IrcClient : IrcClientBase, IIrcClient
+    public class IrcClient : IrcClientBase
     {
         private Connection _ircConnection;
-        private bool _userInitiatedDisconnect = false;
+        private bool _userInitiatedDisconnect;
         private readonly TraceLogImpl _logger = (TraceLogImpl)TraceLogManager.GetLogger(typeof(IrcClient));
 
         public override bool IsConnected { get { return _ircConnection.Connected; } }
@@ -86,7 +86,7 @@ namespace SpikeLite.Irc.ThresherIrc
         {
             _userInitiatedDisconnect = false;
 
-            ConnectionArgs connectionArgs = new ConnectionArgs()
+            var connectionArgs = new ConnectionArgs
             {
                 Nick = Network.BotNickname,
                 RealName = Network.BotRealname,
@@ -162,7 +162,7 @@ namespace SpikeLite.Irc.ThresherIrc
 
         void Listener_OnPublic(UserInfo userInfo, string channel, string message)
         {
-            ManualResetEventSlim finishedEvent = new ManualResetEventSlim();
+            var finishedEvent = new ManualResetEventSlim();
 
             new Thread(() =>
                 {
@@ -182,7 +182,7 @@ namespace SpikeLite.Irc.ThresherIrc
 
         void Listener_OnPrivate(UserInfo userInfo, string message)
         {
-            ManualResetEventSlim finishedEvent = new ManualResetEventSlim();
+            var finishedEvent = new ManualResetEventSlim();
 
             new Thread(() =>
                 {
@@ -202,11 +202,11 @@ namespace SpikeLite.Irc.ThresherIrc
 
         void Listener_OnDisconnected()
         {
-            ManualResetEventSlim finishedEvent = new ManualResetEventSlim();
+            var finishedEvent = new ManualResetEventSlim();
 
             new Thread(() =>
                 {
-                    int reconnectCount = 1;
+                    var reconnectCount = 1;
 
                     UnwireEvents();
 

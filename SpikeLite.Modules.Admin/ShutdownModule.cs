@@ -35,8 +35,8 @@ namespace SpikeLite.Modules.Admin
             if (request.RequestFrom.AccessLevel >= AccessLevel.Root && request.Message.StartsWith("~shutdown", StringComparison.OrdinalIgnoreCase))
             {
                 // Parse off our quit message.
-                string message = "No quit message specified.";
-                int offset = request.Message.IndexOf("~shutdown") + 9;
+                var message = "No quit message specified.";
+                var offset = request.Message.IndexOf("~shutdown") + 9;
 
                 if (request.Message.Length > offset)
                 {

@@ -16,17 +16,17 @@ namespace SpikeLite.Modules.Admin
     {
         public override void HandleRequest(Request request)
         {
-            string[] messageArray = request.Message.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+            var messageArray = request.Message.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
 
             if (request.RequestType == RequestType.Private
                 && request.RequestFrom.AccessLevel >= AccessLevel.Root
                 && messageArray[0].Equals("~puppet", StringComparison.OrdinalIgnoreCase)
                 && messageArray.Length >= 4)
             {
-                string target = messageArray[2].Trim();
-                string message = string.Empty;
+                var target = messageArray[2].Trim();
+                var message = string.Empty;
 
-                for (int i = 3; i < messageArray.Length; i++)
+                for (var i = 3; i < messageArray.Length; i++)
                 {
                     message += messageArray[i];
                     message += " ";
@@ -34,7 +34,7 @@ namespace SpikeLite.Modules.Admin
 
                 if (messageArray[1].Equals("say", StringComparison.OrdinalIgnoreCase))
                 {
-                    Response response = request.CreateResponse(ResponseType.Public, message);
+                    var response = request.CreateResponse(ResponseType.Public, message);
                     response.ResponseType = ResponseType.Public;
                     response.Channel = target;
                     ModuleManagementContainer.HandleResponse(response);

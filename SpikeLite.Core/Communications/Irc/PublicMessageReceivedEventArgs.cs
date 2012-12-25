@@ -18,9 +18,9 @@ namespace SpikeLite.Communications.Irc
 
         public PublicMessageReceivedEventArgs(User user, string channelName, string message)
         {
-            this.User = user;
-            this.ChannelName = channelName;
-            this.Message = message;
+            User = user;
+            ChannelName = channelName;
+            Message = message;
         }
     }
 }

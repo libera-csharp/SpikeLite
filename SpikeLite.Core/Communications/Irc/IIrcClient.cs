@@ -8,7 +8,6 @@
 
 using System;
 using SpikeLite.Communications.Irc.Configuration;
-using SpikeLite.Communications.Messaging;
 
 namespace SpikeLite.Communications.Irc
 {

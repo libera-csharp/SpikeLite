@@ -32,15 +32,15 @@ namespace SpikeLite.Communications.Irc
         public IrcClientBase() { }
         public IrcClientBase(Assembly assemblyForDescription)
         {
-            AssemblyName assemblyName = assemblyForDescription.GetName();
+            var assemblyName = assemblyForDescription.GetName();
 
-            this.Description = string.Format("{0} : {1}", assemblyName.Name, assemblyName.Version);
+            Description = string.Format("{0} : {1}", assemblyName.Name, assemblyName.Version);
         }
 
         #region OnEvent Methods
         protected virtual void OnPrivateMessageReceived(User user, string message)
         {
-            EventHandler<PrivateMessageReceivedEventArgs> privateMessageReceived = this.PrivateMessageReceived;
+            var privateMessageReceived = PrivateMessageReceived;
 
             if (privateMessageReceived != null)
                 privateMessageReceived(this, new PrivateMessageReceivedEventArgs(user, message));
@@ -48,7 +48,7 @@ namespace SpikeLite.Communications.Irc
 
         protected virtual void OnPublicMessageReceived(User user, string channelName, string message)
         {
-            EventHandler<PublicMessageReceivedEventArgs> publicMessageReceived = this.PublicMessageReceived;
+            var publicMessageReceived = PublicMessageReceived;
 
             if (publicMessageReceived != null)
                 publicMessageReceived(this, new PublicMessageReceivedEventArgs(user, channelName, message));
@@ -57,10 +57,7 @@ namespace SpikeLite.Communications.Irc
 
         protected virtual void JoinChannelsForNetwork()
         {
-            Network.ServerList[0].ChannelList.ForEach(channel =>
-            {
-                JoinChannel(channel.Name);
-            });
+            Network.ServerList[0].ChannelList.ForEach(channel => JoinChannel(channel.Name));
         }
 
         protected virtual bool NoticeIsExpectedServicesAgentMessage(string nickname, string notice)
