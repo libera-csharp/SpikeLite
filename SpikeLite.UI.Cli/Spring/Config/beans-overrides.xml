@@ -24,7 +24,7 @@
         <!-- Set values for our bot's setup. -->
         <add key="network.name" value="Localhost" />
         <add key="bot.nick" value="SpikeLite" />
-        <add key="bot.realname" value="SpikeLite" />
+        <add key="bot.realname" value="##CSharp irc bot" />
         <add key="bot.username" value="SpikeLite" />
         <add key="bot.accountpass" value="" />
         <add key="server.supports.identification" value="false" />
