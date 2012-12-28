@@ -77,16 +77,12 @@
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
     <Reference Include="System.Data" />
-    <Reference Include="System.Data.Services.Client" />
-    <Reference Include="System.EnterpriseServices" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Web" />
-    <Reference Include="System.Web.Services" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AbstractApiKeySearchProvider.cs" />
-    <Compile Include="Bing\BingSearchContainer.cs" />
     <Compile Include="GoogleAjaxSearchProvider.cs" />
     <Compile Include="MicrosoftBingSearchProvider.cs" />
     <Compile Include="ISearchProvider.cs" />
@@ -115,9 +111,6 @@
       <Project>{2DB890EF-6D6C-44FD-B607-244CAE1D55F7}</Project>
       <Name>SpikeLite.Core</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

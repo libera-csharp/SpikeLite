@@ -101,30 +101,31 @@ namespace SpikeLite.Modules.Search
 
         public override void ExecuteSearch(string searchCriteria, string domain, Action<string[]> callbackHandler)
         {
-            var httpClient = new HttpClient();
             var searchUri = BuildQueryUri(ApiKey, searchCriteria, domain);
 
-            httpClient.GetAsync(searchUri).ContinueWith((getTask) =>
+            using (var httpClient = new HttpClient())
             {
-                var response = getTask.Result;
-
-                response.Content.ReadAsStringAsync().ContinueWith(readAsStringTask =>
+                httpClient.GetAsync(searchUri).ContinueWith((getTask) =>
                 {
-                    var content = readAsStringTask.Result;
+                    var response = getTask.Result;
 
-                    var customSearchResults = JsonConvert.DeserializeObject<GoogleCustomSearchResults>(content);
-                    var results = new List<string>();
-
-                    foreach (var item in customSearchResults.items.Take(1))
+                    response.Content.ReadAsStringAsync().ContinueWith(readAsStringTask =>
                     {
-                        results.Add(String.Format("'%query%': {0} | {1}",
-                                  item.title,
-                                  item.link));
-                    }
+                        var content = readAsStringTask.Result;
+                        var customSearchResults = JsonConvert.DeserializeObject<GoogleCustomSearchResults>(content);
+                        var results = new List<string>();
 
-                    callbackHandler(results.ToArray());
-                });
-            });
+                        foreach (var item in customSearchResults.items.Take(1))
+                        {
+                            results.Add(String.Format("'%query%': {0} | {1}",
+                                      item.title,
+                                      item.link));
+                        }
+
+                        callbackHandler(results.ToArray());
+                    });
+                }).Wait();
+            }
         }
 
         private static Uri BuildQueryUri(string apiKey, string searchCriteria, string domain)

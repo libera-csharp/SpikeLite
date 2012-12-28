@@ -10,7 +10,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using Bing;
+using System.Net.Http;
+using System.Web;
+using Newtonsoft.Json;
 
 //https://api.datamarket.azure.com/Data.ashx/Bing/Search/v1/Web?Query=%27string%20class%20site%3amsdn.microsoft.com%27&$top=50&$format=Atom 
 
@@ -27,13 +29,37 @@ namespace SpikeLite.Modules.Search
     /// </remarks>
     public class MicrosoftBingSearchProvider : AbstractApiKeySearchProvider
     {
+        #region Inner Classes
+        private class Metadata
+        {
+            public string uri { get; set; }
+            public string type { get; set; }
+        }
+
+        private class Result
+        {
+            public Metadata __metadata { get; set; }
+            public string ID { get; set; }
+            public string Title { get; set; }
+            public string Description { get; set; }
+            public string DisplayUrl { get; set; }
+            public string Url { get; set; }
+        }
+
+        private class D
+        {
+            public List<Result> results { get; set; }
+            public string __next { get; set; }
+        }
+
+        private class RootObject
+        {
+            public D d { get; set; }
+        }
+        #endregion
+
         public override void ExecuteSearch(string searchCriteria, string domain, Action<string[]> callbackHandler)
         {
-            var _searchBroker = new BingSearchContainer(new Uri("https://api.datamarket.azure.com/Bing/Search/"))
-            {
-                Credentials = new NetworkCredential(ApiKey, ApiKey)
-            };
-
             var domainSpecificSearchCriteria = searchCriteria.Trim();
 
             // Not everything needs a domain qualifier - BING and Google being the primary cases. Only add the domain if required, this will
@@ -43,20 +69,42 @@ namespace SpikeLite.Modules.Search
                 domainSpecificSearchCriteria += String.Format(" site:{0}", domain);
             }
 
-            //TODO: AJ: Thread
-            var query = _searchBroker.Web(domainSpecificSearchCriteria, null, null, "en-US", "Off", null, null, null);
-            var webResults = query.Execute();
+            var searchUri = BuildQueryUri(searchCriteria, domain);
 
-            var results = new List<string>();
-
-            foreach (var webResult in webResults.Take(1))
+            using (var httpClientHandler = new HttpClientHandler())
             {
-                results.Add(String.Format("'%query%': {0} | {1}",
-                          webResult.Description,
-                          webResult.Url));
-            }
+                httpClientHandler.Credentials = new NetworkCredential(ApiKey, ApiKey);
+                httpClientHandler.PreAuthenticate = true;
 
-            callbackHandler(results.ToArray());
+                using (var httpClient = new HttpClient(httpClientHandler))
+                {
+                    httpClient.GetAsync(searchUri).ContinueWith((getTask) =>
+                    {
+                        var response = getTask.Result;
+
+                        response.Content.ReadAsStringAsync().ContinueWith(readAsStringTask =>
+                        {
+                            var content = readAsStringTask.Result;
+                            var customSearchResults = JsonConvert.DeserializeObject<RootObject>(content);
+                            var results = new List<string>();
+
+                            foreach (var item in customSearchResults.d.results.Take(1))
+                            {
+                                results.Add(String.Format("'%query%': {0} | {1}",
+                                          item.Title,
+                                          item.Url));
+                            }
+
+                            callbackHandler(results.ToArray());
+                        });
+                    }).Wait();
+                }
+            }
+        }
+
+        private static Uri BuildQueryUri(string searchCriteria, string domain)
+        {
+            return new Uri(new Uri("https://api.datamarket.azure.com/Bing/Search/Web"), string.Format("?Query='{0}'&$top=1&$format=json&Adult='off'&Market='en-US'", HttpUtility.UrlEncode(searchCriteria), domain));
         }
     }
 }
