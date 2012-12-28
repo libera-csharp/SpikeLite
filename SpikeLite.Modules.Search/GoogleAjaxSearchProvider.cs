@@ -129,7 +129,7 @@ namespace SpikeLite.Modules.Search
 
         private static Uri BuildQueryUri(string apiKey, string searchCriteria, string domain)
         {
-            return new Uri(string.Format("?key={0}&cx=&q={1}&siteSearch={2}", apiKey, HttpUtility.UrlEncode(searchCriteria), domain));
+            return new Uri(new Uri("https://www.googleapis.com/customsearch/v1"), string.Format("?key={0}&q={1}&cref=&siteSearch={2}", apiKey, HttpUtility.UrlEncode(searchCriteria), domain));
         }
 
         #endregion
