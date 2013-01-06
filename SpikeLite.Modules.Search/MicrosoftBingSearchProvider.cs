@@ -69,7 +69,7 @@ namespace SpikeLite.Modules.Search
                 domainSpecificSearchCriteria += String.Format(" site:{0}", domain);
             }
 
-            var searchUri = BuildQueryUri(searchCriteria, domain);
+            var searchUri = BuildQueryUri(domainSpecificSearchCriteria);
 
             using (var httpClientHandler = new HttpClientHandler())
             {
@@ -102,9 +102,9 @@ namespace SpikeLite.Modules.Search
             }
         }
 
-        private static Uri BuildQueryUri(string searchCriteria, string domain)
+        private static Uri BuildQueryUri(string searchCriteria)
         {
-            return new Uri(new Uri("https://api.datamarket.azure.com/Bing/Search/Web"), string.Format("?Query='{0}'&$top=1&$format=json&Adult='off'&Market='en-US'", HttpUtility.UrlEncode(searchCriteria), domain));
+            return new Uri(new Uri("https://api.datamarket.azure.com/Bing/Search/Web"), string.Format("?Query='{0}'&$top=1&$format=json&Adult='off'&Market='en-US'", HttpUtility.UrlEncode(searchCriteria)));
         }
     }
 }
