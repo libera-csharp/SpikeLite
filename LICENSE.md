@@ -3,7 +3,7 @@ SpikeLite is licensed under the MIT license as provided below.
 The MIT License
 ===============
 
-Copyright 2009-2011 FreeNode ##Csharp Community
+Copyright 2009-2013 FreeNode ##Csharp Community
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
