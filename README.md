@@ -10,9 +10,9 @@ Obviously you'll need to get the source from GitHub. There should be plenty of h
 
 ### Building The Bot
 
-SpikeLite targets .NET4, so the project file is VS2010 compatible. It has been verified to work on Mono 2.10/2.11, and against
-MonoDevelop 2.6. You'll want to set the SpikeLite.UI.Cli as your start project, if you'd like to run the bot via an IDE. All
-build artifacts will be present in output\Debug or output\Release, depending on how you built it. Right now you'll want x86 only.
+SpikeLite targets .NET4.5, so the project file is VS2012 compatible. It has been verified to work on Mono 3.03. You'll want to set 
+the SpikeLite.UI.Cli as your start project, if you'd like to run the bot via an IDE. All build artifacts will be present in 
+output\Debug or output\Release, depending on how you built it. Right now you'll want x86 only.
 
 There's a NAnt build file that seems to work well enough with XBuild, but still seems to have problems on Windows against MSBuild.
 
@@ -32,8 +32,8 @@ a bunch of known hosts (cloaks) of administrative users. Right now you'll have t
 If you take a gander at beans-overrides.xml, you'll see some points that need setting up:
 
 * The bot's nickname and password - If you don't use identification, set the "server.supports.identification" to false. Otherwise it will block on waiting for a response from NickServ.
-* You must have a proper Bing API key in "apikeys.bing" - these can be obtained at (insert here).
-* You must have a proper referrer URL in "referrers.googleajax" - this can be obtained at (insert here).
+* You should have a proper Bing API key in "apikeys.bing" - these can be obtained at (insert here).
+* You should have a proper referrer URL in "apikeys.google" - this can be obtained at (insert here).
 * If you want another DB provider, you'll need to set up the DB section. It's recommended that you skip this for now.
 * You'll want to populate the Channel list.  There's a sample in there, just make sure subsequent channels have unique ID XML attributes.
 
