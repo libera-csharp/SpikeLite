@@ -99,9 +99,12 @@ namespace SpikeLite.Modules.Search
 
         #region Methods
 
-        public override void ExecuteSearch(string searchCriteria, string domain, Action<string[]> callbackHandler)
+        public override void ExecuteSearch(string searchCriteria, ICollection<string> restrictToDomains, ICollection<string> excludeDomains, Action<string[]> callbackHandler)
         {
-            var searchUri = BuildQueryUri(ApiKey, searchCriteria, domain);
+            if ((restrictToDomains != null && restrictToDomains.Count > 0) || (excludeDomains != null && excludeDomains.Count > 0))
+                throw new NotImplementedException("Restrict to and exclude domains have not yet been implimented.");             
+
+            var searchUri = BuildQueryUri(ApiKey, searchCriteria);
 
             using (var httpClient = new HttpClient())
             {
@@ -128,9 +131,9 @@ namespace SpikeLite.Modules.Search
             }
         }
 
-        private static Uri BuildQueryUri(string apiKey, string searchCriteria, string domain)
+        private static Uri BuildQueryUri(string apiKey, string searchCriteria)
         {
-            return new Uri(new Uri("https://www.googleapis.com/customsearch/v1"), string.Format("?key={0}&q={1}&cref=&siteSearch={2}", apiKey, HttpUtility.UrlEncode(searchCriteria), domain));
+            return new Uri(new Uri("https://www.googleapis.com/customsearch/v1"), string.Format("?key={0}&q={1}&cref=", apiKey, HttpUtility.UrlEncode(searchCriteria)));
         }
 
         #endregion

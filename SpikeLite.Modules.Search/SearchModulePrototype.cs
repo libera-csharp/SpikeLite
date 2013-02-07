@@ -27,14 +27,19 @@ namespace SpikeLite.Modules.Search
         public string SearchTrigger { get; set; }
 
         /// <summary>
-        /// Gets or sets the domain we search our search providers against.
-        /// </summary>
-        public string SearchUrl { get; set; }
-
-        /// <summary>
         /// Gets or sets the search provider backing this module.
         /// </summary>
         public ISearchProvider SearchProvider { get; set; }
+
+        /// <summary>
+        /// Gets or sets a list of domains to restrict the search to.
+        /// </summary>
+        public IList<string> RestrictToDomains { get; set; }
+
+        /// <summary>
+        /// Gets or sets a list of domains to exclude from the search.
+        /// </summary>
+        public IList<string> ExcludeDomains { get; set; }
 
         #endregion
 
@@ -66,7 +71,7 @@ namespace SpikeLite.Modules.Search
                     Logger.DebugFormat("{0} - HandleRequest called on for {1} by {2}", Name, request.Message,
                                        request.Addressee ?? request.Nick);
 
-                    SearchProvider.ExecuteSearch(searchTerms, SearchUrl, x => HandleResults(x, request, searchTerms));
+                    SearchProvider.ExecuteSearch(searchTerms, RestrictToDomains, ExcludeDomains, x => HandleResults(x, request, searchTerms));
                 }
 
                 else if (messageArray[0].StartsWith(NetworkConnectionInformation.BotNickname))
@@ -85,8 +90,7 @@ namespace SpikeLite.Modules.Search
                         Logger.DebugFormat("{0} - HandleRequest called on for {1} by {2}", Name, request.Message,
                                            request.Addressee ?? request.Nick);
 
-                        SearchProvider.ExecuteSearch(searchTerms, SearchUrl,
-                                                     x => HandleResults(x, request, searchTerms));
+                        SearchProvider.ExecuteSearch(searchTerms, RestrictToDomains, ExcludeDomains, x => HandleResults(x, request, searchTerms));
                     }
                 }
             }

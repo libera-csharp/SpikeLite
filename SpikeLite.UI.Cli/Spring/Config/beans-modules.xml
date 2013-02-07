@@ -63,7 +63,11 @@
     <property name="Name" value="pInvoke"/>
     <property name="Description" value="Search pInvoke.Net"/>
     <property name="Instructions" value="~pinvoke [search terms]"/>
-    <property name="SearchUrl" value="pinvoke.net"/>
+    <property name="RestrictToDomains">
+      <list element-type="string">
+        <value>pinvoke.net</value>
+      </list>
+    </property>
     <property name="SearchTrigger" value="~pinvoke"/>
   </object>
 
@@ -71,15 +75,31 @@
     <property name="Name" value="MSDN"/>
     <property name="Description" value="Search MSDN"/>
     <property name="Instructions" value="~msdn [search terms]"/>
-    <property name="SearchUrl" value="msdn.microsoft.com"/>
     <property name="SearchTrigger" value="~msdn"/>
+    <property name="RestrictToDomains">
+      <list element-type="string">
+        <value>msdn.microsoft.com</value>
+      </list>
+    </property>
+    <property name="ExcludeDomains">
+      <list element-type="string">
+        <value>archive.msdn.microsoft.com</value>
+        <value>code.msdn.microsoft.com</value>
+        <value>social.msdn.microsoft.com</value>
+        <value>visualstudiogallery.msdn.microsoft.com</value>
+      </list>
+    </property>
   </object>
 
   <object id="PatternsModule" parent="DefaultSearchModule" type="SpikeLite.Modules.Search.SearchModulePrototype, SpikeLite.Modules.Search">
     <property name="Name" value="Pattern"/>
     <property name="Description" value="Search DoFactory.com/Patterns/"/>
     <property name="Instructions" value="~pattern [search terms]"/>
-    <property name="SearchUrl" value="www.dofactory.com/Patterns/"/>
+    <property name="RestrictToDomains">
+      <list element-type="string">
+        <value>www.dofactory.com/Patterns/</value>
+      </list>
+    </property>
     <property name="SearchTrigger" value="~pattern"/>
   </object>
 
@@ -87,7 +107,11 @@
     <property name="Name" value="MSConnect"/>
     <property name="Description" value="Search Microsoft Connect"/>
     <property name="Instructions" value="~msconnect [search terms]"/>
-    <property name="SearchUrl" value="connect.microsoft.com"/>
+    <property name="RestrictToDomains">
+      <list element-type="string">
+        <value>connect.microsoft.com</value>
+      </list>
+    </property>
     <property name="SearchTrigger" value="~connect"/>
   </object>
 
@@ -95,7 +119,11 @@
     <property name="Name" value="Codeplex"/>
     <property name="Description" value="Search Codeplex"/>
     <property name="Instructions" value="~codeplex [search terms]"/>
-    <property name="SearchUrl" value="www.codeplex.com"/>
+    <property name="RestrictToDomains">
+      <list element-type="string">
+        <value>www.codeplex.com</value>
+      </list>
+    </property>
     <property name="SearchTrigger" value="~codeplex"/>
   </object>
   
@@ -103,7 +131,11 @@
     <property name="Name" value="xkcd"/>
     <property name="Description" value="Search the XKCD comic"/>
     <property name="Instructions" value="~xkcd [search terms]"/>
-    <property name="SearchUrl" value="xkcd.com/"/>
+    <property name="RestrictToDomains">
+      <list element-type="string">
+        <value>xkcd.com/</value>
+      </list>
+    </property>
     <property name="SearchTrigger" value="~xkcd"/>
   </object>
   
@@ -111,7 +143,11 @@
     <property name="Name" value="MDoc"/>
     <property name="Description" value="Search MonoDoc"/>
     <property name="Instructions" value="~mdoc [search terms]"/>
-    <property name="SearchUrl" value="www.go-mono.com/docs"/>
+    <property name="RestrictToDomains">
+      <list element-type="string">
+        <value>www.go-mono.com/docs</value>
+      </list>
+    </property>
     <property name="SearchTrigger" value="~mdoc"/>
   </object>
   
@@ -119,7 +155,11 @@
     <property name="Name" value="CodeProject"/>
     <property name="Description" value="Search CodeProject"/>
     <property name="Instructions" value="~codeproject [search terms]"/>
-    <property name="SearchUrl" value="codeproject.com"/>
+    <property name="RestrictToDomains">
+      <list element-type="string">
+        <value>codeproject.com</value>
+      </list>
+    </property>
     <property name="SearchTrigger" value="~codeproject"/>
   </object>
   
@@ -127,7 +167,11 @@
     <property name="Name" value="DADS"/>
     <property name="Description" value="Search Dictionary of Algorithms and Data Structures at NIST"/>
     <property name="Instructions" value="~dads [search terms]"/>
-    <property name="SearchUrl" value="www.nist.gov/dads/HTML"/>
+    <property name="RestrictToDomains">
+      <list element-type="string">
+        <value>www.nist.gov/dads/HTML</value>
+      </list>
+    </property>
     <property name="SearchTrigger" value="~dads"/>
   </object>
   
@@ -135,7 +179,11 @@
     <property name="Name" value="Refactoring"/>
     <property name="Description" value="Search Refactoring.com"/>
     <property name="Instructions" value="~refactoring [search terms]"/>
-    <property name="SearchUrl" value="www.refactoring.com/catalog/"/>
+    <property name="RestrictToDomains">
+      <list element-type="string">
+        <value>www.refactoring.com/catalog/</value>
+      </list>
+    </property>
     <property name="SearchTrigger" value="~refactoring"/>
   </object>
   
@@ -143,7 +191,11 @@
     <property name="Name" value="ConnectionStrings"/>
     <property name="Description" value="Search ConnectionString.com"/>
     <property name="Instructions" value="~connectionstring [search terms]"/>
-    <property name="SearchUrl" value="www.connectionstrings.com"/>
+    <property name="RestrictToDomains">
+      <list element-type="string">
+        <value>www.connectionstrings.com</value>
+      </list>
+    </property>
     <property name="SearchTrigger" value="~connectionstring"/>
   </object>
   
@@ -151,7 +203,11 @@
     <property name="Name" value="Wikipedia"/>
     <property name="Description" value="Search Wikipedia"/>
     <property name="Instructions" value="~wikipedia [search terms]"/>
-    <property name="SearchUrl" value="en.wikipedia.org"/>
+    <property name="RestrictToDomains">
+      <list element-type="string">
+        <value>en.wikipedia.org</value>
+      </list>
+    </property>
     <property name="SearchTrigger" value="~wikipedia"/>
   </object>
 
@@ -159,7 +215,11 @@
     <property name="Name" value="PHP"/>
     <property name="Description" value="Searches the PHP manual/"/>
     <property name="Instructions" value="~php [search terms]"/>
-    <property name="SearchUrl" value="http://php.net/"/>
+    <property name="RestrictToDomains">
+      <list element-type="string">
+        <value>php.net/</value>
+      </list>
+    </property>
     <property name="SearchTrigger" value="~php"/>
   </object>
 

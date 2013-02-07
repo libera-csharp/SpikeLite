@@ -58,15 +58,24 @@ namespace SpikeLite.Modules.Search
         }
         #endregion
 
-        public override void ExecuteSearch(string searchCriteria, string domain, Action<string[]> callbackHandler)
+        public override void ExecuteSearch(string searchCriteria, ICollection<string> restrictToDomains, ICollection<string> excludeDomains, Action<string[]> callbackHandler)
         {
             var domainSpecificSearchCriteria = searchCriteria.Trim();
 
-            // Not everything needs a domain qualifier - BING and Google being the primary cases. Only add the domain if required, this will
-            // prevent BING from searching MS docs no one cares about.
-            if (!String.IsNullOrWhiteSpace(domain))
+            if (restrictToDomains != null)
             {
-                domainSpecificSearchCriteria += String.Format(" site:{0}", domain);
+                foreach (string restrictToDomain in restrictToDomains)
+                {
+                    domainSpecificSearchCriteria += String.Format(" domain:{0}", restrictToDomain);
+                }
+            }
+
+            if (excludeDomains != null)
+            {
+                foreach (string excludeDomain in excludeDomains)
+                {
+                    domainSpecificSearchCriteria += String.Format(" NOT domain:{0}", excludeDomain);
+                }
             }
 
             var searchUri = BuildQueryUri(domainSpecificSearchCriteria);

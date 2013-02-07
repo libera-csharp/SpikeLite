@@ -7,6 +7,7 @@
  */
 
 using System;
+using System.Collections.Generic;
 
 namespace SpikeLite.Modules.Search
 {
@@ -22,7 +23,8 @@ namespace SpikeLite.Modules.Search
         /// </summary>
         /// 
         /// <param name="searchCriteria">The search criteria to search for.</param>
-        /// <param name="domain">The site:domain tag to give to our search provider, allowing for domain specific searches.</param>
+        /// <param name="restrictToDomains">A collection of site:domain tags to give to our search provider, allowing for domain specific searches.</param>
+        /// /// <param name="excludeDomains">A collection of NOT site:domain tags to give to our search provider, allowing for domain exclusions in searches.</param>
         /// <param name="callbackHandler">A tuple containing our request and our callback handler.</param>
         /// 
         /// <remarks>
@@ -31,6 +33,6 @@ namespace SpikeLite.Modules.Search
         /// post-search processing and filtering. The request is passed back to the delegate
         /// to allow for post operations.
         /// </remarks>
-        void ExecuteSearch(string searchCriteria, string domain, Action<string[]> callbackHandler);
+        void ExecuteSearch(string searchCriteria, ICollection<string> restrictToDomains, ICollection<string> excludeDomains, Action<string[]> callbackHandler);
     }
 }

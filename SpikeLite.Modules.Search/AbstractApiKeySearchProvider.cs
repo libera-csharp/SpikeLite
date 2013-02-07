@@ -7,6 +7,7 @@
  */
 
 using System;
+using System.Collections.Generic;
 
 namespace SpikeLite.Modules.Search
 {
@@ -17,6 +18,6 @@ namespace SpikeLite.Modules.Search
     {
         public string ApiKey { get; set; }
 
-        public abstract void ExecuteSearch(string searchCriteria, string domain, Action<string[]> callbackHandler);
+        public abstract void ExecuteSearch(string searchCriteria, ICollection<string> restrictToDomains, ICollection<string> excludeDomains, Action<string[]> callbackHandler);
     }
 }
