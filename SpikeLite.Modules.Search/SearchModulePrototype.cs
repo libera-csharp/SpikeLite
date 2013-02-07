@@ -100,16 +100,25 @@ namespace SpikeLite.Modules.Search
 
         #region Message Filtering
 
-        private void HandleResults(IEnumerable<string> results, Request request, string searchTerms)
+        private void HandleResults(ICollection<string> results, Request request, string searchTerms)
         {
-            // Not every search provider returns us our query strings, so do a quick token substitution for the services that don't. 
-            foreach (var result in results)
+            if (results.Count == 0)
             {
-                var resultWithQuery = result.Replace("%query%", searchTerms.Trim());
+                string noResult = string.Format("'{0}': No results.", searchTerms.Trim());
 
-                ModuleManagementContainer.HandleResponse(
-                    request.CreateResponse(ResponseType.Public, "{0}, {1} {2}", request.Addressee ?? request.Nick, Name,
-                                           resultWithQuery));
+                ModuleManagementContainer.HandleResponse(request.CreateResponse(ResponseType.Public, "{0}, {1} {2}", request.Addressee ?? request.Nick, Name, noResult));
+            }
+            else
+            {
+                // Not every search provider returns us our query strings, so do a quick token substitution for the services that don't. 
+                foreach (var result in results)
+                {
+                    var resultWithQuery = result.Replace("%query%", searchTerms.Trim());
+
+                    ModuleManagementContainer.HandleResponse(
+                        request.CreateResponse(ResponseType.Public, "{0}, {1} {2}", request.Addressee ?? request.Nick, Name,
+                                               resultWithQuery));
+                }
             }
         }
 
