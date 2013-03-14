@@ -30,9 +30,9 @@ namespace SpikeLite.Modules.About
             var message = string.Format("{0} (V{1}) is the ##csharp irc bot on freenode.net", 
                                            NetworkConnectionInformation.BotNickname, 
                                            Assembly.GetEntryAssembly().GetName().Version.ToString(2));
+
             var response = request.CreateResponse(ResponseType.Private, message);
             ModuleManagementContainer.HandleResponse(response);
-
             response.Message = "====================================";
             ModuleManagementContainer.HandleResponse(response);
             response.Message = "IRC: To get help with the bot type '~Help' in private message with the bot.";
@@ -42,6 +42,8 @@ namespace SpikeLite.Modules.About
             response.Message = "====================================";
             ModuleManagementContainer.HandleResponse(response);
             response.Message = "But there's no sense crying over every mistake. You just keep on trying till you run out of cake.";
+            ModuleManagementContainer.HandleResponse(response);
+            response.Message = "Go make some new disaster. That's what I'm counting on. You're someone else's problem. Now I only want you gone.";
             ModuleManagementContainer.HandleResponse(response);
         }
     }
