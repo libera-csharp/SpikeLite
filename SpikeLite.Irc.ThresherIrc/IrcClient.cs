@@ -102,6 +102,8 @@ namespace SpikeLite.Irc.ThresherIrc
             _ircConnection.Listener.OnPrivateNotice += Listener_OnPrivateNotice;
             _ircConnection.Listener.OnPublic += Listener_OnPublic;
             _ircConnection.Listener.OnPrivate += Listener_OnPrivate;
+            _ircConnection.Listener.OnAction += Listener_OnAction;
+            _ircConnection.Listener.OnPrivateAction += Listener_OnPrivateAction;
             _ircConnection.Listener.OnDisconnected += Listener_OnDisconnected;
 
             _ircConnection.Connect();
@@ -115,6 +117,8 @@ namespace SpikeLite.Irc.ThresherIrc
             _ircConnection.Listener.OnPrivateNotice -= Listener_OnPrivateNotice;
             _ircConnection.Listener.OnPublic -= Listener_OnPublic;
             _ircConnection.Listener.OnPrivate -= Listener_OnPrivate;
+            _ircConnection.Listener.OnAction -= Listener_OnAction;
+            _ircConnection.Listener.OnPrivateAction -= Listener_OnPrivateAction;
             _ircConnection.Listener.OnDisconnected -= Listener_OnDisconnected;
         }
 
@@ -196,6 +200,46 @@ namespace SpikeLite.Irc.ThresherIrc
 
                     finishedEvent.Set();
                 }) { IsBackground = true }.Start();
+
+            finishedEvent.Wait();
+        }
+
+        void Listener_OnAction(UserInfo userInfo, string channel, string message)
+        {
+            var finishedEvent = new ManualResetEventSlim();
+
+            new Thread(() =>
+            {
+                var user = new User
+                {
+                    NickName = userInfo.Nick,
+                    HostName = userInfo.Hostname
+                };
+
+                OnPublicMessageReceived(user, channel, message);
+
+                finishedEvent.Set();
+            }) { IsBackground = true }.Start();
+
+            finishedEvent.Wait();
+        }
+
+        void Listener_OnPrivateAction(UserInfo userInfo, string message)
+        {
+            var finishedEvent = new ManualResetEventSlim();
+
+            new Thread(() =>
+            {
+                var user = new User
+                {
+                    NickName = userInfo.Nick,
+                    HostName = userInfo.Hostname
+                };
+
+                OnPrivateMessageReceived(user, message);
+
+                finishedEvent.Set();
+            }) { IsBackground = true }.Start();
 
             finishedEvent.Wait();
         }

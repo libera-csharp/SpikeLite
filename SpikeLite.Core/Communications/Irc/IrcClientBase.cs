@@ -18,24 +18,27 @@ namespace SpikeLite.Communications.Irc
         #region Events
         public event EventHandler<PrivateMessageReceivedEventArgs> PrivateMessageReceived;
         public event EventHandler<PublicMessageReceivedEventArgs> PublicMessageReceived;
+        public event EventHandler<PrivateMessageReceivedEventArgs> PrivateActionReceived;
+        public event EventHandler<PublicMessageReceivedEventArgs> PublicActionReceived;
         #endregion
 
-        public abstract bool IsConnected { get; }
-
         #region Auto Properties
+        public abstract bool IsConnected { get; }
         public Network Network { get; protected set; }
         public Server Server { get; protected set; }
         public bool SupportsIdentification { get; set; }
         public string Description { get; protected set; }
         #endregion
 
-        public IrcClientBase() { }
-        public IrcClientBase(Assembly assemblyForDescription)
+        #region Constructors
+        protected IrcClientBase() { }
+        protected IrcClientBase(Assembly assemblyForDescription)
         {
             var assemblyName = assemblyForDescription.GetName();
 
             Description = string.Format("{0} : {1}", assemblyName.Name, assemblyName.Version);
         }
+        #endregion
 
         #region OnEvent Methods
         protected virtual void OnPrivateMessageReceived(User user, string message)
@@ -52,6 +55,22 @@ namespace SpikeLite.Communications.Irc
 
             if (publicMessageReceived != null)
                 publicMessageReceived(this, new PublicMessageReceivedEventArgs(user, channelName, message));
+        }
+
+        protected virtual void OnPrivateActionReceived(User user, string Action)
+        {
+            var privateActionReceived = PrivateActionReceived;
+
+            if (privateActionReceived != null)
+                privateActionReceived(this, new PrivateMessageReceivedEventArgs(user, Action));
+        }
+
+        protected virtual void OnPublicActionReceived(User user, string channelName, string Action)
+        {
+            var publicActionReceived = PublicActionReceived;
+
+            if (publicActionReceived != null)
+                publicActionReceived(this, new PublicMessageReceivedEventArgs(user, channelName, Action));
         }
         #endregion
 

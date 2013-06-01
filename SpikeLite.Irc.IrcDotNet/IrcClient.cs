@@ -142,12 +142,11 @@ namespace SpikeLite.Irc.IrcDotNet
         void IrcClient_PublicMessageReceived(object sender, IrcMessageEventArgs e)
         {
             var sourceChannel = (IrcChannel)sender;
-
             var source = e.Source as IrcUser;
+
             if (source != null)
             {
                 var sourceUser = source;
-
                 var user = new User
                 {
                     NickName = sourceUser.NickName,
@@ -161,7 +160,6 @@ namespace SpikeLite.Irc.IrcDotNet
         void IrcClient_PrivateMessageReceived(object sender, IrcMessageEventArgs e)
         {
             var sourceUser = (IrcUser)e.Source;
-
             var user = new User
             {
                 NickName = sourceUser.NickName,
@@ -169,6 +167,24 @@ namespace SpikeLite.Irc.IrcDotNet
             };
 
             OnPrivateMessageReceived(user, e.Text);
+        }
+
+        void _ctcpClient_ActionReceived(object sender, CtcpMessageEventArgs e)
+        {
+            var sourceChannel = (IrcChannel)sender;
+            var source = e.Source as IrcUser;
+
+            if (source != null)
+            {
+                var sourceUser = source;
+                var user = new User
+                {
+                    NickName = sourceUser.NickName,
+                    HostName = sourceUser.HostName
+                };
+
+                OnPublicActionReceived(user, sourceChannel.Name, e.Text);
+            }
         }
 
         void NoticeReceived(object sender, IrcMessageEventArgs e)
@@ -192,6 +208,8 @@ namespace SpikeLite.Irc.IrcDotNet
             _ircClient.LocalUser.LeftChannel += LeftChannel;
             _ircClient.LocalUser.NoticeReceived += NoticeReceived;
             _ircClient.LocalUser.MessageReceived += IrcClient_PrivateMessageReceived;
+
+            _ctcpClient.ActionReceived += _ctcpClient_ActionReceived;
 
             if (SupportsIdentification)
             {

@@ -16,6 +16,9 @@ namespace SpikeLite.Communications.Irc
         event EventHandler<PrivateMessageReceivedEventArgs> PrivateMessageReceived;
         event EventHandler<PublicMessageReceivedEventArgs> PublicMessageReceived;
 
+        event EventHandler<PrivateMessageReceivedEventArgs> PrivateActionReceived;
+        event EventHandler<PublicMessageReceivedEventArgs> PublicActionReceived;
+
         string Description { get; }
         bool IsConnected { get; }
         bool SupportsIdentification { get; set; }
