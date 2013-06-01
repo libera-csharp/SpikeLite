@@ -34,8 +34,13 @@ namespace SpikeLite.Modules.Admin
 
                 if (messageArray[1].Equals("say", StringComparison.OrdinalIgnoreCase))
                 {
-                    var response = request.CreateResponse(ResponseTargetType.Public, message);
-                    response.ResponseTargetType = ResponseTargetType.Public;
+                    var response = request.CreateResponse(ResponseTargetType.Public, ResponseType.Message, false, message);
+                    response.Channel = target;
+                    ModuleManagementContainer.HandleResponse(response);
+                }
+                else if (messageArray[1].Equals("do", StringComparison.OrdinalIgnoreCase))
+                {
+                    var response = request.CreateResponse(ResponseTargetType.Public, ResponseType.Action, false, message);
                     response.Channel = target;
                     ModuleManagementContainer.HandleResponse(response);
                 }
