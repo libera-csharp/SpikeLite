@@ -73,19 +73,21 @@ namespace SpikeLite.Modules.GeoIP
                     catch (Exception ex)
                     {
 
-                        ModuleManagementContainer.HandleResponse(request.CreateResponse(ResponseType.Public,
-                                                                 "{0}, The service is currently b00rked, please try again in a few minutes.", request.Nick));
+                        ModuleManagementContainer.HandleResponse(request.CreateResponse("{0}, The service is currently b00rked, please try again in a few minutes.",
+                            request.Nick));
+
                         Logger.WarnFormat("Search threw an exception. Nick: {0}, terms: \"{1}\", stack message: {2}",
-                                          request.Nick, expressionMatch.Groups[1].Value, ex.StackTrace);
+                            request.Nick,
+                            expressionMatch.Groups[1].Value,
+                            ex.StackTrace);
                     }
 
                 }
                 else
                 {
                     // If the message format isn't correct, notify the user.
-                    ModuleManagementContainer.HandleResponse(request.CreateResponse(ResponseType.Public,
-                                                                                    String.Format("{0}, invalid geoip syntax, please try again.",
-                                                                                    request.Nick)));
+                    ModuleManagementContainer.HandleResponse(request.CreateResponse("{0}, invalid geoip syntax, please try again.",
+                        request.Nick));
                 }
             }
         }
@@ -125,8 +127,6 @@ namespace SpikeLite.Modules.GeoIP
             {
                 // Construct an XLinq document fragment and start anonymously pulling things out.
                 var xmlResponse = XDocument.Parse(e.Result);
-
-
                 var root = xmlResponse.Descendants("Hostip");
                 response = String.Format(ResponseTemplate,
                                          requestContext.Addressee ?? requestContext.Nick,
@@ -145,7 +145,7 @@ namespace SpikeLite.Modules.GeoIP
                 webclient.Dispose();
             }
 
-            ModuleManagementContainer.HandleResponse(requestContext.CreateResponse(ResponseType.Public, response));
+            ModuleManagementContainer.HandleResponse(requestContext.CreateResponse(ResponseTargetType.Public, response));
         }
 
         #endregion

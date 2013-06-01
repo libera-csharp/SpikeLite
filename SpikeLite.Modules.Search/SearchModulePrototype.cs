@@ -106,7 +106,8 @@ namespace SpikeLite.Modules.Search
             {
                 string noResult = string.Format("'{0}': No results.", searchTerms.Trim());
 
-                ModuleManagementContainer.HandleResponse(request.CreateResponse(ResponseType.Public, "{0}, {1} {2}", request.Addressee ?? request.Nick, Name, noResult));
+                ModuleManagementContainer.HandleResponse(
+                    request.CreateResponse("{0}, {1} {2}", request.Addressee ?? request.Nick, Name, noResult));
             }
             else
             {
@@ -116,8 +117,7 @@ namespace SpikeLite.Modules.Search
                     var resultWithQuery = result.Replace("%query%", searchTerms.Trim());
 
                     ModuleManagementContainer.HandleResponse(
-                        request.CreateResponse(ResponseType.Public, "{0}, {1} {2}", request.Addressee ?? request.Nick, Name,
-                                               resultWithQuery));
+                        request.CreateResponse("{0}, {1} {2}", request.Addressee ?? request.Nick, Name, resultWithQuery));
                 }
             }
         }

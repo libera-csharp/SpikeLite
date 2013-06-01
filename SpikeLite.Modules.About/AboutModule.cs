@@ -31,7 +31,7 @@ namespace SpikeLite.Modules.About
                                            NetworkConnectionInformation.BotNickname, 
                                            Assembly.GetEntryAssembly().GetName().Version.ToString(2));
 
-            var response = request.CreateResponse(ResponseType.Private, message);
+            var response = request.CreateResponse(ResponseTargetType.Private, message);
             ModuleManagementContainer.HandleResponse(response);
             response.Message = "====================================";
             ModuleManagementContainer.HandleResponse(response);

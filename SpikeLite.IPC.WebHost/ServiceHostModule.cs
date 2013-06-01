@@ -144,7 +144,7 @@ namespace SpikeLite.IPC.WebHost
                     resultMessage = String.Format("The {0} servicehost is currently {1}.", Name, _serviceStarted ? "started" : "stopped");
                 }
 
-                ModuleManagementContainer.HandleResponse(request.CreateResponse(ResponseType.Public, resultMessage));
+                ModuleManagementContainer.HandleResponse(request.CreateResponse(ResponseTargetType.Public, resultMessage));
             }
         }
 

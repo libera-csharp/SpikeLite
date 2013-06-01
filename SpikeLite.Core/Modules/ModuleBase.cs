@@ -101,19 +101,39 @@ namespace SpikeLite.Modules
         /// </remarks>
         public abstract void HandleRequest(Request request);
 
+        protected void Reply(Request request, ResponseTargetType responseTargetType, string responseMessage)
+        {
+            ModuleManagementContainer.HandleResponse(request.CreateResponse(responseTargetType, ResponseType.Message, responseMessage));
+        }
+
+        protected void Reply(Request request, ResponseType responseType, string responseMessage)
+        {
+            ModuleManagementContainer.HandleResponse(request.CreateResponse(ResponseTargetType.Public, responseType, responseMessage));
+        }
+
+        protected void Reply(Request request, ResponseTargetType responseTargetType, string responseMessage, params object[] formatObjects)
+        {
+            ModuleManagementContainer.HandleResponse(request.CreateResponse(responseTargetType, ResponseType.Message, responseMessage, formatObjects));
+        }
+
+        protected void Reply(Request request, ResponseType responseType, string responseMessage, params object[] formatObjects)
+        {
+            ModuleManagementContainer.HandleResponse(request.CreateResponse(ResponseTargetType.Public, responseType, responseMessage, formatObjects));
+        }
+
         /// <summary>
         /// Provides a utility method for responding to users, cutting down on copy/paste.
         /// </summary>
         /// 
         /// <param name="request">The request that triggered the message.</param>
-        /// <param name="responseType">The type of response to return: whether the message is public or private.<see cref="ResponseType"/></param>
+        /// <param name="responseType">The type of response to return: whether the message is public or private.<see cref="ResponseTargetType"/></param>
         /// <param name="responseMessage">The literal text of the response message.</param>
         /// <param name="formatObjects">An optional set of format objects. Will be passed along to String.format.</param>
         /// 
         /// <returns></returns>
-        protected void Reply(Request request, ResponseType responseType, string responseMessage, params object[] formatObjects)
+        protected void Reply(Request request, ResponseTargetType responseTargetType, ResponseType responseType, string responseMessage, params object[] formatObjects)
         {
-            ModuleManagementContainer.HandleResponse(request.CreateResponse(responseType, String.Format(responseMessage, formatObjects)));
+            ModuleManagementContainer.HandleResponse(request.CreateResponse(responseTargetType, responseType, responseMessage, formatObjects));
         }
 
         #endregion

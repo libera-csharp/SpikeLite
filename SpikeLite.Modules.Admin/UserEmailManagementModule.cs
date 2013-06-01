@@ -51,35 +51,34 @@ namespace SpikeLite.Modules.Admin
                                 user.EmailAddress = email;
                                 AuthenticationManager.UpdateHost(user);
 
-                                Reply(request, ResponseType.Private, "Your email has been set to {0}", email);                             
+                                Reply(request, ResponseTargetType.Private, "Your email has been set to {0}", email);
                             }
                             catch (Exception ex)
                             {
                                 // Ruh roh, they've violated our unique constraint.
                                 Logger.Warn("Caught an exception trying to set someone's email.", ex);
-                                Reply(request, ResponseType.Private, "Email {0} is already in use.", email);
+                                Reply(request, ResponseTargetType.Private, "Email {0} is already in use.", email);
                             }
 
                         }
                         else
                         {
                             // User hasn't given us an email, barf.
-                            Reply(request, ResponseType.Private, "No email specified, cannot set email address.");
+                            Reply(request, ResponseTargetType.Private, "No email specified, cannot set email address.");
                         }
                     }
 
                     // Handle the case when the user wants to check their email.
                     if (splitMessage[1].Equals("display", StringComparison.InvariantCultureIgnoreCase))
                     {
-                        ModuleManagementContainer.HandleResponse(request.CreateResponse(ResponseType.Private,
-                                                                                        String.IsNullOrEmpty(user.EmailAddress) ? "You have no email address set."
-                                                                                            : String.Format("Your currently set email is {0}.", user.EmailAddress)));
+                        ModuleManagementContainer.HandleResponse(request.CreateResponse(ResponseTargetType.Private,
+                            String.IsNullOrEmpty(user.EmailAddress) ? "You have no email address set." : String.Format("Your currently set email is {0}.", user.EmailAddress)));
                     }
                 }
                 else
                 {
                     // User has given us an invalid request, barf.
-                    Reply(request, ResponseType.Private, "Invalid request, please read the help for email.");
+                    Reply(request, ResponseTargetType.Private, "Invalid request, please read the help for email.");
                 }
             }
         }

@@ -87,6 +87,13 @@ namespace SpikeLite.Communications
 
         #region CreateResponse
 
+        public Response CreateResponse()
+        {
+            var responseTargetType = (RequestSourceType == Communications.RequestSourceType.Public) ? Communications.ResponseTargetType.Public : ResponseTargetType.Private;
+
+            return CreateResponse(responseTargetType, ResponseType.Message, true, string.Empty);
+        }
+
         /// <summary>
         /// Creates a response for a given response type.
         /// </summary>
@@ -94,11 +101,70 @@ namespace SpikeLite.Communications
         /// <param name="maxResponse">The type of response to yield.</param>
         /// 
         /// <returns>A response structure capable of being sent along the application as a message.</returns>
-        public Response CreateResponse(ResponseType maxResponse)
+        public Response CreateResponse(ResponseTargetType responseTargetType)
         {
-            return CreateResponse(maxResponse, "");
+            return CreateResponse(responseTargetType, Communications.ResponseType.Message, true, string.Empty);
         }
 
+        public Response CreateResponse(ResponseType responseType)
+        {
+            var responseTargetType = (RequestSourceType == Communications.RequestSourceType.Public) ? Communications.ResponseTargetType.Public : ResponseTargetType.Private;
+
+            return CreateResponse(responseTargetType, responseType, true, string.Empty);
+        }
+
+        public Response CreateResponse(string message)
+        {
+            var responseTargetType = (RequestSourceType == Communications.RequestSourceType.Public) ? Communications.ResponseTargetType.Public : ResponseTargetType.Private;
+
+            return CreateResponse(responseTargetType, Communications.ResponseType.Message, true, message);
+        }
+
+        public Response CreateResponse(string message, params object[] args)
+        {
+            var responseTargetType = (RequestSourceType == Communications.RequestSourceType.Public) ? Communications.ResponseTargetType.Public : ResponseTargetType.Private;
+
+            return CreateResponse(responseTargetType, Communications.ResponseType.Message, true, string.Format(message, args));
+        }
+
+        public Response CreateResponse(ResponseTargetType responseTargetType, string message)
+        {
+            return CreateResponse(responseTargetType, Communications.ResponseType.Message, true, message);
+        }
+
+        public Response CreateResponse(ResponseType responseType, string message)
+        {
+            var responseTargetType = (RequestSourceType == Communications.RequestSourceType.Public) ? Communications.ResponseTargetType.Public : ResponseTargetType.Private;
+
+            return CreateResponse(responseTargetType, responseType, true, message);
+        }
+
+        public Response CreateResponse(ResponseTargetType responseTargetType, string message, params object[] args)
+        {
+            return CreateResponse(responseTargetType, Communications.ResponseType.Message, true, string.Format(message, args));
+        }
+
+        public Response CreateResponse(ResponseType responseType, string message, params object[] args)
+        {
+            var responseTargetType = (RequestSourceType == Communications.RequestSourceType.Public) ? Communications.ResponseTargetType.Public : ResponseTargetType.Private;
+
+            return CreateResponse(responseTargetType, responseType, true, string.Format(message, args));
+        }
+
+        public Response CreateResponse(ResponseTargetType responseTargetType, ResponseType responseType, string message, params object[] args)
+        {
+            return CreateResponse(responseTargetType, responseType, true, string.Format(message, args));
+        }
+
+        public Response CreateResponse(ResponseTargetType responseTargetType, ResponseType responseType, string message)
+        {
+            return CreateResponse(responseTargetType, responseType, true, message);
+        }
+
+        public Response CreateResponse(ResponseTargetType responseTargetType, ResponseType responseType, bool enableResponseTargetTypeCheck, string message, params object[] args)
+        {
+            return CreateResponse(responseTargetType, responseType, enableResponseTargetTypeCheck, string.Format(message, args));
+        }
 
         /// <summary>
         /// Creates a response for a given response type with a given message payload.
@@ -108,49 +174,33 @@ namespace SpikeLite.Communications
         /// <param name="message">The message payload to deliver.</param>
         /// 
         /// <returns>A response structure capable of being sent along the application as a message.</returns>
-        public Response CreateResponse(ResponseType maxResponse, string message)
+        public Response CreateResponse(ResponseTargetType responseTargetType, ResponseType responseType, bool enableResponseTargetTypeCheck, string message)
         {
-            var responseType = GetResponseType(maxResponse);
+            if (enableResponseTargetTypeCheck)
+            {
+                responseTargetType = CheckResponseTargetType(responseTargetType);
+            }
 
             return new Response
             {
                 Channel = Channel,
                 Nick = Nick,
+                ResponseTargetType = responseTargetType,
                 ResponseType = responseType,
                 Message = message
             };
         }
 
-        public Response CreateResponse(ResponseType maxResponse, string message, object arg1)
-        {
-            return CreateResponse(maxResponse, string.Format(message, arg1));
-        }
-
-        public Response CreateResponse(ResponseType maxResponse, string message, object arg1, object arg2)
-        {
-            return CreateResponse(maxResponse, string.Format(message, arg1, arg2));
-        }
-
-        public Response CreateResponse(ResponseType maxResponse, string message, object arg1, object arg2, object arg3)
-        {
-            return CreateResponse(maxResponse, string.Format(message, arg1, arg2, arg3));
-        }
-
-        public Response CreateResponse(ResponseType maxResponse, string message, params object[] args)
-        {
-            return CreateResponse(maxResponse, string.Format(message, args));
-        }
-
         #endregion
 
-        private ResponseType GetResponseType(ResponseType maxResponse)
+        private ResponseTargetType CheckResponseTargetType(ResponseTargetType responseTargetType)
         {
-            if (maxResponse == ResponseType.Private || RequestSourceType == RequestSourceType.Private)
+            if (responseTargetType == ResponseTargetType.Private || RequestSourceType == RequestSourceType.Private)
             {
-                return ResponseType.Private;
+                return ResponseTargetType.Private;
             }
 
-            return ResponseType.Public;
+            return ResponseTargetType.Public;
         }
     }
 }

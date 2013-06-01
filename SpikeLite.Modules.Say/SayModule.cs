@@ -36,7 +36,7 @@ namespace SpikeLite.Modules.Say
                 && messageArray.Length > 0
                 && messageArray[0].Equals("~"+Name, StringComparison.OrdinalIgnoreCase))
             {
-                ModuleManagementContainer.HandleResponse(request.CreateResponse(ResponseType.Public, Phrase));
+                ModuleManagementContainer.HandleResponse(request.CreateResponse(ResponseTargetType.Public, Phrase));
             }
         }
     }

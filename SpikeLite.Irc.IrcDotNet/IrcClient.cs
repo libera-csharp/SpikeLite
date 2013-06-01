@@ -100,11 +100,11 @@ namespace SpikeLite.Irc.IrcDotNet
         {
             try
             {
-                if (response.ResponseType == ResponseType.Public)
+                if (response.ResponseTargetType == ResponseTargetType.Public)
                 {
                     _ircClient.LocalUser.SendMessage(response.Channel, response.Message);
                 }
-                else if (response.ResponseType == ResponseType.Private)
+                else if (response.ResponseTargetType == ResponseTargetType.Private)
                 {
                     _ircClient.LocalUser.SendMessage(response.Nick, response.Message);
                 }

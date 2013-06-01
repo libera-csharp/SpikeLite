@@ -59,27 +59,27 @@ namespace SpikeLite.Modules.Admin
                         user.AccessToken = accessToken.ToString();
                         user.AccessTokenIssueTime = accessTokenCreationTime;
                         user.AccessTokenExpiration = accessTokenExpiration;
-                        
+
                         // Update the account.
                         AuthenticationManager.UpdateHost(user);
 
                         // Hand it back.
-                        Reply(request, ResponseType.Private, "Your new access token is {0}.", accessToken);
+                        Reply(request, ResponseTargetType.Private, "Your new access token is {0}.", accessToken);
                     }
 
                     // Handle a user asking for their current access token.
                     if (splitMessage[1].Equals("display", StringComparison.InvariantCultureIgnoreCase))
                     {
-                        ModuleManagementContainer.HandleResponse(request.CreateResponse(ResponseType.Private,
-                                                                                        user.AccessToken == null ? "You have no access token. Please request one." :
-                                                                                        String.Format("Your access token is {0} and was generated at {1} UTC. The token will expire at {2} UTC.",
-                                                                                                        user.AccessToken, user.AccessTokenIssueTime, user.AccessTokenExpiration)));                            
+                        ModuleManagementContainer.HandleResponse(request.CreateResponse(ResponseTargetType.Private,
+                            user.AccessToken == null ?
+                            "You have no access token. Please request one." :
+                            String.Format("Your access token is {0} and was generated at {1} UTC. The token will expire at {2} UTC.", user.AccessToken, user.AccessTokenIssueTime, user.AccessTokenExpiration)));
                     }
                 }
                 else
                 {
                     // The user used the command incorrectly.
-                    Reply(request, ResponseType.Private, "Invalid access token request, please consult the help for details.");
+                    Reply(request, ResponseTargetType.Private, "Invalid access token request, please consult the help for details.");
                 }
             }
         }

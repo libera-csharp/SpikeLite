@@ -124,7 +124,7 @@ namespace SpikeLite.Modules.Admin
                 };
  
                 AuthenticationManager.RememberHost(host);
-                ModuleManagementContainer.HandleResponse(request.CreateResponse(ResponseType.Private, String.Format("Learned host {0}", TranslateHostToString(host))));
+                ModuleManagementContainer.HandleResponse(request.CreateResponse(ResponseTargetType.Private, String.Format("Learned host {0}", TranslateHostToString(host))));
             }
         }
 
@@ -253,7 +253,7 @@ namespace SpikeLite.Modules.Admin
         /// <param name="request">Our incoming <see cref="Request"/> object, which we use for creating our response.</param>
         public void SendResponse(string message, Request request)
         {
-            ModuleManagementContainer.HandleResponse(request.CreateResponse(ResponseType.Private, message));   
+            ModuleManagementContainer.HandleResponse(request.CreateResponse(ResponseTargetType.Private, message));   
         }
 
         /// <summary>

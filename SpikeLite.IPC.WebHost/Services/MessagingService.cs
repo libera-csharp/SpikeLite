@@ -37,7 +37,7 @@ namespace SpikeLite.IPC.WebHost.Services
         public void SendMessage(string channelTarget, string messageText)
         {
             var mgr = GetBean<CommunicationManager>("CommunicationManager");
-            mgr.SendResponse(new Response { Channel = channelTarget, Message = messageText, ResponseType = ResponseType.Public });
+            mgr.SendResponse(new Response { Channel = channelTarget, Message = messageText, ResponseTargetType = ResponseTargetType.Public });
         }
     }
 }

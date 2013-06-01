@@ -74,7 +74,7 @@ namespace SpikeLite.Modules.Help
         /// <param name="request">The incoming message to respond to.</param>
         private void SendHelpResponses(IModule module, Request request)
         {
-            var response = request.CreateResponse(ResponseType.Private);
+            var response = request.CreateResponse(ResponseTargetType.Private);
             
             response.Message = "Module Name: " + module.Name;
             ModuleManagementContainer.HandleResponse(response);
@@ -102,7 +102,7 @@ namespace SpikeLite.Modules.Help
                                               ForEach(x => { modulesList.Append(x.Name); modulesList.Append(", "); });
 
 
-            var response = request.CreateResponse(ResponseType.Private);
+            var response = request.CreateResponse(ResponseTargetType.Private);
             response.Message = "Modules list: " + modulesList.ToString().Trim().Trim(',');
             ModuleManagementContainer.HandleResponse(response);
         }
@@ -115,7 +115,7 @@ namespace SpikeLite.Modules.Help
         /// <param name="request">The incoming message to respond to.</param>
         private void SendModuleNotFoundResponse(string moduleName, Request request)
         {
-            var response = request.CreateResponse(ResponseType.Private);
+            var response = request.CreateResponse(ResponseTargetType.Private);
             response.Message = string.Format("Module '{0}' could not be found.", moduleName);
             ModuleManagementContainer.HandleResponse(response);
         }
@@ -127,7 +127,7 @@ namespace SpikeLite.Modules.Help
         /// <param name="request">The incoming message to respond to.</param>
         private void SendIncorrectRequestSyntaxResponse(Request request)
         {
-            var response = request.CreateResponse(ResponseType.Private);
+            var response = request.CreateResponse(ResponseTargetType.Private);
             response.Message = "Request was not in the correct syntax.";
             ModuleManagementContainer.HandleResponse(response);
         }

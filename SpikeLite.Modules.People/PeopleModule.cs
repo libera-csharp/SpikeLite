@@ -65,7 +65,7 @@ namespace SpikeLite.Modules.People
 
                     // OK, so we know we've at least got a person. Let's look them up. 
                     var target = PersonDao.CreateOrFindPerson(normalizedName);
-                    var response = request.CreateResponse(ResponseType.Public, String.Format("No factoids of type {0} found for {1}.", command, name));
+                    var response = request.CreateResponse(ResponseTargetType.Public, String.Format("No factoids of type {0} found for {1}.", command, name));
 
                     // If we've got a description, they're added to said person.
                     if (description.Length > 0)
@@ -82,7 +82,7 @@ namespace SpikeLite.Modules.People
                         target.Factoids.Add(factoid);
                         PersonDao.SaveFactoids(target);
 
-                        response = request.CreateResponse(ResponseType.Public, "Factoid saved.");
+                        response = request.CreateResponse(ResponseTargetType.Public, "Factoid saved.");
                     }
                     else
                     {
@@ -92,7 +92,7 @@ namespace SpikeLite.Modules.People
 
                         if (factCount > 0)
                         {
-                            response = request.CreateResponse(ResponseType.Public, String.Format("Found {0} factoid{1} of type {2} for {3}{4}: {5}",
+                            response = request.CreateResponse(ResponseTargetType.Public, String.Format("Found {0} factoid{1} of type {2} for {3}{4}: {5}",
                                                                                                  factCount, (factCount == 1) ? String.Empty : "s", 
                                                                                                  command, 
                                                                                                  name, 
@@ -108,7 +108,7 @@ namespace SpikeLite.Modules.People
                 }
                 else
                 {
-                    var response = request.CreateResponse(ResponseType.Public, string.Format("Invalid request, please try ~help {0}", Name));
+                    var response = request.CreateResponse(ResponseTargetType.Public, string.Format("Invalid request, please try ~help {0}", Name));
                     ModuleManagementContainer.HandleResponse(response);
                 }
             }

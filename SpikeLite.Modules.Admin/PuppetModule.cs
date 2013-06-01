@@ -34,8 +34,8 @@ namespace SpikeLite.Modules.Admin
 
                 if (messageArray[1].Equals("say", StringComparison.OrdinalIgnoreCase))
                 {
-                    var response = request.CreateResponse(ResponseType.Public, message);
-                    response.ResponseType = ResponseType.Public;
+                    var response = request.CreateResponse(ResponseTargetType.Public, message);
+                    response.ResponseTargetType = ResponseTargetType.Public;
                     response.Channel = target;
                     ModuleManagementContainer.HandleResponse(response);
                 }

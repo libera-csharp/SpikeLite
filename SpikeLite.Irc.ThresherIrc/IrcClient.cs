@@ -66,11 +66,11 @@ namespace SpikeLite.Irc.ThresherIrc
         {
             try
             {
-                if (response.ResponseType == ResponseType.Private)
+                if (response.ResponseTargetType == ResponseTargetType.Private)
                 {
                     _ircConnection.Sender.PrivateMessage(response.Nick, response.Message);
                 }
-                else if (response.ResponseType == ResponseType.Public)
+                else if (response.ResponseTargetType == ResponseTargetType.Public)
                 {
                     _ircConnection.Sender.PublicMessage(response.Channel, response.Message);
                 }
