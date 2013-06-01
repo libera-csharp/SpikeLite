@@ -32,5 +32,22 @@ namespace SpikeLite.Communications.Messaging
         /// <param name="user">A <see cref="User"/> class containing information about the user sending the message.</param>
         /// <param name="message">The message being sent.</param>
         void HandleSingleTargetMessage(User user, string message);
+
+        /// <summary>
+        /// Attempts to parse a 1:N action the bot has received. This would be when someone sends a action to a channel.
+        /// </summary>
+        /// 
+        /// <param name="user">A <see cref="User"/> class containing information about the user sending the action.</param>
+        /// <param name="channel">The name of the target channel of the message.</param>
+        /// <param name="message">The message being sent.</param>
+        void HandleMultiTargetAction(User user, string channel, string message);
+
+        /// <summary>
+        /// Attempts to parse a 1:1 action the bot has received.
+        /// </summary>
+        /// 
+        /// <param name="user">A <see cref="User"/> class containing information about the user sending the action.</param>
+        /// <param name="message">The message being sent.</param>
+        void HandleSingleTargetAction(User user, string message);
     }
 }

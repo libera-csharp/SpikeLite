@@ -37,7 +37,7 @@ namespace SpikeLite.Modules.Admin
 
             // The user must be root, the request must be a 1:1 PRIVMSG and it's gotta be of a known form factor.
             if (request.RequestFrom.AccessLevel >= AccessLevel.Root
-                && request.RequestType == RequestType.Private
+                && request.RequestSourceType == RequestSourceType.Private
                 && message[0].Equals("~users", StringComparison.OrdinalIgnoreCase)
                 && (message.Length >= 2 && message.Length <= 5))
             {

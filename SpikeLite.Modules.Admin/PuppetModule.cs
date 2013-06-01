@@ -18,7 +18,7 @@ namespace SpikeLite.Modules.Admin
         {
             var messageArray = request.Message.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
 
-            if (request.RequestType == RequestType.Private
+            if (request.RequestSourceType == RequestSourceType.Private
                 && request.RequestFrom.AccessLevel >= AccessLevel.Root
                 && messageArray[0].Equals("~puppet", StringComparison.OrdinalIgnoreCase)
                 && messageArray.Length >= 4)

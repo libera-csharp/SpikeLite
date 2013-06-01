@@ -32,7 +32,7 @@ namespace SpikeLite.Modules.Say
             var messageArray = request.Message.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
 
             if (request.RequestFrom.AccessLevel >= AccessLevel.Public
-                && request.RequestType == RequestType.Public
+                && request.RequestSourceType == RequestSourceType.Public
                 && messageArray.Length > 0
                 && messageArray[0].Equals("~"+Name, StringComparison.OrdinalIgnoreCase))
             {

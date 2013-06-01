@@ -113,6 +113,8 @@ namespace SpikeLite.Communications
                 _ircClient.SupportsIdentification = SupportsIdentification;
                 _ircClient.PublicMessageReceived += _ircClient_PublicMessageReceived;
                 _ircClient.PrivateMessageReceived += _ircClient_PrivateMessageReceived;
+                _ircClient.PublicActionReceived += _ircClient_PublicActionReceived;
+                _ircClient.PrivateActionReceived += _ircClient_PrivateActionReceived;
                 _ircClient.Connect(NetworkList.First());
 
                 _isStarted = true;
@@ -207,6 +209,16 @@ namespace SpikeLite.Communications
             MessageParser.HandleSingleTargetMessage(e.User, e.Message);
         }
 
+        void _ircClient_PublicActionReceived(object sender, PublicMessageReceivedEventArgs e)
+        {
+            MessageParser.HandleMultiTargetAction(e.User, e.ChannelName, e.Message);
+        }
+
+        void _ircClient_PrivateActionReceived(object sender, PrivateMessageReceivedEventArgs e)
+        {
+            MessageParser.HandleSingleTargetAction(e.User, e.Message);
+        }
+
         /// <summary>
         /// Passes our internal message format to all subscribers.
         /// </summary>
@@ -224,7 +236,7 @@ namespace SpikeLite.Communications
             catch (Exception ex)
             {
                 _logger.WarnFormat("Caught an exception trying to HandleRequestReceived on [channel {0} nick {1} request type {2} message {3}]: {4}",
-                                   request.Channel ?? "N/A", request.RequestFrom.User.DisplayName, request.RequestType, request.Message, ex);
+                                   request.Channel ?? "N/A", request.RequestFrom.User.DisplayName, request.RequestSourceType, request.Message, ex);
             }
 
         }

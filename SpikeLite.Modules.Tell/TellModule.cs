@@ -21,7 +21,7 @@ namespace SpikeLite.Modules.Tell
             var messageArray = request.Message.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
 
             if (request.RequestFrom.AccessLevel >= AccessLevel.Public
-                && request.RequestType == RequestType.Public
+                && request.RequestSourceType == RequestSourceType.Public
                 && messageArray[0].Equals("~tell", StringComparison.OrdinalIgnoreCase))
             {
                 var newMessage = string.Empty;

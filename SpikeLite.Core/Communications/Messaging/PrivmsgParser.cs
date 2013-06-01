@@ -42,7 +42,8 @@ namespace SpikeLite.Communications.Messaging
                 RequestFrom = authToken,
                 Channel = channel,
                 Nick = user.NickName,
-                RequestType = RequestType.Public,
+                RequestSourceType = RequestSourceType.Public,
+                RequestType = Communications.RequestType.Message,
                 Addressee = user.NickName,
                 Message = message
             };
@@ -60,7 +61,45 @@ namespace SpikeLite.Communications.Messaging
                 RequestFrom = authToken,
                 Channel = null,
                 Nick = user.NickName,
-                RequestType = RequestType.Private,
+                RequestSourceType = RequestSourceType.Private,
+                RequestType = Communications.RequestType.Message,
+                Message = message
+            };
+
+            CommunicationManager.HandleRequestReceived(request);
+        }
+
+        public void HandleMultiTargetAction(User user, string channel, string message)
+        {
+            var userToken = UserTokenCache.RetrieveToken(user);
+            var authToken = AuthHandler.Authenticate(userToken);
+
+            var request = new Request
+            {
+                RequestFrom = authToken,
+                Channel = channel,
+                Nick = user.NickName,
+                RequestSourceType = RequestSourceType.Public,
+                RequestType = Communications.RequestType.Action,
+                Addressee = user.NickName,
+                Message = message
+            };
+
+            CommunicationManager.HandleRequestReceived(request);
+        }
+
+        public void HandleSingleTargetAction(User user, string message)
+        {
+            var userToken = UserTokenCache.RetrieveToken(user);
+            var authToken = AuthHandler.Authenticate(userToken);
+
+            var request = new Request
+            {
+                RequestFrom = authToken,
+                Channel = null,
+                Nick = user.NickName,
+                RequestSourceType = RequestSourceType.Private,
+                RequestType = Communications.RequestType.Action,
                 Message = message
             };
 

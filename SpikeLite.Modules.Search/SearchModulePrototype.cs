@@ -52,7 +52,7 @@ namespace SpikeLite.Modules.Search
         /// <param name="request">Our incoming message.</param>
         public override void HandleRequest(Request request)
         {
-            if (request.RequestType == RequestType.Public)
+            if (request.RequestSourceType == RequestSourceType.Public)
             {
                 var messageArray = request.Message.Split(' ');
 

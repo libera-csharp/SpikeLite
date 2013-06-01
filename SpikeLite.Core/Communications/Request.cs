@@ -10,19 +10,35 @@ using SpikeLite.AccessControl;
 namespace SpikeLite.Communications
 {
     /// <summary>
-    /// This enum represents the types of request possible, in this case either a 1:1 or 1:N message.
+    /// This enum represents the source types of request possible, in this case either a 1:1 or 1:N message.
     /// </summary>
-    public enum RequestType
+    public enum RequestSourceType
     {
         /// <summary>
-        /// This is a 1:N message, being targeted at a channel.
+        /// This is a 1:N message, coming from a channel.
         /// </summary>
         Public,
 
         /// <summary>
-        /// This is a 1:1 message, being targeted at a single user.
+        /// This is a 1:1 message, coming from a single user.
         /// </summary>
         Private
+    }
+
+    /// <summary>
+    /// This enum represents the types of request possible, in this case either an action or a message.
+    /// </summary>
+    public enum RequestType
+    {
+        /// <summary>
+        /// This is an action, coming from a source.
+        /// </summary>
+        Action,
+
+        /// <summary>
+        /// This is a message, coming from a source.
+        /// </summary>
+        Message
     }
 
     /// <summary>
@@ -48,6 +64,11 @@ namespace SpikeLite.Communications
         public string Nick { get; set; }
 
         /// <summary>
+        /// Gets or sets the <see cref="RequestSourceType"/> of the message.
+        /// </summary>
+        public RequestSourceType RequestSourceType { get; set; }
+
+        /// <summary>
         /// Gets or sets the <see cref="RequestType"/> of the message.
         /// </summary>
         public RequestType RequestType { get; set; }
@@ -62,7 +83,7 @@ namespace SpikeLite.Communications
         /// </summary>
         public string Message { get; set; }
 
-        #endregion 
+        #endregion
 
         #region CreateResponse
 
@@ -73,7 +94,7 @@ namespace SpikeLite.Communications
         /// <param name="maxResponse">The type of response to yield.</param>
         /// 
         /// <returns>A response structure capable of being sent along the application as a message.</returns>
-        public Response CreateResponse( ResponseType maxResponse )
+        public Response CreateResponse(ResponseType maxResponse)
         {
             return CreateResponse(maxResponse, "");
         }
@@ -87,7 +108,7 @@ namespace SpikeLite.Communications
         /// <param name="message">The message payload to deliver.</param>
         /// 
         /// <returns>A response structure capable of being sent along the application as a message.</returns>
-        public Response CreateResponse( ResponseType maxResponse, string message )
+        public Response CreateResponse(ResponseType maxResponse, string message)
         {
             var responseType = GetResponseType(maxResponse);
 
@@ -100,31 +121,31 @@ namespace SpikeLite.Communications
             };
         }
 
-        public Response CreateResponse( ResponseType maxResponse, string message, object arg1 )
+        public Response CreateResponse(ResponseType maxResponse, string message, object arg1)
         {
             return CreateResponse(maxResponse, string.Format(message, arg1));
         }
 
-        public Response CreateResponse( ResponseType maxResponse, string message, object arg1, object arg2 )
+        public Response CreateResponse(ResponseType maxResponse, string message, object arg1, object arg2)
         {
             return CreateResponse(maxResponse, string.Format(message, arg1, arg2));
         }
 
-        public Response CreateResponse( ResponseType maxResponse, string message, object arg1, object arg2, object arg3 )
+        public Response CreateResponse(ResponseType maxResponse, string message, object arg1, object arg2, object arg3)
         {
             return CreateResponse(maxResponse, string.Format(message, arg1, arg2, arg3));
         }
 
-        public Response CreateResponse( ResponseType maxResponse, string message, params object[] args )
+        public Response CreateResponse(ResponseType maxResponse, string message, params object[] args)
         {
             return CreateResponse(maxResponse, string.Format(message, args));
         }
-        
+
         #endregion
 
-        private ResponseType GetResponseType( ResponseType maxResponse )
+        private ResponseType GetResponseType(ResponseType maxResponse)
         {
-            if (maxResponse == ResponseType.Private || RequestType == RequestType.Private)
+            if (maxResponse == ResponseType.Private || RequestSourceType == RequestSourceType.Private)
             {
                 return ResponseType.Private;
             }
