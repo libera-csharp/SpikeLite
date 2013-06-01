@@ -66,13 +66,27 @@ namespace SpikeLite.Irc.ThresherIrc
         {
             try
             {
-                if (response.ResponseTargetType == ResponseTargetType.Private)
+                if (response.ResponseType == ResponseType.Action)
                 {
-                    _ircConnection.Sender.PrivateMessage(response.Nick, response.Message);
+                    if (response.ResponseTargetType == ResponseTargetType.Private)
+                    {
+                        _ircConnection.Sender.PrivateAction(response.Nick, response.Message);
+                    }
+                    else if (response.ResponseTargetType == ResponseTargetType.Public)
+                    {
+                        _ircConnection.Sender.Action(response.Channel, response.Message);
+                    }
                 }
-                else if (response.ResponseTargetType == ResponseTargetType.Public)
+                else if (response.ResponseType == ResponseType.Message)
                 {
-                    _ircConnection.Sender.PublicMessage(response.Channel, response.Message);
+                    if (response.ResponseTargetType == ResponseTargetType.Private)
+                    {
+                        _ircConnection.Sender.PrivateMessage(response.Nick, response.Message);
+                    }
+                    else if (response.ResponseTargetType == ResponseTargetType.Public)
+                    {
+                        _ircConnection.Sender.PublicMessage(response.Channel, response.Message);
+                    }
                 }
             }
             catch (Exception ex)

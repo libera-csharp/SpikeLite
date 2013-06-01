@@ -100,19 +100,50 @@ namespace SpikeLite.Irc.IrcDotNet
         {
             try
             {
-                if (response.ResponseTargetType == ResponseTargetType.Public)
+                if (response.ResponseType == ResponseType.Action)
                 {
-                    _ircClient.LocalUser.SendMessage(response.Channel, response.Message);
+                    IIrcMessageTarget target = null;
+
+                    if (response.ResponseTargetType == ResponseTargetType.Public)
+                    {
+                        target = _ircClient.Channels.FirstOrDefault(c => c.Name.Equals(response.Channel, StringComparison.OrdinalIgnoreCase));
+                    }
+                    else if (response.ResponseTargetType == ResponseTargetType.Private)
+                    {
+                        target = _ircClient.Users.FirstOrDefault(u => u.NickName.Equals(response.Nick, StringComparison.OrdinalIgnoreCase));
+                    }
+
+                    if (target != null)
+                    {
+                        _ctcpClient.SendAction(target, response.Message);
+                    }
                 }
-                else if (response.ResponseTargetType == ResponseTargetType.Private)
+                else if (response.ResponseType == ResponseType.Message)
                 {
-                    _ircClient.LocalUser.SendMessage(response.Nick, response.Message);
+                    string target = null;
+
+                    if (response.ResponseTargetType == ResponseTargetType.Public)
+                    {
+                        target = response.Channel;
+                    }
+                    else if (response.ResponseTargetType == ResponseTargetType.Private)
+                    {
+                        target = response.Nick;
+                    }
+
+                    if (target != null)
+                    {
+                        _ircClient.LocalUser.SendMessage(target, response.Message);
+                    }
                 }
             }
             catch (Exception ex)
             {
                 _logger.WarnFormat("Caught an exception trying to SendResponse on [channel: {0} by nick: {1} of message {2}]: {3}",
-                                   response.Channel, response.Nick ?? "N/A", response.Message, ex);
+                    response.Channel,
+                    response.Nick ?? "N/A",
+                    response.Message,
+                    ex);
             }
         }
 
@@ -126,6 +157,8 @@ namespace SpikeLite.Irc.IrcDotNet
             _ircClient.RawMessageReceived -= IrcClient_RawMessageReceived;
             _ircClient.RawMessageSent -= IrcClient_RawMessageSent;
             _ircClient.Disconnected -= Disconnected;
+
+            _ctcpClient.ActionReceived -= _ctcpClient_ActionReceived;
         }
 
         #region Event Handlers
