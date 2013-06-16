@@ -7,6 +7,7 @@
  */
 
 using System.Collections.Generic;
+using System.Linq;
 using SpikeLite.Domain.Model.People;
 using Spring.Data.NHibernate.Generic.Support;
 
@@ -16,36 +17,32 @@ namespace SpikeLite.Domain.Persistence.People
 
     public class PeopleDao : HibernateDaoSupport, IPeopleDao
     {
+        //private IPersistanceSession _persistanceSession = new RavenDBSession();
+        private IPersistanceSession _persistanceSession;
+
         public IList<Person> FindAllPeople()
         {
-            return Session.QueryOver<Person>()
-                          .List();
+            _persistanceSession = new NHibernateSession(this.Session);
+
+            return _persistanceSession.Query<Person>().ToList();
         }
 
         public Person CreateOrFindPerson(string name)
         {
-            var entity = Session.QueryOver<Person>()
-                             .Where(person => person.Name == name)
-                             .SingleOrDefault() ?? new Person {Name = name};
+            _persistanceSession = new NHibernateSession(this.Session);
 
-            return entity;
+            return _persistanceSession.Query<Person>()
+                .SingleOrDefault(p => p.Name == name) ?? new Person() { Name = name };
         }
 
-        public void SaveFactoids(Person person)
+        public void SaveFactoids(Person entity)
         {
-            HibernateTemplate.SaveOrUpdate(person);
+            _persistanceSession = new NHibernateSession(this.Session);
+
+            _persistanceSession.Add(entity);
+            _persistanceSession.SaveChanges();
         }
 
-        public void DeleteFactoidById(int factoidId)
-        {
-            var target = Session.QueryOver<PersonFactoid>()
-                                .Where(factoid => factoid.Id == factoidId)
-                                .SingleOrDefault();
-
-            if (target != null)
-            {
-                Session.Delete(target);
-            }
-        }
+        public void DeleteFactoidById(int factoidId) { }
     }
 }

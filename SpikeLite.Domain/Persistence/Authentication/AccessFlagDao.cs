@@ -7,6 +7,7 @@
  */
 
 using System.Collections.Generic;
+using System.Linq;
 using log4net.Ext.Trace;
 using SpikeLite.Domain.Model.Authentication;
 using Spring.Data.NHibernate.Generic.Support;
@@ -15,6 +16,9 @@ namespace SpikeLite.Domain.Persistence.Authentication
 {
     public class AccessFlagDao : HibernateDaoSupport, IAccessFlagDao
     {
+        //private IPersistanceSession _persistanceSession = new RavenDBSession();
+        private IPersistanceSession _persistanceSession;
+
         /// <summary>
         /// Stores our log4net logger.
         /// </summary>
@@ -22,7 +26,9 @@ namespace SpikeLite.Domain.Persistence.Authentication
 
         public IList<AccessFlag> FindAll()
         {
-            return HibernateTemplate.ExecuteFind(x => x.CreateCriteria(typeof(AccessFlag)).List<AccessFlag>());
+            _persistanceSession = new NHibernateSession(this.Session);
+
+            return _persistanceSession.Query<AccessFlag>().ToList();
         }
 
         public AccessFlag CreateFlag(string flagIdentifier, string flagDescription)
@@ -32,10 +38,10 @@ namespace SpikeLite.Domain.Persistence.Authentication
 
         public void SaveOrUpdate(AccessFlag accessFlag)
         {
-            HibernateTemplate.SaveOrUpdate(accessFlag);
+            _persistanceSession = new NHibernateSession(this.Session);
 
-            // Adding new access flags is indeed of significance. We should log this.
-            Logger.InfoFormat("Created new access flag {0} ({1}), with description {2}.", accessFlag.Flag, accessFlag.Id, accessFlag.Description);
+            _persistanceSession.Add(accessFlag);
+            _persistanceSession.SaveChanges();
         }
     }
 }

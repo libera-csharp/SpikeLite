@@ -6,9 +6,9 @@
  * distributed license.txt for details.
  */
 
+using System.Linq;
 using SpikeLite.Domain.Model.Karma;
 using Spring.Data.NHibernate.Generic.Support;
-using System.Linq;
 
 namespace SpikeLite.Domain.Persistence.Karma
 {
@@ -17,6 +17,9 @@ namespace SpikeLite.Domain.Persistence.Karma
     /// </summary>
     public class KarmaDao : HibernateDaoSupport, IKarmaDao
     {
+        //private IPersistanceSession _persistanceSession = new RavenDBSession();
+        private IPersistanceSession _persistanceSession;
+
         /// <summary>
         /// Attempt to find karma for a given user
         /// </summary>
@@ -26,23 +29,26 @@ namespace SpikeLite.Domain.Persistence.Karma
         /// <returns>A <see cref="KarmaItem"/> for your username, or null if no curent entries</returns>
         public virtual KarmaItem FindKarma(string userName)
         {
-            return HibernateTemplate.ExecuteFind(x => x.CreateQuery("from KarmaItem k where k.UserName = ?")
-                                                                    .SetParameter(0, userName)
-                                                                    .List<KarmaItem>()).FirstOrDefault();
+            _persistanceSession = new NHibernateSession(this.Session);
+
+            return _persistanceSession.Query<KarmaItem>().SingleOrDefault(k => k.UserName == userName);
         }
 
         /// <summary>
         /// Persist a <see cref="KarmaItem"/>
         /// </summary>
         /// 
-        /// <param name="karma">Karma item to save</param>
+        /// <param name="entity">Karma item to save</param>
         /// 
         /// <remarks>
         /// This will flush the session after saving.
         /// </remarks>
-        public virtual void SaveKarma(KarmaItem karma)
+        public virtual void SaveKarma(KarmaItem entity)
         {
-            HibernateTemplate.SaveOrUpdate(karma);
+            _persistanceSession = new NHibernateSession(this.Session);
+
+            _persistanceSession.Update(entity);
+            _persistanceSession.SaveChanges();
         }
     }
 }

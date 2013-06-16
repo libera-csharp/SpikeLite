@@ -7,6 +7,7 @@
  */
 
 using System.Collections.Generic;
+using System.Linq;
 using SpikeLite.Domain.Model.Authentication;
 using Spring.Data.NHibernate.Generic.Support;
 
@@ -22,19 +23,24 @@ namespace SpikeLite.Domain.Persistence.Authentication
     /// </summary>
     public class KnownHostDao : HibernateDaoSupport, IKnownHostDao
     {
+        //private IPersistanceSession _persistanceSession = new RavenDBSession();
+        private IPersistanceSession _persistanceSession = null;
+
         public virtual IList<KnownHost> FindAll()
         {
-            return HibernateTemplate.ExecuteFind(x => x.CreateCriteria(typeof(KnownHost)).List<KnownHost>());
+            _persistanceSession = new NHibernateSession(this.Session);
+
+            return _persistanceSession.Query<KnownHost>().ToList();
         }
 
-        public void SaveOrUpdate(KnownHost host)
+        public void SaveOrUpdate(KnownHost entity)
         {
-            HibernateTemplate.SaveOrUpdate(host);
+            _persistanceSession = new NHibernateSession(this.Session);
+
+            _persistanceSession.Update(entity);
+            _persistanceSession.SaveChanges();
         }
 
-        public void Delete(KnownHost host)
-        {
-            HibernateTemplate.Delete(host);
-        }
+        public void Delete(KnownHost host) { }
     }
 }
