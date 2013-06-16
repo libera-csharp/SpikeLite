@@ -187,7 +187,7 @@ namespace SpikeLite.Irc.SmartIrc4Net
                 HostName = e.Data.Host
             };
 
-            OnPublicActionReceived(user, e.Data.Channel, e.Data.Message);
+            OnPublicActionReceived(user, e.Data.Channel, e.Data.Message.Substring(8, e.Data.Message.Length - 9));
         }
 
         void _ircClient_OnChannelMessage(object sender, SIRC4N.IrcEventArgs e)
@@ -209,7 +209,7 @@ namespace SpikeLite.Irc.SmartIrc4Net
                 HostName = e.Data.Host
             };
 
-            OnPrivateActionReceived(user, e.Data.Message);
+            OnPrivateActionReceived(user, e.Data.Message.Substring(8, e.Data.Message.Length - 9));
         }
 
         void _ircClient_OnQueryMessage(object sender, SIRC4N.IrcEventArgs e)
