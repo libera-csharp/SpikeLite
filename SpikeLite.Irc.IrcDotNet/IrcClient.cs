@@ -204,19 +204,32 @@ namespace SpikeLite.Irc.IrcDotNet
 
         void _ctcpClient_ActionReceived(object sender, CtcpMessageEventArgs e)
         {
-            var sourceChannel = (IrcChannel)sender;
             var source = e.Source as IrcUser;
 
             if (source != null)
             {
-                var sourceUser = source;
-                var user = new User
-                {
-                    NickName = sourceUser.NickName,
-                    HostName = sourceUser.HostName
-                };
+                var sourceChannel = sender as IrcChannel;
 
-                OnPublicActionReceived(user, sourceChannel.Name, e.Text);
+                if (sourceChannel != null)
+                {
+                    var user = new User
+                    {
+                        NickName = source.NickName,
+                        HostName = source.HostName
+                    };
+
+                    OnPublicActionReceived(user, sourceChannel.Name, e.Text);
+                }
+                else
+                {
+                    var user = new User
+                    {
+                        NickName = source.NickName,
+                        HostName = source.HostName
+                    };
+
+                    OnPrivateActionReceived(user, e.Text);
+                }
             }
         }
 
