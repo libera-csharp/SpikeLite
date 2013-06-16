@@ -230,7 +230,7 @@ namespace SpikeLite.Irc.ThresherIrc
                     HostName = userInfo.Hostname
                 };
 
-                OnPublicMessageReceived(user, channel, message);
+                OnPublicActionReceived(user, channel, message);
 
                 finishedEvent.Set();
             }) { IsBackground = true }.Start();
@@ -250,7 +250,7 @@ namespace SpikeLite.Irc.ThresherIrc
                     HostName = userInfo.Hostname
                 };
 
-                OnPrivateMessageReceived(user, message);
+                OnPrivateActionReceived(user, message);
 
                 finishedEvent.Set();
             }) { IsBackground = true }.Start();
