@@ -100,7 +100,7 @@ namespace SpikeLite.Irc.SmartIrc4Net
                 {
                     if (response.ResponseTargetType == ResponseTargetType.Private)
                     {
-                        _ircClient.SendMessage(SIRC4N.SendType.Message, response.Nick, response.Message);
+                        _ircClient.SendMessage(SIRC4N.SendType.Action, response.Nick, response.Message);
                     }
                     else if (response.ResponseTargetType == ResponseTargetType.Public)
                     {
