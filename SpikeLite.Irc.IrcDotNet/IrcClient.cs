@@ -179,14 +179,27 @@ namespace SpikeLite.Irc.IrcDotNet
 
             if (source != null)
             {
-                var sourceUser = source;
-                var user = new User
+                if(sourceChannel != null)
                 {
-                    NickName = sourceUser.NickName,
-                    HostName = sourceUser.HostName
-                };
+                    var sourceUser = source;
+                    var user = new User
+                    {
+                        NickName = sourceUser.NickName,
+                        HostName = sourceUser.HostName
+                    };
 
-                OnPublicMessageReceived(user, sourceChannel.Name, e.Text);
+                    if (e.Text.TrimStart().StartsWith("ACTION "))
+                    {
+                        string message = e.Text.Substring(8);
+                        message = message.Substring(0, message.Length-1);
+
+                        OnPublicActionReceived(user, sourceChannel.Name, message);
+                    }
+                    else
+                    {
+                        OnPublicMessageReceived(user, sourceChannel.Name, e.Text);
+                    }
+                }
             }
         }
 
