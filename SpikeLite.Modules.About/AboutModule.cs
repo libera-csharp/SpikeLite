@@ -18,7 +18,6 @@ namespace SpikeLite.Modules.About
         public override void HandleRequest(Request request)
         {
             if (request.RequestFrom.AccessLevel >= AccessLevel.Public
-                && request.RequestSourceType == RequestSourceType.Public
                 && request.Message.Equals("~about", StringComparison.OrdinalIgnoreCase))
             {
                 SendResponse(request);
