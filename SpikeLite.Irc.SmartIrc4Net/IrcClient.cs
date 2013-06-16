@@ -17,6 +17,8 @@ namespace SpikeLite.Irc.SmartIrc4Net
 
         public override bool IsConnected { get { return _ircClient.IsConnected; } }
 
+        public IrcClient() : base(typeof(SIRC4N.IrcClient).Assembly) { }
+
         public override void Connect(Communications.Irc.Configuration.Network network)
         {
             Network = network;
