@@ -7,3 +7,5 @@ output/*
 SpikeLite.sln.cache
 */beans-overrides.xml
 packages/*
+*.sh
+*.log
