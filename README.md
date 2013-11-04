@@ -79,3 +79,7 @@ As of July, 2012 we've started to rely on NuGet rather than having all our depen
     "mozroots --import --sync"
 
  This will grab the standard set of SSL certs that Mozilla ships, and put them into the "trusted" category (use certmgr to check if you're curious). The --sync option means that you're not going to have to say yes to the approximately 140 certificates. If you have trouble parsing the file and get "No certificates found" you should fetch the file via wget/curl/whatever and use the -file parameter.
+
+### SSL Support for WCF-based IPC Endpoints
+
+ SpikeLite now supports transport security for its WCF-based IPC endpoints! Check out the [Wiki page](https://github.com/Freenode-Csharp/SpikeLite/wiki/Using-SSL-For-WCF-based-IPC-Endpoints)
