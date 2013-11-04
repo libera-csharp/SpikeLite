@@ -6,6 +6,7 @@
  * distributed license.txt for details.
  */
 using System.Reflection;
+using System.Runtime.InteropServices;
 
 [assembly: AssemblyTitle("SpikeLite Console Runner")]
 [assembly: AssemblyDescription("A console runner for SpikeLite IRC bot")]
@@ -18,3 +19,6 @@ using System.Reflection;
 
 [assembly: AssemblyVersion("4.0.0.0")]
 [assembly: AssemblyFileVersion("4.0.0.0")]
+
+// We'll need this for netsh/httpcfg if we want to use SSL for our services.
+[assembly: Guid("07f526e6-754f-4b4b-8103-49c65e591cc9")]

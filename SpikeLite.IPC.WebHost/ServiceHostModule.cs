@@ -48,6 +48,11 @@ namespace SpikeLite.IPC.WebHost
         /// </summary>
         public string ServiceAddress { get; set; }
 
+        /// <summary>
+        /// Gets or sets whether or not this endpoint should use transport level security (IE: HTTPS).
+        /// </summary>
+        public bool TransportSecurity { get; set; }
+
         #endregion
 
         #region Init Factory Methods
@@ -163,8 +168,17 @@ namespace SpikeLite.IPC.WebHost
 
             // Wire up everything via our self-hosted WCF harness.
             var serviceHost = new ServiceHost(concreteEndpoint, new Uri(ServiceAddress));
-            serviceHost.AddServiceEndpoint(typeof(I), new BasicHttpBinding(), Name);
-            serviceHost.Description.Behaviors.Add(new ServiceMetadataBehavior { HttpGetEnabled = true });
+            var binding = new BasicHttpBinding();
+
+            // Programmatically set the security mode to "Transport" - this will be server-side only, and not client cert.
+            if (TransportSecurity)
+            {
+                binding.Security.Mode = BasicHttpSecurityMode.Transport;
+            }
+
+            serviceHost.AddServiceEndpoint(typeof(I), binding, Name);
+            serviceHost.Description.Behaviors.Add(TransportSecurity ? new ServiceMetadataBehavior { HttpsGetEnabled = true } :
+                                                                      new ServiceMetadataBehavior { HttpGetEnabled = true });
 
             return serviceHost;
         }

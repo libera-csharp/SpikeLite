@@ -184,6 +184,9 @@
         <add key="db.connectionstring" value="Data Source=spikelite.db;Version=3;New=True" />
         <add key="db.dialect" value="NHibernate.Dialect.SQLiteDialect" />
         <add key="db.driver" value="NHibernate.Driver.SQLite20Driver" />
+        
+        <!-- IPC Transport Security -->
+        <add key="ipc.security" value="false"/>
       </name-values>
     </property>
   </object>

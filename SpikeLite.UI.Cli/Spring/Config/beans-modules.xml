@@ -339,6 +339,7 @@
   <!-- IPC Modules -->
   <object id="AbstractServiceHost" abstract="true" type="SpikeLite.IPC.WebHost.ServiceHostModule, SpikeLite.IPC.WebHost" singleton="false" init-method="InitModule" parent="ParentModule">
     <property name="RequiredAccessLevel" value="Root"/>
+    <property name="TransportSecurity" value="${ipc.security}"/>
   </object>
 
   <object id="PingServiceHost" parent="AbstractServiceHost" type="SpikeLite.IPC.WebHost.ServiceHostModule&lt;SpikeLite.IPC.WebHost.Services.IPingService, SpikeLite.IPC.WebHost.Services.PingService>, SpikeLite.IPC.WebHost">
