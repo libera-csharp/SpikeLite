@@ -1,5 +1,7 @@
 SpikeLite - FreeNode ##csharp's IRC bot
 =============
+![Build Status](https://travis-ci.org/Freenode-Csharp/SpikeLite.svg?branch=master)
+
 
 This readme provides a basic set of information about SpikeLite. SpikeLite is MIT licensed.
 
