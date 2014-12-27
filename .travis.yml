@@ -1,0 +1,6 @@
+language: csharp
+solution: SpikeLite.sln 
+install:
+  - nuget restore SpikeLite.sln
+script:
+  - xbuild SpikeLite.sln /target:Rebuild /p:Configuration=release /p:PlatformTarget=x86 
