@@ -28,7 +28,7 @@ namespace SpikeLite.UI.Cli
         /// </summary>
         private static void Main()
         {
-            _logger.Trace("Starting console runner");
+            _logger.Info("Starting console runner");
 
             try
             {
@@ -37,7 +37,7 @@ namespace SpikeLite.UI.Cli
                 Console.WriteLine("We've spun up the bot and are currently logging to our appenders. Hit CTL+C to quit.");
 
                 // We want to know when it's ok to shutdown the bot.
-                using (var shutdownManualResetEvent = new ManualResetEventSlim(false))
+                using (var shutdownManualResetEvent = new ManualResetEvent(false))
                 {
                     // Get our application context from Spring.NET.
                     var applicationContext = ContextRegistry.GetContext();
@@ -50,7 +50,7 @@ namespace SpikeLite.UI.Cli
                     {
                         if (eventArgs.NewStatus == BotStatus.Stopped)
                         {
-                            // Signal that we're ready to shutdown the bot.
+                            _logger.Info("Bot status set to stopped, shutting down.");
                             shutdownManualResetEvent.Set();    
                         }    
                     };
@@ -60,24 +60,22 @@ namespace SpikeLite.UI.Cli
                     // Handle SIGTERM gracefully.
                     Console.CancelKeyPress += ((sender, args) =>
                     {
-                        // Let us handle the shutdown of the bot
+                        _logger.Info("Cancel key pressed. Shutting down bot.");
                         args.Cancel = true;
 
                         // Clean up.
-                        bot.Shutdown("Caught SIGTERM, quitting");
+                        bot.Shutdown("Caught SIGTERM, quitting");                        
 
                         // Signal that we're ready to shutdown the bot.
                         shutdownManualResetEvent.Set();
-
-                        _logger.Trace("Cancel key pressed. Shutting down bot.");
                     });
 
                     bot.Start();
 
                     // Wait untill we're ready to shutdown the bot.
-                    shutdownManualResetEvent.Wait();
+                    shutdownManualResetEvent.WaitOne();
 
-                    _logger.Trace("Application shutting down.");
+                    _logger.Info("Application shutting down.");
 
                     applicationContext.Dispose();
                 }
