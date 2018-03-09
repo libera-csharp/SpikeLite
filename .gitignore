@@ -9,3 +9,4 @@ SpikeLite.sln.cache
 packages/*
 *.sh
 *.log
+.idea/*
