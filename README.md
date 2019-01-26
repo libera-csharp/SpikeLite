@@ -1,7 +1,10 @@
-SpikeLite - FreeNode ##csharp's IRC bot
-=============
-![Build Status](https://travis-ci.org/Freenode-Csharp/SpikeLite.svg?branch=master)
+# DEPRECATION NOTICE
+SpikeLite has been deprecated in favor of [SpikeCore](https://github.com/Freenode-Csharp/SpikeCore). You may continue to use SpikeLite, but this repository has been archived and no more updates are forthcoming. 
 
+# Historical Readme Text
+
+## SpikeLite - FreeNode ##csharp's old IRC bot
+=============
 
 This readme provides a basic set of information about SpikeLite. SpikeLite is MIT licensed.
 
